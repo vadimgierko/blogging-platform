@@ -1,10 +1,21 @@
 import './App.css';
+import { Switch, Route } from "react-router-dom";
 import Header from './components/Header';
+import Home from './components/Home';
 
 function App() {
   return (
-    <div className="App bg-dark">
+    <div className="App">
       <Header />
+      <div className="container" style={{marginTop: 120}}>
+        <Switch>
+          <Route exact path="/"><Home /></Route>
+          <Route path="/blogs"><h1>Blogs</h1></Route>
+          <Route path="/bloggers"><h1>Bloggers</h1></Route>
+          <Route path="/login"><h1>Log in form</h1></Route>
+          <Route path="/signup"><h1>Create account form</h1></Route>
+        </Switch>
+      </div>
     </div>
   );
 }

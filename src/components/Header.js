@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Header() {
     const [isNavCollapsed, setIsNavCollapsed] = useState(true);
@@ -6,7 +7,7 @@ export default function Header() {
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-            <div className="container-fluid">
+            <div className="container">
                 <a className="navbar-brand" href="#">Blogging Platform</a>
                 <button
                     className="navbar-toggler collapsed"
@@ -24,29 +25,26 @@ export default function Header() {
                 <div className={`${isNavCollapsed ? "collapse" : null} navbar-collapse`} id="navbarColor01">
                     <ul className="navbar-nav me-auto">
                         <li className="nav-item">
-                            <a className="nav-link active" href="#">Home
-                                <span className="visually-hidden">(current)</span>
-                            </a>
+                            <Link className="nav-link active" to="/">Home</Link>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">Blogs</a>
+                            <Link className="nav-link" to="/blogs">Blogs</Link>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">Bloggers</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">About</a>
+                            <Link className="nav-link" to="/bloggers">Bloggers</Link>
                         </li>
                     </ul>
                     <div>
-                        <button
+                        <Link
                             type="button"
+                            to="/login"
                             className={isNavCollapsed ? "btn btn-success me-2" : "btn btn-success me-2 d-block mb-3"}
-                        >Log in</button>
-                        <button
+                        >Log in</Link>
+                        <Link
                             type="button"
+                            to="/signup"
                             className={isNavCollapsed ? "btn btn-info me-2" : "btn btn-info me-2 d-block"}
-                        >Create account</button>
+                        >Create account</Link>
                     </div>
                 </div>
             </div>

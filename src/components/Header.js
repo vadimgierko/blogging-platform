@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { auth } from '../firebase';
+import { signOut } from "firebase/auth";
 
-export default function Header() {
+export default function Header({ isUserLogged }) {
     const [isNavCollapsed, setIsNavCollapsed] = useState(true);
     const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
+
+    function handleSignOut() {
+        signOut(auth).then(() => {
+            //console.log("user signed out");
+        }).catch((error) => {
+            console.log(error.message);
+        });
+    }
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
@@ -35,21 +45,33 @@ export default function Header() {
                         </li>
                     </ul>
                     <div>
-                        <Link
-                            type="button"
-                            to="/login"
-                            className={isNavCollapsed ? "btn btn-outline-success me-2" : "btn btn-outline-success me-2 d-block mb-3"}
-                            onClick={handleNavCollapse}
-                        >Log in</Link>
-                        <Link
-                            type="button"
-                            to="/signup"
-                            className={isNavCollapsed ? "btn btn-outline-info me-2" : "btn btn-outline-info me-2 d-block"}
-                            onClick={handleNavCollapse}
-                        >Create account</Link>
+                        {
+                            isUserLogged ?
+                                <Link
+                                    type="button"
+                                    to="/"
+                                    className={isNavCollapsed ? "btn btn-outline-danger me-2" : "btn btn-outline-danger me-2 d-block"}
+                                    onClick={handleSignOut}
+                                >Log out</Link>
+                            :
+                            <>
+                                <Link
+                                    type="button"
+                                    to="/login"
+                                    className={isNavCollapsed ? "btn btn-outline-success me-2" : "btn btn-outline-success me-2 d-block mb-3"}
+                                >Log in</Link>
+                                <Link
+                                    type="button"
+                                    to="/signup"
+                                    className={isNavCollapsed ? "btn btn-outline-info me-2" : "btn btn-outline-info me-2 d-block"}
+                                >Create account</Link>
+                            </>
+                        }
                     </div>
                 </div>
             </div>
         </nav>
     );
 }
+
+// => btn => onClick={handleNavCollapse}

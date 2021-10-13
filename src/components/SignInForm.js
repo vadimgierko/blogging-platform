@@ -1,6 +1,6 @@
 import { useState } from "react";
-//import { auth } from "../config/firebaseConfig";
-//import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link } from 'react-router-dom';
 
 export default function SignInForm() {
@@ -12,7 +12,7 @@ export default function SignInForm() {
 
     function handleSubmit() {
         console.log(userSignInData);
-        /*
+        
         signInWithEmailAndPassword(auth, userSignInData.email, userSignInData.password)
             .then((userCredential) => {
                 // Signed in 
@@ -22,7 +22,6 @@ export default function SignInForm() {
             .catch((error) => {
                 console.log(error.message);
             });
-        */
     }
 
     return (

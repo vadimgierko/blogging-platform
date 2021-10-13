@@ -8,7 +8,7 @@ export default function Header() {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
             <div className="container">
-                <a className="navbar-brand" href="#">Blogging Platform</a>
+                <Link className="navbar-brand" to="/">Blogging Platform</Link>
                 <button
                     className="navbar-toggler collapsed"
                     type="button"
@@ -25,7 +25,7 @@ export default function Header() {
                 <div className={`${isNavCollapsed ? "collapse" : null} navbar-collapse`} id="navbarColor01">
                     <ul className="navbar-nav me-auto">
                         <li className="nav-item">
-                            <Link className="nav-link active" to="/">Home</Link>
+                            <Link className="nav-link" to="/">Home</Link>
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link" to="/blogs">Blogs</Link>
@@ -38,12 +38,14 @@ export default function Header() {
                         <Link
                             type="button"
                             to="/login"
-                            className={isNavCollapsed ? "btn btn-success me-2" : "btn btn-success me-2 d-block mb-3"}
+                            className={isNavCollapsed ? "btn btn-outline-success me-2" : "btn btn-outline-success me-2 d-block mb-3"}
+                            onClick={handleNavCollapse}
                         >Log in</Link>
                         <Link
                             type="button"
                             to="/signup"
-                            className={isNavCollapsed ? "btn btn-info me-2" : "btn btn-info me-2 d-block"}
+                            className={isNavCollapsed ? "btn btn-outline-info me-2" : "btn btn-outline-info me-2 d-block"}
+                            onClick={handleNavCollapse}
                         >Create account</Link>
                     </div>
                 </div>

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { auth } from '../firebase';
 import { signOut } from "firebase/auth";
 
-export default function Header({ isUserLogged }) {
+export default function Header({ isUserLogged, userName }) {
     const [isNavCollapsed, setIsNavCollapsed] = useState(true);
     const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
 
@@ -47,25 +47,31 @@ export default function Header({ isUserLogged }) {
                     <div>
                         {
                             isUserLogged ?
-                                <Link
-                                    type="button"
-                                    to="/"
-                                    className={isNavCollapsed ? "btn btn-outline-danger me-2" : "btn btn-outline-danger me-2 d-block"}
-                                    onClick={handleSignOut}
-                                >Log out</Link>
+                                <>
+                                    <Link to="/dashboard" className="text-light text-muted" style={{textDecoration: "none"}}>
+                                        <span className="me-2"><i className="bi bi-person-circle"></i></span>
+                                        <span className="me-4">{userName}</span>
+                                    </Link>
+                                    <Link
+                                        type="button"
+                                        to="/"
+                                        className={isNavCollapsed ? "btn btn-outline-danger me-2" : "btn btn-outline-danger me-2 d-block"}
+                                        onClick={handleSignOut}
+                                    >Log out</Link>
+                                </>
                             :
-                            <>
-                                <Link
-                                    type="button"
-                                    to="/login"
-                                    className={isNavCollapsed ? "btn btn-outline-success me-2" : "btn btn-outline-success me-2 d-block mb-3"}
-                                >Log in</Link>
-                                <Link
-                                    type="button"
-                                    to="/signup"
-                                    className={isNavCollapsed ? "btn btn-outline-info me-2" : "btn btn-outline-info me-2 d-block"}
-                                >Create account</Link>
-                            </>
+                                <>
+                                    <Link
+                                        type="button"
+                                        to="/login"
+                                        className={isNavCollapsed ? "btn btn-outline-success me-2" : "btn btn-outline-success me-2 d-block mb-3"}
+                                    >Log in</Link>
+                                    <Link
+                                        type="button"
+                                        to="/signup"
+                                        className={isNavCollapsed ? "btn btn-outline-info me-2" : "btn btn-outline-info me-2 d-block"}
+                                    >Create account</Link>
+                                </>
                         }
                     </div>
                 </div>

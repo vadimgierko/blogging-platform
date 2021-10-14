@@ -5,36 +5,54 @@ import Header from './components/Header';
 import Home from './components/Home';
 import SignInForm from './components/SignInForm';
 import SignUpForm from './components/SignUpForm';
+import Dashboard from './components/Dashboard';
 import { auth } from './firebase';
 import { onAuthStateChanged } from "firebase/auth";
+import { ref, onValue } from "firebase/database";
+import { database } from './firebase';
 
 function App() {
   const [isUserLogged, setIsUserLogged] = useState(false);
-  const [userId, setUserId] = useState(null);
+  const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsUserLogged(true);
-        setUserId(user.uid);
+        setUser(user);
         console.log("user is logged");
-        //console.log("user id:", user.uid);
-        //console.log("joined at:", user.metadata.creationTime)
-        //fetchUserData(user.uid);
-        //console.log(user.uid)
+        fetchUserData(user.uid);
       } else {
         setIsUserLogged(false);
-        setUserId(null);
+        setUser(null);
         console.log("user logged out");
-        //console.log("user id:", userId);
-        // clear userData
+        setUserData(null);
       }
     });
   }, []);
 
+  function fetchUserData (userId) {
+    const userDataRef = ref(database, 'users/' + userId);
+    onValue(userDataRef, (snapshot) => {
+        if (snapshot) {
+          const fetchedUserData = snapshot.val();
+          setUserData(fetchedUserData);
+        } else {
+          setUserData({
+            firstName: "",
+            lastName: ""
+          });
+        }
+    });
+  }
+
   return (
     <div className="App">
-      <Header isUserLogged={isUserLogged} />
+      <Header
+        isUserLogged={isUserLogged}
+        userName={userData && userData.firstName && userData.lastName ? (userData.firstName + " " + userData.lastName) : (user ? user.email : null)}
+      />
       <div className="container" style={{marginTop: 120}}>
         <Switch>
           <Route exact path="/"><Home /></Route>
@@ -42,6 +60,7 @@ function App() {
           <Route path="/bloggers"><h1>Bloggers</h1></Route>
           <Route path="/login"><SignInForm /></Route>
           <Route path="/signup"><SignUpForm /></Route>
+          <Route path="/dashboard"><Dashboard userId={user ? user.uid : null} userData={userData} /></Route>
         </Switch>
       </div>
     </div>

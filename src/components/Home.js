@@ -9,7 +9,7 @@ export default function Home() {
             </ul>
             <h2>Technologies</h2>
             <ul>
-                <li>React (+ React Router + React Markdown</li>
+                <li>React (+ React Router + React Markdown)</li>
                 <li>Firebase</li>
                 <li>Bootstrap</li>
                 <li>Bootswatch</li>

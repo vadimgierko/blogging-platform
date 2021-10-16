@@ -5,15 +5,16 @@ import { auth } from "../firebase";
 import { deleteUser } from "firebase/auth";
 import { Link } from "react-router-dom";
 
-export default function Dashboard({ userId, userData }) {
+export default function Dashboard({ userId, userData, fetchUserData, userBlogs }) {
 
     const [data, setData] = useState(userData);
 
     function handleSubmit() {
-        console.log(data);
         set(ref(database, 'users/' + userId), {
             ...data
-        });
+        }).then(() => {
+            fetchUserData(userId);
+        })
     }
 
     function deleteAccount(userId) {
@@ -77,13 +78,13 @@ export default function Dashboard({ userId, userData }) {
                         <Link
                             to="/dashboard"
                             type="button"
-                            className="btn btn-success d-block mb-2"
+                            className="btn btn-success d-block mb-3"
                             onClick={handleSubmit}
                         >Save changes</Link>
                         <Link
                             to="/"
                             type="button"
-                            className="btn btn-outline-danger d-block mb-2"
+                            className="btn btn-outline-danger d-block mb-3"
                             onClick={() => {
                                 // eslint-disable-next-line no-restricted-globals
                                 const wantToDelete = confirm("Are you sure, you want to delete your account & your articles forever? There's no turning back... Delete account?");
@@ -97,6 +98,25 @@ export default function Dashboard({ userId, userData }) {
                 <div className="col-lg">
                     <h5 className="text-center">Your blogs</h5>
                     <hr />
+                    {
+                        userBlogs ?
+                        userBlogs.map((blog) =>
+                            <div key={blog.title}>
+                                <h5>{blog.title}</h5>
+                                <p>{blog.description}</p>
+                                <hr />
+                            </div>
+                        )
+                        :
+                        <div>
+                            <h5 className="text-center">There is no blogs yet... Create one!</h5>
+                            <Link
+                                to="/create-blog"
+                                type="button"
+                                className="btn btn-info d-block my-3"
+                            >Create new blog</Link>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

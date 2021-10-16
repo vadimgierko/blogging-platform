@@ -8,6 +8,7 @@ import SignUpForm from './components/SignUpForm';
 import Dashboard from './components/Dashboard';
 import BloggersList from './components/BloggersList';
 import UserProfile from './components/UserProfile';
+import CreateBlogForm from './components/CreateBlogForm';
 import { auth } from './firebase';
 import { onAuthStateChanged } from "firebase/auth";
 import { ref, onValue } from "firebase/database";
@@ -20,6 +21,8 @@ function App() {
 
   const [bloggersList, setBloggersList] = useState(() => getBloggersList());
   const [bloggerData, setBloggerData] = useState(null);
+
+  const [testBlog, setTestBlog] = useState([]);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -43,11 +46,6 @@ function App() {
         if (snapshot) {
           const fetchedUserData = snapshot.val();
           setUserData(fetchedUserData);
-        } else {
-          setUserData({
-            firstName: "",
-            lastName: ""
-          });
         }
     });
   }
@@ -99,10 +97,13 @@ function App() {
           </Route>
           <Route path="/login"><SignInForm /></Route>
           <Route path="/signup"><SignUpForm /></Route>
+          <Route path="/create-blog">
+            <CreateBlogForm userId={null} setTestBlog={setTestBlog} testBlog={testBlog} />
+          </Route>
           {
             isUserLogged && user ?
               <Route path="/dashboard">
-                <Dashboard userId={user.uid} userData={userData} />
+                <Dashboard userId={user.uid} userData={userData} fetchUserData={fetchUserData} userBlogs={testBlog} />
               </Route>
             :
               null

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function BloggersList({ bloggersList }) {
+export default function BloggersList({ bloggersList, fetchBloggerData }) {
     return (
         <div>
             {
@@ -13,6 +13,7 @@ export default function BloggersList({ bloggersList }) {
                             to={"/" + bloggerData.userName}
                             className="d-block my-2"
                             style={{textDecoration: "none"}}
+                            onClick={() => fetchBloggerData(bloggerId)}
                         >
                             <i className="bi bi-person-circle me-2"></i>{bloggerData.firstName + " " + bloggerData.lastName + " | " + bloggerData.userName}
                         </Link>

@@ -7,6 +7,7 @@ import SignInForm from './components/SignInForm';
 import SignUpForm from './components/SignUpForm';
 import Dashboard from './components/Dashboard';
 import BloggersList from './components/BloggersList';
+import UserProfile from './components/UserProfile';
 import { auth } from './firebase';
 import { onAuthStateChanged } from "firebase/auth";
 import { ref, onValue } from "firebase/database";
@@ -16,7 +17,9 @@ function App() {
   const [isUserLogged, setIsUserLogged] = useState(false);
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
+
   const [bloggersList, setBloggersList] = useState(() => getBloggersList());
+  const [bloggerData, setBloggerData] = useState(null);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -34,7 +37,7 @@ function App() {
     });
   }, []);
 
-  function fetchUserData (userId) {
+  function fetchUserData(userId) {
     const userDataRef = ref(database, 'users/' + userId);
     onValue(userDataRef, (snapshot) => {
         if (snapshot) {
@@ -48,23 +51,29 @@ function App() {
         }
     });
   }
+
+  function fetchBloggerData(bloggerId) {
+    const bloggerDataRef = ref(database, 'users/' + bloggerId);
+    onValue(bloggerDataRef, (snapshot) => {
+        if (snapshot) {
+          const fetchedBloggerData = snapshot.val();
+          setBloggerData(fetchedBloggerData);
+        }
+    });
+  }
   
   function getBloggersList() {
     const bloggersListRef = ref(database, 'users/');
     onValue(bloggersListRef, (snapshot) => {
         if (snapshot) {
           const bloggersListObject = snapshot.val();
-          console.log(bloggersListObject);
+          //console.log(bloggersListObject);
           const bloggersListArray = Object.entries(bloggersListObject);
-          console.log(Object.entries(bloggersListObject))
+          //console.log(Object.entries(bloggersListObject))
           setBloggersList(bloggersListArray);
-        } else {
-          
         }
     });
   }
-
-  //getBloggersList();
   
   return (
     <div className="App">
@@ -80,7 +89,10 @@ function App() {
           <Route path="/bloggers">
             {
               bloggersList ?
-                <BloggersList bloggersList={bloggersList} />
+                <BloggersList
+                  bloggersList={bloggersList}
+                  fetchBloggerData={fetchBloggerData}
+                />
               :
                 null
             }
@@ -91,16 +103,15 @@ function App() {
           {
             userData ?
               <Route path={`/${userData.userName}`}>
-                <div>
-                  {
-                    <>
-                      <h1>{userData.firstName + " " + userData.lastName}</h1>
-                      <hr />
-                      <p>user name: {"@" + userData.userName}</p>
-                      <p>email: {userData.email}</p>
-                    </>
-                  }
-                </div>
+                <UserProfile userData={userData} />
+              </Route>
+            :
+              null
+          }
+          {
+            bloggerData ?
+              <Route path={`/${bloggerData.userName}`}>
+                <UserProfile userData={bloggerData} />
               </Route>
             :
               null

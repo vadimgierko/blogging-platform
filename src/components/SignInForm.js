@@ -11,13 +11,10 @@ export default function SignInForm() {
     });
 
     function handleSubmit() {
-        console.log(userSignInData);
         
         signInWithEmailAndPassword(auth, userSignInData.email, userSignInData.password)
             .then((userCredential) => {
-                // Signed in 
-                const user = userCredential.user;
-                console.log(user);
+                // Signed in
             })
             .catch((error) => {
                 console.log(error.message);
@@ -26,6 +23,8 @@ export default function SignInForm() {
 
     return (
         <div className="container">
+            <h1>Sign in!</h1>
+            <hr />
             <form>
                 <div className="row mb-3">
                     <div className="mb-2">

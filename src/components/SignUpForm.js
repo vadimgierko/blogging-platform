@@ -27,7 +27,7 @@ export default function SignUpForm() {
                 set(ref(database, 'users/' + userId), {
                     firstName: userSignUpData.firstName,
                     lastName: userSignUpData.lastName,
-                    userName: userSignUpData.userName.toLowerCase(),
+                    userName: userSignUpData.userName,
                     email: userSignUpData.email,
                 });
             })
@@ -62,7 +62,7 @@ export default function SignUpForm() {
                         type="text"
                         className="form-control"
                         placeholder="user name (lower case letters only!)"
-                        onChange={(e) => setUserSignUpData({...userSignUpData, userName: e.target.value})}
+                        onChange={(e) => setUserSignUpData({...userSignUpData, userName: e.target.value.toLowerCase()})}
                     />
                 </div>
                 <div className="mb-2">
@@ -85,7 +85,7 @@ export default function SignUpForm() {
                 </div>
                 
                 <Link
-                    to="/"
+                    to={`/${userSignUpData.userName}`}
                     type="button"
                     className="btn btn-primary mb-3"
                     onClick={handleSubmit}

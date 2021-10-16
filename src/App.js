@@ -51,7 +51,8 @@ function App() {
     <div className="App">
       <Header
         isUserLogged={isUserLogged}
-        userName={userData && userData.firstName && userData.lastName ? (userData.firstName + " " + userData.lastName) : (user ? user.email : null)}
+        userNames={userData ? (userData.firstName + " " + userData.lastName) : (user ? user.email : null)}
+        userName={userData ? userData.userName : null}
       />
       <div className="container" style={{marginTop: 120}}>
         <Switch>
@@ -61,6 +62,23 @@ function App() {
           <Route path="/login"><SignInForm /></Route>
           <Route path="/signup"><SignUpForm /></Route>
           <Route path="/dashboard"><Dashboard userId={user ? user.uid : null} userData={userData} /></Route>
+          {
+            userData ?
+              <Route path={`/${userData.userName}`}>
+                <div>
+                  {
+                    <>
+                      <h1>{userData.firstName + " " + userData.lastName}</h1>
+                      <hr />
+                      <p>user name: {"@" + userData.userName}</p>
+                      <p>email: {userData.email}</p>
+                    </>
+                  }
+                </div>
+              </Route>
+            :
+              null
+          }
         </Switch>
       </div>
     </div>

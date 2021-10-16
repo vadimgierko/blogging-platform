@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { auth } from '../firebase';
 import { signOut } from "firebase/auth";
 
-export default function Header({ isUserLogged, userName }) {
+export default function Header({ isUserLogged, userNames, userName }) {
     const [isNavCollapsed, setIsNavCollapsed] = useState(true);
     const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
 
@@ -48,9 +48,9 @@ export default function Header({ isUserLogged, userName }) {
                         {
                             isUserLogged ?
                                 <>
-                                    <Link to="/dashboard" className="text-light text-muted" style={{textDecoration: "none"}}>
+                                    <Link to={`/${userName}`} className="text-light text-muted" style={{textDecoration: "none"}}>
                                         <span className="me-2"><i className="bi bi-person-circle"></i></span>
-                                        <span className="me-4">{userName}</span>
+                                        <span className="me-4">{userNames}</span>
                                     </Link>
                                     <Link
                                         type="button"

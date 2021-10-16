@@ -11,13 +11,10 @@ export default function SignInForm() {
     });
 
     function handleSubmit() {
-        console.log(userSignInData);
         
         signInWithEmailAndPassword(auth, userSignInData.email, userSignInData.password)
             .then((userCredential) => {
-                // Signed in 
-                const user = userCredential.user;
-                console.log(user);
+                // Signed in
             })
             .catch((error) => {
                 console.log(error.message);

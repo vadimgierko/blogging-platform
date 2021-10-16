@@ -4,8 +4,12 @@ import { auth } from '../firebase';
 import { signOut } from "firebase/auth";
 
 export default function Header({ isUserLogged, userNames, userName }) {
+    
     const [isNavCollapsed, setIsNavCollapsed] = useState(true);
-    const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
+    
+    const handleNavCollapse = () => {
+        setIsNavCollapsed(!isNavCollapsed);
+    };
 
     function handleSignOut() {
         signOut(auth).then(() => {
@@ -35,20 +39,24 @@ export default function Header({ isUserLogged, userNames, userName }) {
                 <div className={`${isNavCollapsed ? "collapse" : null} navbar-collapse`} id="navbarColor01">
                     <ul className="navbar-nav me-auto">
                         <li className="nav-item">
-                            <Link className="nav-link" to="/">Home</Link>
+                            <Link className="nav-link" to="/" onClick={isNavCollapsed ? null : () => handleNavCollapse() }>Home</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="/blogs">Blogs</Link>
+                            <Link className="nav-link" to="/blogs" onClick={isNavCollapsed ? null : () => handleNavCollapse() }>Blogs</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="/bloggers">Bloggers</Link>
+                            <Link className="nav-link" to="/bloggers" onClick={isNavCollapsed ? null : () => handleNavCollapse() }>Bloggers</Link>
                         </li>
                     </ul>
                     <div>
                         {
                             isUserLogged ?
                                 <>
-                                    <Link to={`/${userName}`} className="text-light text-muted" style={{textDecoration: "none"}}>
+                                    <Link
+                                        to={`/${userName}`}
+                                        className="text-light text-muted"
+                                        style={{textDecoration: "none"}}
+                                    >
                                         <span className="me-2"><i className="bi bi-person-circle"></i></span>
                                         <span className="me-4">{userNames}</span>
                                     </Link>
@@ -56,7 +64,12 @@ export default function Header({ isUserLogged, userNames, userName }) {
                                         type="button"
                                         to="/"
                                         className={isNavCollapsed ? "btn btn-outline-danger me-2" : "btn btn-outline-danger me-2 d-block"}
-                                        onClick={handleSignOut}
+                                        onClick={() => {
+                                            handleSignOut();
+                                            if (!isNavCollapsed) {
+                                                handleNavCollapse();
+                                            }
+                                        }}
                                     >Log out</Link>
                                 </>
                             :
@@ -65,11 +78,13 @@ export default function Header({ isUserLogged, userNames, userName }) {
                                         type="button"
                                         to="/login"
                                         className={isNavCollapsed ? "btn btn-outline-success me-2" : "btn btn-outline-success me-2 d-block mb-3"}
+                                        onClick={isNavCollapsed ? null : () => handleNavCollapse() }
                                     >Log in</Link>
                                     <Link
                                         type="button"
                                         to="/signup"
                                         className={isNavCollapsed ? "btn btn-outline-info me-2" : "btn btn-outline-info me-2 d-block"}
+                                        onClick={isNavCollapsed ? null : () => handleNavCollapse() }
                                     >Create account</Link>
                                 </>
                         }
@@ -79,5 +94,3 @@ export default function Header({ isUserLogged, userNames, userName }) {
         </nav>
     );
 }
-
-// => btn => onClick={handleNavCollapse}

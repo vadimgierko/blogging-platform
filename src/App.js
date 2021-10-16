@@ -85,7 +85,7 @@ function App() {
       <div className="container" style={{marginTop: 120}}>
         <Switch>
           <Route exact path="/"><Home /></Route>
-          <Route path="/blogs"><h1>Blogs</h1></Route>
+          <Route path="/blogs"><h1>Blogs</h1><hr /></Route>
           <Route path="/bloggers">
             {
               bloggersList ?
@@ -99,7 +99,14 @@ function App() {
           </Route>
           <Route path="/login"><SignInForm /></Route>
           <Route path="/signup"><SignUpForm /></Route>
-          <Route path="/dashboard"><Dashboard userId={user ? user.uid : null} userData={userData} /></Route>
+          {
+            isUserLogged && user ?
+              <Route path="/dashboard">
+                <Dashboard userId={user.uid} userData={userData} />
+              </Route>
+            :
+              null
+          }
           {
             userData ?
               <Route path={`/${userData.userName}`}>

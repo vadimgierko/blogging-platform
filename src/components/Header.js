@@ -4,7 +4,7 @@ import { auth } from '../firebase';
 import { signOut } from "firebase/auth";
 
 export default function Header({ isUserLogged, userNames, userName }) {
-    
+
     const [isNavCollapsed, setIsNavCollapsed] = useState(true);
     
     const handleNavCollapse = () => {
@@ -53,7 +53,7 @@ export default function Header({ isUserLogged, userNames, userName }) {
                             isUserLogged ?
                                 <>
                                     <Link
-                                        to={`/${userName}`}
+                                        to="/dashboard"
                                         className="text-light text-muted"
                                         style={{textDecoration: "none"}}
                                     >

@@ -41,6 +41,8 @@ export default function SignUpForm() {
     return (
         <div className="container">
             <form>
+                <h1>Create account!</h1>
+                <hr />
                 <div className="mb-2">
                     <input
                         type="text"

@@ -23,6 +23,8 @@ export default function SignInForm() {
 
     return (
         <div className="container">
+            <h1>Sign in!</h1>
+            <hr />
             <form>
                 <div className="row mb-3">
                     <div className="mb-2">

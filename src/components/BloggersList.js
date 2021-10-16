@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 export default function BloggersList({ bloggersList, fetchBloggerData }) {
     return (
         <div>
+            <h1>Bloggers</h1>
+            <hr />
             {
                 bloggersList.map((blogger) => {
                     const bloggerId = blogger[0];

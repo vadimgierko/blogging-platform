@@ -6,6 +6,7 @@ import Home from './components/Home';
 import SignInForm from './components/SignInForm';
 import SignUpForm from './components/SignUpForm';
 import Dashboard from './components/Dashboard';
+import BloggersList from './components/BloggersList';
 import { auth } from './firebase';
 import { onAuthStateChanged } from "firebase/auth";
 import { ref, onValue } from "firebase/database";
@@ -15,6 +16,7 @@ function App() {
   const [isUserLogged, setIsUserLogged] = useState(false);
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
+  const [bloggersList, setBloggersList] = useState(() => getBloggersList());
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -46,7 +48,24 @@ function App() {
         }
     });
   }
+  
+  function getBloggersList() {
+    const bloggersListRef = ref(database, 'users/');
+    onValue(bloggersListRef, (snapshot) => {
+        if (snapshot) {
+          const bloggersListObject = snapshot.val();
+          console.log(bloggersListObject);
+          const bloggersListArray = Object.entries(bloggersListObject);
+          console.log(Object.entries(bloggersListObject))
+          setBloggersList(bloggersListArray);
+        } else {
+          
+        }
+    });
+  }
 
+  //getBloggersList();
+  
   return (
     <div className="App">
       <Header
@@ -58,7 +77,14 @@ function App() {
         <Switch>
           <Route exact path="/"><Home /></Route>
           <Route path="/blogs"><h1>Blogs</h1></Route>
-          <Route path="/bloggers"><h1>Bloggers</h1></Route>
+          <Route path="/bloggers">
+            {
+              bloggersList ?
+                <BloggersList bloggersList={bloggersList} />
+              :
+                null
+            }
+          </Route>
           <Route path="/login"><SignInForm /></Route>
           <Route path="/signup"><SignUpForm /></Route>
           <Route path="/dashboard"><Dashboard userId={user ? user.uid : null} userData={userData} /></Route>

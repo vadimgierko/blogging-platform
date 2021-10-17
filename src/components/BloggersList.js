@@ -17,7 +17,8 @@ export default function BloggersList({ bloggersList, fetchBloggerData }) {
                             style={{textDecoration: "none"}}
                             onClick={() => fetchBloggerData(bloggerId)}
                         >
-                            <i className="bi bi-person-circle me-2"></i>{bloggerData.firstName + " " + bloggerData.lastName + " | " + bloggerData.userName}
+                            <i className="bi bi-person-circle me-2"></i>
+                            {bloggerData.firstName + " " + bloggerData.lastName + " | " + bloggerData.userName}
                         </Link>
                     );
                 })

@@ -46,7 +46,7 @@ function App() {
         if (snapshot) {
           const fetchedUserData = snapshot.val();
           setUserData(fetchedUserData);
-          console.log("User data fetched", fetchedUserData);
+          console.log("User data fetched in the <App />", fetchedUserData);
         }
     });
   }
@@ -80,8 +80,12 @@ function App() {
         if (snapshot) {
           const blogsListObject = snapshot.val();
           //console.log(bloggersListObject);
-          const blogsListArray = Object.entries(blogsListObject);
-          setBlogsList(blogsListArray);
+          if (blogsListObject) {
+            const blogsListArray = Object.entries(blogsListObject);
+            setBlogsList(blogsListArray);
+          } else {
+            setBlogsList([]);
+          }
         }
     });
   }
@@ -144,12 +148,10 @@ function App() {
               null
           }
           {
-            isUserLogged && user && userData ?
+            isUserLogged && user ?
               <Route path="/dashboard">
                 <Dashboard
                   userId={user.uid}
-                  userData={userData}
-                  fetchUserData={fetchUserData}
                 />
               </Route>
             :

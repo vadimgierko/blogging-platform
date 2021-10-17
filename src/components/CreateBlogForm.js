@@ -59,7 +59,7 @@ export default function CreateBlogForm({ userId, userName, userFirstName, userLa
                 </div>
                 
                 <Link
-                    to="/dashboard"
+                    to="/dashboard/user-blogs"
                     type="button"
                     className="btn btn-primary mb-3"
                     onClick={handleSubmit}

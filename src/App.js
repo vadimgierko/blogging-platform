@@ -46,7 +46,7 @@ function App() {
         if (snapshot) {
           const fetchedUserData = snapshot.val();
           setUserData(fetchedUserData);
-          console.log("User data fetched", fetchedUserData);
+          console.log("User data fetched in the <App />", fetchedUserData);
         }
     });
   }
@@ -148,12 +148,10 @@ function App() {
               null
           }
           {
-            isUserLogged && user && userData ?
+            isUserLogged && user ?
               <Route path="/dashboard">
                 <Dashboard
                   userId={user.uid}
-                  userData={userData}
-                  fetchUserData={fetchUserData}
                 />
               </Route>
             :

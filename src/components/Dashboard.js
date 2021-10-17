@@ -3,9 +3,11 @@ import { database } from "../firebase";
 import { ref, set, remove, onValue } from "firebase/database";
 import { auth } from "../firebase";
 import { deleteUser } from "firebase/auth";
-import { Link } from "react-router-dom";
+import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
 
 export default function Dashboard({ userId }) {
+
+    let {path, url} = useRouteMatch();
 
     const [userData, setUserData] = useState(null);
     const [userBlogsList, setUserBlogsList] = useState(null);
@@ -65,14 +67,25 @@ export default function Dashboard({ userId }) {
     if (userData) {
         return (
             <div>
-                <h1 className="text-center">Dashboard</h1>
+                <div className="row justify-content-between">
+                    <div className="col-4">
+                        <h1>Dashboard</h1>
+                    </div>
+                    <div className="col-4 text-end">
+                        <Link
+                            to={`${url}/user-data`}
+                            className="me-2"
+                        >Your profile data</Link>
+                        <span> | </span>
+                        <Link
+                            to={`${url}/user-blogs`}
+                            className="ms-2"
+                        >Your blogs</Link>
+                    </div>
+                </div>
                 <hr />
-                
-                <div className="row">
-                    {/** DATA SETTINGS */}
-                    <div className="col-lg">
-                        <h5 className="text-center">Your profile data</h5>
-                        <hr />
+                <Switch>
+                    <Route path={`${path}/user-data`}>
                         <form>
                             <div className="mb-2">
                                 <p>Your real first name:</p>
@@ -129,49 +142,48 @@ export default function Dashboard({ userId }) {
                                 }}
                             >Delete my account</Link>
                         </form>
-                    </div>
-                    {/** BLOGS SETTINGS */}
-                    <div className="col-lg">
-                        <h5 className="text-center">Your blogs</h5>
-                        <hr />
-                        <Link
-                            to="/create-blog"
-                            type="button"
-                            className="btn btn-info d-block my-3"
-                        >Create new blog</Link>
-                        {
-                            userBlogsList && userBlogsList.length ?
-                                userBlogsList.map((blog) =>
-                                    <div className="container" key={blog[0]}>
-                                        <div className="row">
-                                            <div className="col"><h5>{blog[1].title}</h5></div>
-                                            <div className="col-4 text-end">
-                                                <Link><i className="bi bi-eye me-2" /></Link>
-                                                <Link><i className="bi bi-pencil me-2" /></Link>
-                                                <Link><i className="bi bi-plus-square me-2" /></Link>
-                                                <Link
-                                                    className="text-danger"
-                                                    to="/dashboard"
-                                                    onClick={() => {
-                                                        deleteBlog(blog[0]);
-                                                    }}
-                                                >
-                                                    <i className="bi bi-trash" />
-                                                </Link>
+                    </Route>
+                    <Route path={`${path}/user-blogs`}>
+                        <div>
+                            <Link
+                                to="/create-blog"
+                                type="button"
+                                className="btn btn-info d-block my-3"
+                            >Create new blog</Link>
+                            {
+                                userBlogsList && userBlogsList.length ?
+                                    userBlogsList.map((blog) =>
+                                        <div className="container" key={blog[0]}>
+                                            <div className="row">
+                                                <div className="col"><h5>{blog[1].title}</h5></div>
+                                                <div className="col-4 text-end">
+                                                    <Link><i className="bi bi-eye me-2" /></Link>
+                                                    <Link><i className="bi bi-pencil me-2" /></Link>
+                                                    <Link><i className="bi bi-plus-square me-2" /></Link>
+                                                    <Link
+                                                        className="text-danger"
+                                                        to="/dashboard"
+                                                        onClick={() => {
+                                                            deleteBlog(blog[0]);
+                                                        }}
+                                                    >
+                                                        <i className="bi bi-trash" />
+                                                    </Link>
+                                                </div>
+                                                
                                             </div>
-                                            
+                                            <p>{blog[1].description}</p>
+                                            <hr />
                                         </div>
-                                        <p>{blog[1].description}</p>
-                                        <hr />
+                                    )
+                                :
+                                    <div>
+                                        <h5 className="text-center">There is no blogs yet... Create one!</h5>
                                     </div>
-                                )
-                            :
-                                <div>
-                                    <h5 className="text-center">There is no blogs yet... Create one!</h5>
-                                </div>
-                        }
-                    </div>
-                </div>
+                            }
+                        </div>
+                    </Route>
+                </Switch>
             </div>
         );
     } else {

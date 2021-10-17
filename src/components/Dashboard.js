@@ -3,6 +3,7 @@ import { database } from "../firebase";
 import { ref, remove, onValue } from "firebase/database";
 import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
 import UserDataFormInDashboard from "./UserDataFormInDashboard";
+import UserBlogsListInDashboard from "./UserBlogsListInDashboard";
 
 export default function Dashboard({ userId }) {
 
@@ -70,44 +71,7 @@ export default function Dashboard({ userId }) {
                         <UserDataFormInDashboard userId={userId} />
                     </Route>
                     <Route path={`${path}/user-blogs`}>
-                        <div>
-                            <Link
-                                to="/create-blog"
-                                type="button"
-                                className="btn btn-info d-block my-3"
-                            >Create new blog</Link>
-                            {
-                                userBlogsList && userBlogsList.length ?
-                                    userBlogsList.map((blog) =>
-                                        <div className="container" key={blog[0]}>
-                                            <div className="row">
-                                                <div className="col"><h5>{blog[1].title}</h5></div>
-                                                <div className="col-4 text-end">
-                                                    <Link><i className="bi bi-eye me-2" /></Link>
-                                                    <Link><i className="bi bi-pencil me-2" /></Link>
-                                                    <Link><i className="bi bi-plus-square me-2" /></Link>
-                                                    <Link
-                                                        className="text-danger"
-                                                        to="/dashboard"
-                                                        onClick={() => {
-                                                            deleteBlog(blog[0]);
-                                                        }}
-                                                    >
-                                                        <i className="bi bi-trash" />
-                                                    </Link>
-                                                </div>
-                                                
-                                            </div>
-                                            <p>{blog[1].description}</p>
-                                            <hr />
-                                        </div>
-                                    )
-                                :
-                                    <div>
-                                        <h5 className="text-center">There is no blogs yet... Create one!</h5>
-                                    </div>
-                            }
-                        </div>
+                        <UserBlogsListInDashboard userId={userId} />
                     </Route>
                 </Switch>
             </div>

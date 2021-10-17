@@ -1,20 +1,37 @@
 import { useState } from "react";
 import { database } from "../firebase";
-import { ref, set } from "firebase/database";
+import { ref, push, child, update } from "firebase/database";
 import { Link } from 'react-router-dom';
 
-export default function CreateBlogForm({ userId, testBlog, setTestBlog }) {
+export default function CreateBlogForm({ userId, userName, userFirstName, userLastName }) {
 
     const [newBlogData, setNewBlogData] = useState({
+        author: userFirstName + " " + userLastName,
+        userId: userId,
+        userName: userName,
         title: "",
-        description: ""
+        description: "",
+        articles: []
     });
 
     function handleSubmit() {
         console.log(newBlogData);
-        let blogs = testBlog;
-        blogs.push(newBlogData);
-        setTestBlog(blogs);
+        saveNewBlog(newBlogData);
+    }
+
+    function saveNewBlog(newBlogData) {
+        
+        const blogData = {
+            ...newBlogData
+        };
+
+        const newBlogKey = push(child(ref(database), 'blogs')).key;
+
+        const updates = {};
+        updates['/blogs/' + newBlogKey] = blogData;
+        updates['/users/' + userId + '/blogs/' + newBlogKey] = blogData;
+
+        return update(ref(database), updates);
     }
 
     return (
@@ -36,17 +53,19 @@ export default function CreateBlogForm({ userId, testBlog, setTestBlog }) {
                     <textarea
                         type="text"
                         className="form-control"
+                        placeholder="description"
                         onChange={(e) => setNewBlogData({...newBlogData, description: e.target.value})}
                     />
                 </div>
                 
-                <button
+                <Link
+                    to="/dashboard"
                     type="button"
                     className="btn btn-primary mb-3"
                     onClick={handleSubmit}
                 >
                     Create new blog
-                </button>
+                </Link>
             </form>
         </div>
     );

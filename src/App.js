@@ -19,10 +19,10 @@ function App() {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
 
-  const [bloggersList, setBloggersList] = useState(() => getBloggersList());
+  const [bloggersList, setBloggersList] = useState(null);
   const [bloggerData, setBloggerData] = useState(null);
 
-  const [testBlog, setTestBlog] = useState([]);
+  const [blogsList, setBlogsList] = useState(null);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -46,6 +46,7 @@ function App() {
         if (snapshot) {
           const fetchedUserData = snapshot.val();
           setUserData(fetchedUserData);
+          console.log("User data fetched", fetchedUserData);
         }
     });
   }
@@ -59,7 +60,7 @@ function App() {
         }
     });
   }
-  
+
   function getBloggersList() {
     const bloggersListRef = ref(database, 'users/');
     onValue(bloggersListRef, (snapshot) => {
@@ -69,6 +70,18 @@ function App() {
           const bloggersListArray = Object.entries(bloggersListObject);
           //console.log(Object.entries(bloggersListObject))
           setBloggersList(bloggersListArray);
+        }
+    });
+  }
+
+  function getBlogsList() {
+    const blogsListRef = ref(database, 'blogs/');
+    onValue(blogsListRef, (snapshot) => {
+        if (snapshot) {
+          const blogsListObject = snapshot.val();
+          //console.log(bloggersListObject);
+          const blogsListArray = Object.entries(blogsListObject);
+          setBlogsList(blogsListArray);
         }
     });
   }
@@ -83,7 +96,27 @@ function App() {
       <div className="container" style={{marginTop: 120}}>
         <Switch>
           <Route exact path="/"><Home /></Route>
-          <Route path="/blogs"><h1>Blogs</h1><hr /></Route>
+          <Route path="/blogs">
+            {
+              blogsList ?
+              <>
+                <h1>Blogs</h1>
+                <hr />
+                {
+                  blogsList.map((blog) => 
+                    <div key={blog[0]}>
+                      <h3>{blog[1].title}</h3>
+                      <p><em>by {blog[1].author}</em></p>
+                      <p>{blog[1].description}</p>
+                      <hr />
+                    </div>
+                  )
+                }
+              </>
+              :
+              getBlogsList()
+            }
+          </Route>
           <Route path="/bloggers">
             {
               bloggersList ?
@@ -92,26 +125,32 @@ function App() {
                   fetchBloggerData={fetchBloggerData}
                 />
               :
-                null
+                getBloggersList()
             }
           </Route>
           <Route path="/login"><SignInForm /></Route>
           <Route path="/signup"><SignUpForm /></Route>
-          <Route path="/create-blog">
-            <CreateBlogForm userId={null} setTestBlog={setTestBlog} testBlog={testBlog} />
-          </Route>
           {
-            isUserLogged && user ?
-              <Route path="/dashboard">
-                <Dashboard userId={user.uid} userData={userData} fetchUserData={fetchUserData} userBlogs={testBlog} />
+            isUserLogged && user && userData ?
+              <Route path="/create-blog">
+                <CreateBlogForm
+                  userId={user.uid}
+                  userName={userData.userName} 
+                  userFirstName={userData.firstName}
+                  userLastName={userData.lastName} 
+                />
               </Route>
             :
               null
           }
           {
-            userData ?
-              <Route path={`/${userData.userName}`}>
-                <UserProfile userData={userData} />
+            isUserLogged && user && userData ?
+              <Route path="/dashboard">
+                <Dashboard
+                  userId={user.uid}
+                  userData={userData}
+                  fetchUserData={fetchUserData}
+                />
               </Route>
             :
               null

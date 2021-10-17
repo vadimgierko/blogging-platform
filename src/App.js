@@ -80,8 +80,12 @@ function App() {
         if (snapshot) {
           const blogsListObject = snapshot.val();
           //console.log(bloggersListObject);
-          const blogsListArray = Object.entries(blogsListObject);
-          setBlogsList(blogsListArray);
+          if (blogsListObject) {
+            const blogsListArray = Object.entries(blogsListObject);
+            setBlogsList(blogsListArray);
+          } else {
+            setBlogsList([]);
+          }
         }
     });
   }

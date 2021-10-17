@@ -5,9 +5,10 @@ import { auth } from "../firebase";
 import { deleteUser } from "firebase/auth";
 import { Link } from "react-router-dom";
 
-export default function Dashboard({ userId, userData, fetchUserData, userBlogs }) {
+export default function Dashboard({ userId, userData, fetchUserData }) {
 
     const [data, setData] = useState(userData);
+    const [blogsList, setBlogsList] = useState(Object.entries(userData.blogs));
 
     function handleSubmit() {
         set(ref(database, 'users/' + userId), {
@@ -98,24 +99,24 @@ export default function Dashboard({ userId, userData, fetchUserData, userBlogs }
                 <div className="col-lg">
                     <h5 className="text-center">Your blogs</h5>
                     <hr />
+                    <Link
+                        to="/create-blog"
+                        type="button"
+                        className="btn btn-info d-block my-3"
+                    >Create new blog</Link>
                     {
-                        userBlogs ?
-                        userBlogs.map((blog) =>
-                            <div key={blog.title}>
-                                <h5>{blog.title}</h5>
-                                <p>{blog.description}</p>
-                                <hr />
-                            </div>
-                        )
+                        blogsList ?
+                            blogsList.map((blog) =>
+                                <div key={blog[0]}>
+                                    <h5>{blog[1].title}</h5>
+                                    <p>{blog[1].description}</p>
+                                    <hr />
+                                </div>
+                            )
                         :
-                        <div>
-                            <h5 className="text-center">There is no blogs yet... Create one!</h5>
-                            <Link
-                                to="/create-blog"
-                                type="button"
-                                className="btn btn-info d-block my-3"
-                            >Create new blog</Link>
-                        </div>
+                            <div>
+                                <h5 className="text-center">There is no blogs yet... Create one!</h5>
+                            </div>
                     }
                 </div>
             </div>

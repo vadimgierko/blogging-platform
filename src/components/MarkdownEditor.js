@@ -8,30 +8,26 @@ export default function MarkdownEditor({ content }) {
     const [contentForEdition, setContentForEdition] = useState(content);
 
     return (
-        <div>
-            <h1>Markdown Editor</h1>
-            <hr />
-            <div className="row">
-                <div className="col-lg mt-2 mx-2" style={{marginBottom: 90}}>
-                    <p className="text-center">Write your content here using Markdown Syntax</p>
-                    <hr />
-                    <textarea
-                        defaultValue={contentForEdition}
-                        onChange={(e) => setContentForEdition(e.target.value)}
-                        style={{width: "100%", height: "80%"}}
-                    />
-                    <button
-                        type="button"
-                        className="btn btn-success my-2"
-                        onClick={() => console.log(contentForEdition)}
-                    >Save changes</button>
-                </div>
-                <div className="col-lg m-2">
-                    <p className="text-center">Here you can see how your article would be looking like</p>
-                    <hr />
-                    <div>
-                        <ReactMarkdown children={contentForEdition} remarkPlugins={[remarkGfm]} />
-                    </div>
+        <div className="row">
+            <div className="col-lg mt-2 mx-2" style={{marginBottom: 90}}>
+                <p className="text-center">Write your content here using Markdown Syntax</p>
+                <hr />
+                <textarea
+                    defaultValue={contentForEdition}
+                    onChange={(e) => setContentForEdition(e.target.value)}
+                    style={{width: "100%", height: "80%"}}
+                />
+                <button
+                    type="button"
+                    className="btn btn-success my-2"
+                    onClick={() => console.log(contentForEdition)}
+                >Save changes</button>
+            </div>
+            <div className="col-lg m-2">
+                <p className="text-center">Here you can see how your article would be looking like</p>
+                <hr />
+                <div>
+                    <ReactMarkdown children={contentForEdition} remarkPlugins={[remarkGfm]} />
                 </div>
             </div>
         </div>

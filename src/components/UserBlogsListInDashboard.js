@@ -73,7 +73,12 @@ export default function UserBlogsListInDashboard({ userId }) {
                                             </Link>
                                         </div>
                                         <div className="col-4 text-end">
-                                            <Link><i className="bi bi-plus-square me-2" /></Link>
+                                            <Link
+                                                to="/create-article"
+                                                className="text-info"
+                                            >
+                                                <i className="bi bi-plus-square me-2" />
+                                            </Link>
                                             <Link
                                                 className="text-danger"
                                                 to="/dashboard/user-blogs"

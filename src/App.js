@@ -9,7 +9,7 @@ import Dashboard from './components/Dashboard';
 import BloggersList from './components/BloggersList';
 import UserProfile from './components/UserProfile';
 import CreateBlogForm from './components/CreateBlogForm';
-import MarkdownEditor from './components/MarkdownEditor';
+import CreateArticlePage from './components/CreateArticlePage';
 import Footer from './components/Footer';
 import { auth } from './firebase';
 import { onAuthStateChanged } from "firebase/auth";
@@ -168,7 +168,7 @@ function App() {
               null
           }
           <Route path="/create-article">
-            <MarkdownEditor content={null} />
+            <CreateArticlePage />
           </Route>
         </Switch>
         <hr />

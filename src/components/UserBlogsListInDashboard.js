@@ -73,8 +73,6 @@ export default function UserBlogsListInDashboard({ userId }) {
                                             </Link>
                                         </div>
                                         <div className="col-4 text-end">
-                                            <Link><i className="bi bi-eye me-2" /></Link>
-                                            <Link><i className="bi bi-pencil me-2" /></Link>
                                             <Link><i className="bi bi-plus-square me-2" /></Link>
                                             <Link
                                                 className="text-danger"
@@ -100,7 +98,11 @@ export default function UserBlogsListInDashboard({ userId }) {
                 </div>
             </Route>
             <Route path={currentBlogLink}>
-                <BlogEditionForm userId={userId} blogKey={currentBlogKey} deleteBlog={deleteBlog} />
+                <BlogEditionForm
+                    userId={userId}
+                    blogKey={currentBlogKey}
+                    deleteBlog={deleteBlog}
+                />
             </Route>
         </Switch>
     );

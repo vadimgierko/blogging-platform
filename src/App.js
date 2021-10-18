@@ -9,6 +9,8 @@ import Dashboard from './components/Dashboard';
 import BloggersList from './components/BloggersList';
 import UserProfile from './components/UserProfile';
 import CreateBlogForm from './components/CreateBlogForm';
+import MarkdownEditor from './components/MarkdownEditor';
+import Footer from './components/Footer';
 import { auth } from './firebase';
 import { onAuthStateChanged } from "firebase/auth";
 import { ref, onValue } from "firebase/database";
@@ -165,7 +167,14 @@ function App() {
             :
               null
           }
+          <Route path="/create-article">
+            <MarkdownEditor content={null} />
+          </Route>
         </Switch>
+        <hr />
+        <div className="text-center">
+          <Footer />
+        </div>
       </div>
     </div>
   );

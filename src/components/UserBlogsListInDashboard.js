@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
 import { database } from "../firebase";
 import { ref, remove, onValue } from "firebase/database";
-import { Link } from "react-router-dom";
+import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
+import BlogEditionForm from "./BlogEditionForm";
 
 export default function UserBlogsListInDashboard({ userId }) {
 
+    let {path, url} = useRouteMatch();
+
     const [userBlogsList, setUserBlogsList] = useState(null);
+
+    const [currentBlogKey, setCurrentBlogKey] = useState(null);
+    const [currentBlogLink, setCurrentBlogLink] = useState(null);
 
     function fetchUserBlogsList(userId) {
         const userBlogsRef = ref(database, 'users/' + userId + '/blogs');
@@ -33,54 +39,69 @@ export default function UserBlogsListInDashboard({ userId }) {
         }
     }
 
+    function convertBlogTitleIntoLink(blogTitle) {
+        return ("/" + blogTitle.replace(/ /g, "-").toLowerCase());
+    }
+
     useEffect(() => {
         fetchUserBlogsList(userId);
     }, [userId]);
 
     return (
-        <div>
-            <Link
-                to="/create-blog"
-                type="button"
-                className="btn btn-info d-block my-3"
-            >Create new blog</Link>
-            {
-                userBlogsList && userBlogsList.length ?
-                    userBlogsList.map((blog) =>
-                        <div className="container" key={blog[0]}>
-                            <div className="row">
-                                <div className="col">
-                                    <Link
-                                        to={"/dashboard/user-blogs/" + blog[0]}
-                                    >
-                                        <h5>{blog[1].title}</h5>
-                                    </Link>
+        <Switch>
+            <Route exact path={path}>
+                <div>
+                    <Link
+                        to="/create-blog"
+                        type="button"
+                        className="btn btn-info d-block my-3"
+                    >Create new blog</Link>
+                    {
+                        userBlogsList && userBlogsList.length ?
+                            userBlogsList.map((blog) =>
+                                <div className="container" key={blog[0]}>
+                                    <div className="row">
+                                        <div className="col">
+                                            <Link
+                                                to={`${url}${convertBlogTitleIntoLink(blog[1].title)}`}
+                                                onClick={() => {
+                                                    setCurrentBlogKey(blog[0]);
+                                                    setCurrentBlogLink(`${url}${convertBlogTitleIntoLink(blog[1].title)}`);
+                                                }}
+                                            >
+                                                <h5>{blog[1].title}</h5>
+                                            </Link>
+                                        </div>
+                                        <div className="col-4 text-end">
+                                            <Link><i className="bi bi-eye me-2" /></Link>
+                                            <Link><i className="bi bi-pencil me-2" /></Link>
+                                            <Link><i className="bi bi-plus-square me-2" /></Link>
+                                            <Link
+                                                className="text-danger"
+                                                to="/dashboard/user-blogs"
+                                                onClick={() => {
+                                                    deleteBlog(blog[0]);
+                                                }}
+                                            >
+                                                <i className="bi bi-trash" />
+                                            </Link>
+                                        </div>
+                                        
+                                    </div>
+                                    <p>{blog[1].description}</p>
+                                    <hr />
                                 </div>
-                                <div className="col-4 text-end">
-                                    <Link><i className="bi bi-eye me-2" /></Link>
-                                    <Link><i className="bi bi-pencil me-2" /></Link>
-                                    <Link><i className="bi bi-plus-square me-2" /></Link>
-                                    <Link
-                                        className="text-danger"
-                                        to="/dashboard/user-blogs"
-                                        onClick={() => {
-                                            deleteBlog(blog[0]);
-                                        }}
-                                    >
-                                        <i className="bi bi-trash" />
-                                    </Link>
-                                </div>
-                                
+                            )
+                        :
+                            <div>
+                                <h5 className="text-center">There is no blogs yet... Create one!</h5>
                             </div>
-                            <p>{blog[1].description}</p>
-                            <hr />
-                        </div>
-                    )
-                :
-                    <div>
-                        <h5 className="text-center">There is no blogs yet... Create one!</h5>
-                    </div>
-            }
-        </div>
+                    }
+                </div>
+            </Route>
+            <Route path={currentBlogLink}>
+                <BlogEditionForm userId={userId} blogKey={currentBlogKey} deleteBlog={deleteBlog} />
+            </Route>
+        </Switch>
     );
 }

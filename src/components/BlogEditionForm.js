@@ -68,6 +68,17 @@ export default function BlogEditionForm({blogKey, userId, deleteBlog}) {
                 <div className="col">
                     <h4 className="text-center">Articles</h4>
                     <hr />
+                    {
+                        blogData.articles ? (
+                            Object.entries(blogData.articles).map((article) => (
+                                <div key={article[0]}>
+                                    <h5>{article[1].title}</h5>
+                                    <p>{article[1].description}</p>
+                                    <hr />
+                                </div>
+                            ))
+                        ) : (null)
+                    }
                 </div>
             </div>
         );

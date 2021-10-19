@@ -14,11 +14,14 @@ export default function CreateArticlePage({ userId, userName, userFirstName, use
         description: "",
         createdAt: "",
         blogTitle: blogTitle,
-        blogKey: blogKey
+        blogKey: blogKey,
+        content: ""
     });
 
+    console.log("data passed to CreateArticlePage", newArticleData);
+
     function handleSubmit() {
-        console.log(newArticleData);
+        //console.log(newArticleData);
         saveNewArticle(newArticleData);
     }
 
@@ -48,7 +51,7 @@ export default function CreateArticlePage({ userId, userName, userFirstName, use
                         type="text"
                         className="form-control"
                         placeholder="title"
-                        onChange={(e) => setNewArticleData({...newArticleData, title: e.target.value})}
+                        onChange={(e) => setNewArticleData({...newArticleData, title: e.target.value, content: "# " + e.target.value})}
                     />
                 </div>
                 <div className="mb-2">
@@ -61,7 +64,10 @@ export default function CreateArticlePage({ userId, userName, userFirstName, use
                     />
                 </div>
                 <hr />
-                <MarkdownEditor />
+                <MarkdownEditor
+                    articleData={newArticleData}
+                    setArticleData={setNewArticleData}
+                />
                 <Link
                     to="/dashboard/user-blogs"
                     type="button"

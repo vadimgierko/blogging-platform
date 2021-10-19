@@ -4,7 +4,7 @@ import { ref, remove, onValue } from "firebase/database";
 import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
 import BlogEditionForm from "./BlogEditionForm";
 
-export default function UserBlogsListInDashboard({ userId }) {
+export default function UserBlogsListInDashboard({ userId, setBlogKeyForNewArticle, setBlogTitleForNewArticle }) {
 
     let {path, url} = useRouteMatch();
 
@@ -76,6 +76,10 @@ export default function UserBlogsListInDashboard({ userId }) {
                                             <Link
                                                 to="/create-article"
                                                 className="text-info"
+                                                onClick={() => {
+                                                    setBlogKeyForNewArticle(blog[0]);
+                                                    setBlogTitleForNewArticle(blog[1].title);
+                                                }}
                                             >
                                                 <i className="bi bi-plus-square me-2" />
                                             </Link>

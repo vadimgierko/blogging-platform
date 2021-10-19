@@ -3,7 +3,7 @@ import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
 import UserDataFormInDashboard from "./UserDataFormInDashboard";
 import UserBlogsListInDashboard from "./UserBlogsListInDashboard";
 
-export default function Dashboard({ userId }) {
+export default function Dashboard({ userId, setBlogKeyForNewArticle, setBlogTitleForNewArticle }) {
 
     let {path, url} = useRouteMatch();
     
@@ -34,7 +34,11 @@ export default function Dashboard({ userId }) {
                     <UserDataFormInDashboard userId={userId} />
                 </Route>
                 <Route path={`${path}/user-blogs`}>
-                    <UserBlogsListInDashboard userId={userId} />
+                    <UserBlogsListInDashboard
+                        userId={userId}
+                        setBlogKeyForNewArticle={setBlogKeyForNewArticle}
+                        setBlogTitleForNewArticle={setBlogTitleForNewArticle}
+                    />
                 </Route>
             </Switch>
         </div>

@@ -26,6 +26,9 @@ function App() {
 
   const [blogsList, setBlogsList] = useState(null);
 
+  const [blogKeyForNewArticle, setBlogKeyForNewArticle] = useState(null);
+  const [blogTitleForNewArticle, setBlogTitleForNewArticle] = useState(null);
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -115,6 +118,18 @@ function App() {
                       <p><em>by {blog[1].author}</em></p>
                       <p>{blog[1].description}</p>
                       <hr />
+                      <p>Articles:</p>
+                      {
+                        blog[1].articles ? (
+                            Object.entries(blog[1].articles).map((article) => (
+                                <div key={article[0]}>
+                                    <h5>{article[1].title}</h5>
+                                    <p>{article[1].description}</p>
+                                    <hr />
+                                </div>
+                            ))
+                        ) : (null)
+                    }
                     </div>
                   )
                 }
@@ -154,6 +169,8 @@ function App() {
               <Route path="/dashboard">
                 <Dashboard
                   userId={user.uid}
+                  setBlogKeyForNewArticle={setBlogKeyForNewArticle}
+                  setBlogTitleForNewArticle={setBlogTitleForNewArticle}
                 />
               </Route>
             :
@@ -167,9 +184,20 @@ function App() {
             :
               null
           }
-          <Route path="/create-article">
-            <CreateArticlePage />
-          </Route>
+          {
+            isUserLogged && user && blogKeyForNewArticle && blogTitleForNewArticle ? (
+              <Route path="/create-article">
+                <CreateArticlePage
+                  userId={user.uid}
+                  userName={userData.userName} 
+                  userFirstName={userData.firstName}
+                  userLastName={userData.lastName}
+                  blogKey={blogKeyForNewArticle}
+                  blogTitle={blogTitleForNewArticle} 
+                />
+              </Route>
+            ) : (null)
+          }
         </Switch>
         <hr />
         <div className="text-center">

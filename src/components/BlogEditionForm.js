@@ -18,6 +18,21 @@ export default function BlogEditionForm({blogKey, userId, deleteBlog}) {
         });
     }
 
+    function deleteArticle(articleKey) {
+        // eslint-disable-next-line no-restricted-globals
+        const wantToDeleteArticle = confirm("Are you sure, you want to delete this article from this blog forever? There's no turning back... Delete blog?");
+        if (wantToDeleteArticle) {
+            remove(ref(database, 'users/' + userId + '/blogs/' + blogKey + '/articles/' + articleKey)).then(() => {
+                console.log("article was deleted");
+                getBlogData(blogKey);
+            }).catch((error) => {
+                // An error ocurred
+                console.log(error.message);
+            });
+            remove(ref(database, 'blogs/' + blogKey + '/articles/' + articleKey));
+        }
+    }
+
     useEffect(() => {
         getBlogData(blogKey);
     }, [blogKey]);
@@ -72,8 +87,22 @@ export default function BlogEditionForm({blogKey, userId, deleteBlog}) {
                         blogData.articles ? (
                             Object.entries(blogData.articles).map((article) => (
                                 <div key={article[0]}>
-                                    <h5>{article[1].title}</h5>
-                                    <p>{article[1].description}</p>
+                                    <div className="row">
+                                        <div className="col">
+                                            <h5>{article[1].title}</h5>
+                                            <p>{article[1].description}</p>
+                                        </div>
+                                        <div className="col-4 text-end">
+                                            <button
+                                                className="btn btn-danger d-inline"
+                                                onClick={() => {
+                                                    deleteArticle(article[0]);
+                                                }}
+                                            >
+                                                <i className="bi bi-trash" />
+                                            </button>
+                                        </div>
+                                    </div>
                                     <hr />
                                 </div>
                             ))

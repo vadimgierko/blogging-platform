@@ -34,6 +34,8 @@ export default function BlogPage({ blogKey }) {
         });
     }
 
+    
+
     console.log(currentArticleLink);
     console.log(currentArticle)
 

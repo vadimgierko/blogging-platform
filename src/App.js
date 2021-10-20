@@ -3,6 +3,8 @@ import { Switch, Route } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Home from './components/Home';
+import BlogsListPage from './components/BlogsListPage';
+import BlogPage from './components/BlogPage';
 import SignInForm from './components/SignInForm';
 import SignUpForm from './components/SignUpForm';
 import Dashboard from './components/Dashboard';
@@ -24,10 +26,11 @@ function App() {
   const [bloggersList, setBloggersList] = useState(null);
   const [bloggerData, setBloggerData] = useState(null);
 
-  const [blogsList, setBlogsList] = useState(null);
-
   const [blogKeyForNewArticle, setBlogKeyForNewArticle] = useState(null);
   const [blogTitleForNewArticle, setBlogTitleForNewArticle] = useState(null);
+
+  const [currentBlogLink, setCurrentBlogLink] = useState(null);
+  const [currentBlogKey, setCurrentBlogKey] = useState(null);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -78,22 +81,6 @@ function App() {
         }
     });
   }
-
-  function getBlogsList() {
-    const blogsListRef = ref(database, 'blogs/');
-    onValue(blogsListRef, (snapshot) => {
-        if (snapshot) {
-          const blogsListObject = snapshot.val();
-          //console.log(bloggersListObject);
-          if (blogsListObject) {
-            const blogsListArray = Object.entries(blogsListObject);
-            setBlogsList(blogsListArray);
-          } else {
-            setBlogsList([]);
-          }
-        }
-    });
-  }
   
   return (
     <div className="App">
@@ -104,39 +91,19 @@ function App() {
       />
       <div className="container" style={{marginTop: 120}}>
         <Switch>
-          <Route exact path="/"><Home /></Route>
+          <Route exact path="/">
+            <Home />
+          </Route>
           <Route path="/blogs">
-            {
-              blogsList ?
-              <>
-                <h1>Blogs</h1>
-                <hr />
-                {
-                  blogsList.map((blog) => 
-                    <div key={blog[0]}>
-                      <h3>{blog[1].title}</h3>
-                      <p><em>by {blog[1].author}</em></p>
-                      <p>{blog[1].description}</p>
-                      <hr />
-                      <p>Articles:</p>
-                      {
-                        blog[1].articles ? (
-                            Object.entries(blog[1].articles).map((article) => (
-                                <div key={article[0]}>
-                                    <h5>{article[1].title}</h5>
-                                    <p>{article[1].description}</p>
-                                    <hr />
-                                </div>
-                            ))
-                        ) : (null)
-                    }
-                    </div>
-                  )
-                }
-              </>
-              :
-              getBlogsList()
-            }
+            <BlogsListPage
+              setCurrentBlogKey={setCurrentBlogKey}
+              setCurrentBlogLink={setCurrentBlogLink}
+            />
+          </Route>
+          <Route path={currentBlogLink}>
+            <BlogPage
+              blogKey={currentBlogKey}
+            />
           </Route>
           <Route path="/bloggers">
             {

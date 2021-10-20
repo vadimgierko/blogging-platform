@@ -1,5 +1,4 @@
 import ReactMarkdown from "react-markdown";
-import { useState } from "react";
 import remarkGfm from "remark-gfm";
 
 export default function MarkdownEditor({ articleData, setArticleData }) {

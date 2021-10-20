@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { ref, onValue } from "firebase/database";
 import { database } from '../firebase';
+import { Link } from "react-router-dom";
 
-export default function BlogsListPage() {
+export default function BlogsListPage({ setCurrentBlogLink, setCurrentBlogKey }) {
 
     const [blogsList, setBlogsList] = useState(null);
 
@@ -22,6 +23,10 @@ export default function BlogsListPage() {
         });
     }
 
+    function convertBlogTitleIntoLink(blogTitle) {
+        return ("/" + blogTitle.replace(/ /g, "-").toLowerCase());
+    }
+
     return (
         <>
             {
@@ -32,24 +37,18 @@ export default function BlogsListPage() {
                         {
                             blogsList.map((blog) => 
                                 <div key={blog[0]}>
-                                    <h3>{blog[1].title}</h3>
+                                    <Link
+                                        to={convertBlogTitleIntoLink(blog[1].title)}
+                                        onClick={() => {
+                                            setCurrentBlogKey(blog[0]);
+                                            setCurrentBlogLink(convertBlogTitleIntoLink(blog[1].title))
+                                        }}
+                                    >
+                                        <h3>{blog[1].title}</h3>
+                                    </Link>
                                     <p><em>by {blog[1].author}</em></p>
                                     <p>{blog[1].description}</p>
                                     <hr />
-                                    <p>Articles:</p>
-                                    {
-                                        blog[1].articles ? (
-                                            Object.entries(blog[1].articles).map((article) => (
-                                                <div key={article[0]}>
-                                                    <h5>{article[1].title}</h5>
-                                                    <p>{article[1].description}</p>
-                                                    <hr />
-                                                </div>
-                                            ))
-                                        ) : (
-                                            null
-                                        )
-                                    }
                                 </div>
                             )
                         }

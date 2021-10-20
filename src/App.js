@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Home from './components/Home';
 import BlogsListPage from './components/BlogsListPage';
+import BlogPage from './components/BlogPage';
 import SignInForm from './components/SignInForm';
 import SignUpForm from './components/SignUpForm';
 import Dashboard from './components/Dashboard';
@@ -27,6 +28,9 @@ function App() {
 
   const [blogKeyForNewArticle, setBlogKeyForNewArticle] = useState(null);
   const [blogTitleForNewArticle, setBlogTitleForNewArticle] = useState(null);
+
+  const [currentBlogLink, setCurrentBlogLink] = useState(null);
+  const [currentBlogKey, setCurrentBlogKey] = useState(null);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -87,9 +91,19 @@ function App() {
       />
       <div className="container" style={{marginTop: 120}}>
         <Switch>
-          <Route exact path="/"><Home /></Route>
+          <Route exact path="/">
+            <Home />
+          </Route>
           <Route path="/blogs">
-            <BlogsListPage />
+            <BlogsListPage
+              setCurrentBlogKey={setCurrentBlogKey}
+              setCurrentBlogLink={setCurrentBlogLink}
+            />
+          </Route>
+          <Route path={currentBlogLink}>
+            <BlogPage
+              blogKey={currentBlogKey}
+            />
           </Route>
           <Route path="/bloggers">
             {

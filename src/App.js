@@ -3,7 +3,7 @@ import { Switch, Route } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Home from './components/Home';
-import BlogPage from './components/BlogPage';
+import BlogsListPage from './components/BlogsListPage';
 import SignInForm from './components/SignInForm';
 import SignUpForm from './components/SignUpForm';
 import Dashboard from './components/Dashboard';
@@ -89,7 +89,7 @@ function App() {
         <Switch>
           <Route exact path="/"><Home /></Route>
           <Route path="/blogs">
-            <BlogPage />
+            <BlogsListPage />
           </Route>
           <Route path="/bloggers">
             {

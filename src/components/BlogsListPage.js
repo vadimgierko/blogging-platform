@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ref, onValue } from "firebase/database";
 import { database } from '../firebase';
 
-export default function BlogPage() {
+export default function BlogsListPage() {
 
     const [blogsList, setBlogsList] = useState(null);
 

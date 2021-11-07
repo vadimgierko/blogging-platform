@@ -7,13 +7,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
-import { AuthProvider } from "./hooks/use-auth.js";
+import { AuthProvider } from "./hooks/use-auth";
+import { DatabaseProvider } from "./hooks/use-database";
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <App />
+        <DatabaseProvider>
+          <App />
+        </DatabaseProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,

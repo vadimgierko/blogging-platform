@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/use-auth';
+import { useDatabase } from "../hooks/use-database";
 
 export default function SignUpForm() {
 
     const { signUp } = useAuth();
+    const { updateUserData } = useDatabase();
 
     const [userSignUpData, setUserSignUpData] = useState({
         firstName: "",
@@ -63,10 +65,13 @@ export default function SignUpForm() {
                 </div>
                 
                 <Link
-                    to={`/${userSignUpData.userName}`}
+                    to="/dashboard"
                     type="button"
                     className="btn btn-primary mb-3"
-                    onClick={() => signUp(userSignUpData.email, userSignUpData.password)}
+                    onClick={() => {
+                        signUp(userSignUpData.email, userSignUpData.password);
+                        //updateUserData(userSignUpData);
+                    }}
                 >
                     Create account
                 </Link>

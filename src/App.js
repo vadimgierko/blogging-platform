@@ -45,6 +45,12 @@ function App() {
           <Route path="/signup">
             <SignUpForm />
           </Route>
+          <Route path="/dashboard">
+            <Dashboard
+              setBlogKeyForNewArticle={setBlogKeyForNewArticle}
+              setBlogTitleForNewArticle={setBlogTitleForNewArticle}
+            />
+          </Route>
           {/*<Route path="/blogs">
             <BlogsListPage
               setCurrentBlogKey={setCurrentBlogKey}

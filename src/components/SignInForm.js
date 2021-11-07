@@ -1,25 +1,15 @@
 import { useState } from "react";
-import { auth } from "../firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link } from 'react-router-dom';
+import { useAuth } from '../hooks/use-auth';
 
 export default function SignInForm() {
+
+    const { signIn } = useAuth();
 
     const [userSignInData, setUserSignInData] = useState({
         email: "",
         password: ""
     });
-
-    function handleSubmit() {
-        
-        signInWithEmailAndPassword(auth, userSignInData.email, userSignInData.password)
-            .then((userCredential) => {
-                // Signed in
-            })
-            .catch((error) => {
-                console.log(error.message);
-            });
-    }
 
     return (
         <div className="container">
@@ -50,7 +40,7 @@ export default function SignInForm() {
                     to="/"
                     type="button"
                     className="btn btn-primary mb-3"
-                    onClick={handleSubmit}
+                    onClick={() => signIn(userSignInData.email, userSignInData.password)}
                 >
                     Log in
                 </Link>

@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { auth } from "../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { database } from "../firebase";
-import { ref, set } from "firebase/database";
 import { Link } from 'react-router-dom';
+import { useAuth } from '../hooks/use-auth';
+import { useDatabase } from "../hooks/use-database";
 
 export default function SignUpForm() {
+
+    const { signUp } = useAuth();
+    const { updateUserData } = useDatabase();
 
     const [userSignUpData, setUserSignUpData] = useState({
         firstName: "",
@@ -14,29 +15,6 @@ export default function SignUpForm() {
         email: "",
         password: ""
     });
-
-    function handleSubmit() {
-        console.log(userSignUpData);
-        
-        createUserWithEmailAndPassword(auth, userSignUpData.email, userSignUpData.password)
-            .then((userCredential) => {
-                console.log(userCredential);
-                const user = userCredential.user;
-                const userId = user.uid;
-                // create user folder in database and pass initial data:
-                set(ref(database, 'users/' + userId), {
-                    firstName: userSignUpData.firstName,
-                    lastName: userSignUpData.lastName,
-                    userName: userSignUpData.userName,
-                    email: userSignUpData.email,
-                });
-            })
-            .catch((error) => {
-                console.log(error.code);
-                console.log(error.message);
-            });
-        
-    }
 
     return (
         <div className="container">
@@ -87,10 +65,13 @@ export default function SignUpForm() {
                 </div>
                 
                 <Link
-                    to={`/${userSignUpData.userName}`}
+                    to="/dashboard"
                     type="button"
                     className="btn btn-primary mb-3"
-                    onClick={handleSubmit}
+                    onClick={() => {
+                        signUp(userSignUpData.email, userSignUpData.password);
+                        //updateUserData(userSignUpData);
+                    }}
                 >
                     Create account
                 </Link>

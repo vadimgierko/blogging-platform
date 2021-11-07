@@ -1,23 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { auth } from '../firebase';
-import { signOut } from "firebase/auth";
+import { useAuth } from '../hooks/use-auth';
 
-export default function Header({ isUserLogged, userNames, userName }) {
+export default function Header() {
+    const { user, logOut } = useAuth();
 
     const [isNavCollapsed, setIsNavCollapsed] = useState(true);
     
     const handleNavCollapse = () => {
         setIsNavCollapsed(!isNavCollapsed);
     };
-
-    function handleSignOut() {
-        signOut(auth).then(() => {
-            //console.log("user signed out");
-        }).catch((error) => {
-            console.log(error.message);
-        });
-    }
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
@@ -50,7 +42,7 @@ export default function Header({ isUserLogged, userNames, userName }) {
                     </ul>
                     <div>
                         {
-                            isUserLogged ?
+                            user ?
                                 <>
                                     <Link
                                         to="/dashboard"
@@ -58,14 +50,14 @@ export default function Header({ isUserLogged, userNames, userName }) {
                                         style={{textDecoration: "none"}}
                                     >
                                         <span className="me-2"><i className="bi bi-person-circle"></i></span>
-                                        <span className="me-4">{userNames}</span>
+                                        <span className="me-4">{user.email}</span>
                                     </Link>
                                     <Link
                                         type="button"
                                         to="/"
                                         className={isNavCollapsed ? "btn btn-outline-danger me-2" : "btn btn-outline-danger me-2 d-block"}
                                         onClick={() => {
-                                            handleSignOut();
+                                            logOut();
                                             if (!isNavCollapsed) {
                                                 handleNavCollapse();
                                             }

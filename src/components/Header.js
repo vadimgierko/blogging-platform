@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react/cjs/react.development';
 import { useAuth } from '../hooks/use-auth';
 
 export default function Header() {
@@ -10,6 +11,16 @@ export default function Header() {
     const handleNavCollapse = () => {
         setIsNavCollapsed(!isNavCollapsed);
     };
+
+    const [currentUser, setCurrentUser] = useState(null)
+
+    useEffect(() => {
+        if (user) {
+            setCurrentUser(user)
+        } else {
+            setCurrentUser(null);
+        }
+    }, [user])
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
@@ -42,15 +53,20 @@ export default function Header() {
                     </ul>
                     <div>
                         {
-                            user ?
+                            currentUser ?
                                 <>
                                     <Link
                                         to="/dashboard"
                                         className="text-light text-muted"
                                         style={{textDecoration: "none"}}
+                                        onClick={() => {
+                                            if (!isNavCollapsed) {
+                                                handleNavCollapse();
+                                            }
+                                        }}
                                     >
                                         <span className="me-2"><i className="bi bi-person-circle"></i></span>
-                                        <span className="me-4">{user.email}</span>
+                                        <span className="me-4">{currentUser.email}</span>
                                     </Link>
                                     <Link
                                         type="button"

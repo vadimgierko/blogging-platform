@@ -1,43 +1,34 @@
-import { useState } from "react";
-import { ref, onValue } from "firebase/database";
-import { database } from '../firebase';
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, Switch, Route, useRouteMatch, useParams } from "react-router-dom";
+import { useDatabase } from "../hooks/use-database";
+//import { useAuth } from "../hooks/use-auth";
+import ArticleView from "./ArticleView";
 
-export default function BlogPage({ blogKey }) {
+export default function BlogPage() {
 
     let {path, url} = useRouteMatch();
+    const { blogLink } = useParams();
+
+    //const { user } = useAuth();
+    const { blogs, deleteBlog } = useDatabase();
 
     const [blog, setBlog] = useState(null);
 
-    const [currentArticleLink, setCurrentArticleLink] = useState(null);
-    const [currentArticle, setCurrentArticle] = useState(null);
+    useEffect(() => {
+        if (blogs) {
+            console.log(blogs);
+            const fetchedBlogs = Object.entries(blogs);
+            const currentBlogArray = fetchedBlogs.filter(blog => blog[1].blogLink === blogLink); // array...
+            const currentBlog = currentBlogArray[0][1];
+            setBlog(currentBlog);
+        } else {
+            console.log("there are no blogs or blogLink in BlogPage ...")
+        }
+    }, [blogs, blogLink]);
 
     function convertArticleTitleIntoLink(articleTitle) {
-        return ("/" + articleTitle.replace(/ /g, "-").toLowerCase());
+        return (articleTitle.replace(/ /g, "-").toLowerCase());
     }
-
-    function fetchBlog() {
-
-        const blogRef = ref(database, 'blogs/' + blogKey);
-
-        onValue(blogRef, (snapshot) => {
-            if (snapshot) {
-
-                const fetchedBlog = snapshot.val();
-                
-                if (fetchedBlog) {
-                    setBlog(fetchedBlog);
-                }
-            }
-        });
-    }
-
-    
-
-    console.log(currentArticleLink);
-    console.log(currentArticle)
 
     return (
         <div>
@@ -49,18 +40,11 @@ export default function BlogPage({ blogKey }) {
                         <hr />
                         {
                             blog.articles ? (
+                            
                                 <div className="row">
                                     <Switch>
-                                        <Route path={currentArticleLink}>
-                                            {
-                                                currentArticle && currentArticleLink ? (
-                                                    <div className="col">
-                                                        {/*<h1>{currentArticle.title}</h1>
-                                                        <hr />*/}
-                                                        <ReactMarkdown children={currentArticle.content} remarkPlugins={[remarkGfm]} />
-                                                    </div>
-                                                ) : null
-                                            }
+                                        <Route exact path={path + "/:articleLink"}>
+                                            <ArticleView />
                                         </Route>
                                     </Switch>
                                     <div className="col-4">
@@ -71,12 +55,8 @@ export default function BlogPage({ blogKey }) {
                                                 Object.entries(blog.articles).map((article) =>
                                                     <Link
                                                         key={article[0]}
-                                                        to={url + convertArticleTitleIntoLink(article[1].title)}
+                                                        to={url + "/" + convertArticleTitleIntoLink(article[1].title)}
                                                         className="d-block"
-                                                        onClick={() => {
-                                                            setCurrentArticle(article[1]);
-                                                            setCurrentArticleLink(url + convertArticleTitleIntoLink(article[1].title))
-                                                        }}
                                                     >{article[1].title}</Link>
                                                 )
                                             }
@@ -90,7 +70,9 @@ export default function BlogPage({ blogKey }) {
                             )
                         }
                     </div>
-                ) : fetchBlog()
+                ) : (
+                    <div>Downloading data...</div>
+                )
             }
         </div>
     );

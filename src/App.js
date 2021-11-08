@@ -14,12 +14,18 @@ import UserProfile from "./components/UserProfile";
 import CreateBlogForm from "./components/CreateBlogForm";
 import CreateArticlePage from "./components/CreateArticlePage";
 import Footer from "./components/Footer";
+import { useDatabase } from "./hooks/use-database";
 
 function App() {
 
   const { user } = useAuth();
   if (user) {
     console.log("user:", user.uid, user.email);
+  }
+
+  const { blogs } = useDatabase();
+  if (blogs) {
+    console.log("blogs:", blogs);
   }
 
   const [bloggersList, setBloggersList] = useState(null);
@@ -30,6 +36,10 @@ function App() {
 
   const [currentBlogLink, setCurrentBlogLink] = useState(null);
   const [currentBlogKey, setCurrentBlogKey] = useState(null);
+
+  if (currentBlogLink) {
+    console.log(currentBlogLink)
+  }
 
   return (
     <div className="App">
@@ -49,7 +59,12 @@ function App() {
             <Dashboard
               setBlogKeyForNewArticle={setBlogKeyForNewArticle}
               setBlogTitleForNewArticle={setBlogTitleForNewArticle}
+              setCurrentBlogKey={setCurrentBlogKey}
+              setCurrentBlogLink={setCurrentBlogLink}
             />
+          </Route>
+          <Route path="/blogs/:blogLink">
+            <BlogPage />
           </Route>
           {/*<Route path="/blogs">
             <BlogsListPage
@@ -57,9 +72,7 @@ function App() {
               setCurrentBlogLink={setCurrentBlogLink}
             />
           </Route>
-          <Route path={currentBlogLink}>
-            <BlogPage blogKey={currentBlogKey} />
-          </Route>
+          
           <Route path="/bloggers">
             {bloggersList ? (
               <BloggersList

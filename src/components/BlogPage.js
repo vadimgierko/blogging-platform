@@ -1,15 +1,33 @@
-import { useState } from "react";
-import { ref, onValue } from "firebase/database";
-import { database } from '../firebase';
+import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
+import { useDatabase } from "../hooks/use-database";
+//import { useAuth } from "../hooks/use-auth";
 
 export default function BlogPage({ blogKey }) {
 
+    console.log(blogKey)
+
     let {path, url} = useRouteMatch();
 
+    console.log(url)
+    //const { user } = useAuth();
+    const { blogs, deleteBlog } = useDatabase();
+
     const [blog, setBlog] = useState(null);
+
+    useEffect(() => {
+        if (blogs) {
+            console.log(blogs);
+            const fetchedBlogs = Object.entries(blogs);
+            const currentBlogArray = fetchedBlogs.filter(blog => blog[0] === blogKey); // array...
+            const currentBlog = currentBlogArray[0][1];
+            setBlog(currentBlog);
+        } else {
+            console.log("there are no user and blogs...")
+        }
+    }, [blogs]);
 
     const [currentArticleLink, setCurrentArticleLink] = useState(null);
     const [currentArticle, setCurrentArticle] = useState(null);
@@ -17,24 +35,6 @@ export default function BlogPage({ blogKey }) {
     function convertArticleTitleIntoLink(articleTitle) {
         return ("/" + articleTitle.replace(/ /g, "-").toLowerCase());
     }
-
-    function fetchBlog() {
-
-        const blogRef = ref(database, 'blogs/' + blogKey);
-
-        onValue(blogRef, (snapshot) => {
-            if (snapshot) {
-
-                const fetchedBlog = snapshot.val();
-                
-                if (fetchedBlog) {
-                    setBlog(fetchedBlog);
-                }
-            }
-        });
-    }
-
-    
 
     console.log(currentArticleLink);
     console.log(currentArticle)
@@ -90,7 +90,9 @@ export default function BlogPage({ blogKey }) {
                             )
                         }
                     </div>
-                ) : fetchBlog()
+                ) : (
+                    <div>Downloading data...</div>
+                )
             }
         </div>
     );

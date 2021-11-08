@@ -4,7 +4,12 @@ import { useAuth } from "../hooks/use-auth";
 import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
 import BlogEditionForm from "./BlogEditionForm";
 
-export default function UserBlogsListInDashboard({ setBlogKeyForNewArticle, setBlogTitleForNewArticle }) {
+export default function UserBlogsListInDashboard({
+    setBlogKeyForNewArticle,
+    setBlogTitleForNewArticle,
+    setCurrentBlogKey,
+    setCurrentBlogLink
+    }) {
 
     let {path, url} = useRouteMatch();
 
@@ -24,8 +29,8 @@ export default function UserBlogsListInDashboard({ setBlogKeyForNewArticle, setB
         }
     }, [blogs, user]);
 
-    const [currentBlogKey, setCurrentBlogKey] = useState(null);
-    const [currentBlogLink, setCurrentBlogLink] = useState(null);
+    //const [currentBlogKey, setCurrentBlogKey] = useState(null);
+    //const [currentBlogLink, setCurrentBlogLink] = useState(null);
 
     function convertBlogTitleIntoLink(blogTitle) {
         return ("/" + blogTitle.replace(/ /g, "-").toLowerCase());
@@ -68,6 +73,16 @@ export default function UserBlogsListInDashboard({ setBlogKeyForNewArticle, setB
                                                 <i className="bi bi-plus-square me-2" />
                                             </Link>
                                             <Link
+                                                className="text-primary"
+                                                to={`/blogs${convertBlogTitleIntoLink(blog[1].title)}`}
+                                                onClick={() => {
+                                                    setCurrentBlogKey(blog[0]);
+                                                    setCurrentBlogLink(`/blogs${convertBlogTitleIntoLink(blog[1].title)}`);
+                                                }}
+                                            >
+                                                <i className="bi bi-eye me-2" />
+                                            </Link>
+                                            <Link
                                                 className="text-danger"
                                                 to="/dashboard/user-blogs"
                                                 onClick={() => {
@@ -94,11 +109,11 @@ export default function UserBlogsListInDashboard({ setBlogKeyForNewArticle, setB
                     }
                 </div>
             </Route>
-            <Route path={currentBlogLink}>
+            {/*<Route path={currentBlogLink}>
                 <BlogEditionForm
                     blogKey={currentBlogKey}
                 />
-            </Route>
+            </Route>*/}
         </Switch>
     );
 }

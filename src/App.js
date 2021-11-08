@@ -37,6 +37,10 @@ function App() {
   const [currentBlogLink, setCurrentBlogLink] = useState(null);
   const [currentBlogKey, setCurrentBlogKey] = useState(null);
 
+  if (currentBlogLink) {
+    console.log(currentBlogLink)
+  }
+
   return (
     <div className="App">
       <Header />
@@ -55,10 +59,6 @@ function App() {
             <Dashboard
               setBlogKeyForNewArticle={setBlogKeyForNewArticle}
               setBlogTitleForNewArticle={setBlogTitleForNewArticle}
-            />
-          </Route>
-          {/*<Route path="/blogs">
-            <BlogsListPage
               setCurrentBlogKey={setCurrentBlogKey}
               setCurrentBlogLink={setCurrentBlogLink}
             />
@@ -66,6 +66,13 @@ function App() {
           <Route path={currentBlogLink}>
             <BlogPage blogKey={currentBlogKey} />
           </Route>
+          {/*<Route path="/blogs">
+            <BlogsListPage
+              setCurrentBlogKey={setCurrentBlogKey}
+              setCurrentBlogLink={setCurrentBlogLink}
+            />
+          </Route>
+          
           <Route path="/bloggers">
             {bloggersList ? (
               <BloggersList

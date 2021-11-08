@@ -59,6 +59,12 @@ export default function Header() {
                                         to="/dashboard"
                                         className="text-light text-muted"
                                         style={{textDecoration: "none"}}
+                                        onClick={() => {
+                                            logOut();
+                                            if (!isNavCollapsed) {
+                                                handleNavCollapse();
+                                            }
+                                        }}
                                     >
                                         <span className="me-2"><i className="bi bi-person-circle"></i></span>
                                         <span className="me-4">{currentUser.email}</span>

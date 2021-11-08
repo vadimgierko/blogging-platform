@@ -4,7 +4,12 @@ import UserDataFormInDashboard from "./UserDataFormInDashboard";
 import UserBlogsListInDashboard from "./UserBlogsListInDashboard";
 import { useAuth } from "../hooks/use-auth";
 
-export default function Dashboard({ setBlogKeyForNewArticle, setBlogTitleForNewArticle }) {
+export default function Dashboard({
+    setBlogKeyForNewArticle,
+    setBlogTitleForNewArticle,
+    setCurrentBlogKey,
+    setCurrentBlogLink
+    }) {
 
     let {path, url} = useRouteMatch();
 
@@ -41,6 +46,8 @@ export default function Dashboard({ setBlogKeyForNewArticle, setBlogTitleForNewA
                     <UserBlogsListInDashboard
                         setBlogKeyForNewArticle={setBlogKeyForNewArticle}
                         setBlogTitleForNewArticle={setBlogTitleForNewArticle}
+                        setCurrentBlogKey={setCurrentBlogKey}
+                        setCurrentBlogLink={setCurrentBlogLink}
                     />
                 </Route>
             </Switch>

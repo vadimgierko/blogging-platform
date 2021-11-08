@@ -37,7 +37,7 @@ export default function SignInForm() {
                     </div>
                 </div>
                 <Link
-                    to="/"
+                    to="/dashboard"
                     type="button"
                     className="btn btn-primary mb-3"
                     onClick={() => signIn(userSignInData.email, userSignInData.password)}

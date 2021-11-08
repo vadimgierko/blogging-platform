@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/use-auth";
 import { useDatabase } from "../hooks/use-database";
@@ -9,9 +9,15 @@ export default function UserDataFormInDashboard() {
     const { userData, updateUserData } = useDatabase();
     //const userId = user.uid;
     
-    const [currentUserData, setCurrentUserData] = useState({...userData});
+    const [currentUserData, setCurrentUserData] = useState(null);
 
-    
+    useEffect(() => {
+        if (userData) {
+            setCurrentUserData(userData);
+        } else {
+            setCurrentUserData(null);
+        }
+    }, [userData]);
 
     // function deleteAccount(userId) {
     //     const user = auth.currentUser;

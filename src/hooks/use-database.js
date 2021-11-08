@@ -22,6 +22,7 @@ export function DatabaseProvider({ children }) {
 
     const [user, setUser] = useState(null);
     const [userData, setUserData] = useState(null);
+    const [blogs, setBlogs] = useState(null);
     //const [users, setUsers] = useState(null);
     //const [items, setItems] = useState(null);
     //const [userItems, setUserItems] = useState(null);
@@ -51,6 +52,14 @@ export function DatabaseProvider({ children }) {
     //   const deleteItem = (itemKey) => {
     //     remove(ref(database, "/items/" + user.uid + "/" + itemKey));
     //   };
+    const deleteBlog = (blogKey) => {
+        remove(ref(database, "blogs/" +  blogKey)).then(() => {
+                console.log("blog " + blogKey + " was deleted");
+            }).catch((error) => {
+                // An error ocurred
+                console.log(error.message);
+            });
+    }
 
     const updateUserData = (userData) => {
         set(ref(database, "users/" + user.uid), {
@@ -125,6 +134,17 @@ export function DatabaseProvider({ children }) {
                     }
                 });
 
+                //fetch blogs list
+                const blogsRef = ref(database, "blogs/");
+                onValue(blogsRef, (snapshot) => {
+                  const data = snapshot.val();
+                  if (data) {
+                    setBlogs(data);
+                  } else {
+                    console.log("there are no blogs");
+                  }
+                });
+
                 // //fetch users list
                 // const usersRef = ref(database, `users/`);
                 // onValue(usersRef, (snapshot) => {
@@ -135,6 +155,9 @@ export function DatabaseProvider({ children }) {
                 //     console.log("there are no users...");
                 //   }
                 // });
+
+                
+
                 // // fetch all items
                 // const itemsRef = ref(database, "items/");
                 // onValue(itemsRef, (snapshot) => {
@@ -158,6 +181,18 @@ export function DatabaseProvider({ children }) {
             } else {
                 setUser(null);
                 setUserData(null);
+
+                //fetch blogs list
+                const blogsRef = ref(database, "blogs/");
+                onValue(blogsRef, (snapshot) => {
+                  const data = snapshot.val();
+                  if (data) {
+                    setBlogs(data);
+                  } else {
+                    console.log("there are no blogs");
+                  }
+                });
+
                 //setUserItems(null);
 
                 // //fetch users list
@@ -192,13 +227,16 @@ export function DatabaseProvider({ children }) {
             value={{
                 user,
                 userData,
+                updateUserData,
+                blogs,
+                deleteBlog,
                 //users,
                 //items,
                 //userItems,
                 //addItem,
                 //updateItem,
                 //deleteItem,
-                updateUserData,
+                
                 //uploadProfileImage,
                 //uploadItemImage
             }}

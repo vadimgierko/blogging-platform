@@ -37,13 +37,12 @@ export default function Dashboard({ setBlogKeyForNewArticle, setBlogTitleForNewA
                 <Route path={`${path}/user-data`}>
                     <UserDataFormInDashboard />
                 </Route>
-                {/*<Route path={`${path}/user-blogs`}>
+                <Route path={`${path}/user-blogs`}>
                     <UserBlogsListInDashboard
-                        userId={userId}
                         setBlogKeyForNewArticle={setBlogKeyForNewArticle}
                         setBlogTitleForNewArticle={setBlogTitleForNewArticle}
                     />
-                </Route>*/}
+                </Route>
             </Switch>
         </div>
     );

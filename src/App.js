@@ -63,8 +63,8 @@ function App() {
               setCurrentBlogLink={setCurrentBlogLink}
             />
           </Route>
-          <Route path={currentBlogLink}>
-            <BlogPage blogKey={currentBlogKey} />
+          <Route path="/blogs/:blogLink">
+            <BlogPage />
           </Route>
           {/*<Route path="/blogs">
             <BlogsListPage

@@ -1,17 +1,14 @@
 import { useState, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
+import { Link, Switch, Route, useRouteMatch, useParams } from "react-router-dom";
 import { useDatabase } from "../hooks/use-database";
 //import { useAuth } from "../hooks/use-auth";
+import ArticleView from "./ArticleView";
 
-export default function BlogPage({ blogKey }) {
-
-    console.log(blogKey)
+export default function BlogPage() {
 
     let {path, url} = useRouteMatch();
+    const { blogLink } = useParams();
 
-    console.log(url)
     //const { user } = useAuth();
     const { blogs, deleteBlog } = useDatabase();
 
@@ -21,23 +18,17 @@ export default function BlogPage({ blogKey }) {
         if (blogs) {
             console.log(blogs);
             const fetchedBlogs = Object.entries(blogs);
-            const currentBlogArray = fetchedBlogs.filter(blog => blog[0] === blogKey); // array...
+            const currentBlogArray = fetchedBlogs.filter(blog => blog[1].blogLink === blogLink); // array...
             const currentBlog = currentBlogArray[0][1];
             setBlog(currentBlog);
         } else {
-            console.log("there are no user and blogs...")
+            console.log("there are no blogs or blogLink in BlogPage ...")
         }
-    }, [blogs]);
-
-    const [currentArticleLink, setCurrentArticleLink] = useState(null);
-    const [currentArticle, setCurrentArticle] = useState(null);
+    }, [blogs, blogLink]);
 
     function convertArticleTitleIntoLink(articleTitle) {
-        return ("/" + articleTitle.replace(/ /g, "-").toLowerCase());
+        return (articleTitle.replace(/ /g, "-").toLowerCase());
     }
-
-    console.log(currentArticleLink);
-    console.log(currentArticle)
 
     return (
         <div>
@@ -49,18 +40,11 @@ export default function BlogPage({ blogKey }) {
                         <hr />
                         {
                             blog.articles ? (
+                            
                                 <div className="row">
                                     <Switch>
-                                        <Route path={currentArticleLink}>
-                                            {
-                                                currentArticle && currentArticleLink ? (
-                                                    <div className="col">
-                                                        {/*<h1>{currentArticle.title}</h1>
-                                                        <hr />*/}
-                                                        <ReactMarkdown children={currentArticle.content} remarkPlugins={[remarkGfm]} />
-                                                    </div>
-                                                ) : null
-                                            }
+                                        <Route exact path={path + "/:articleLink"}>
+                                            <ArticleView />
                                         </Route>
                                     </Switch>
                                     <div className="col-4">
@@ -71,12 +55,8 @@ export default function BlogPage({ blogKey }) {
                                                 Object.entries(blog.articles).map((article) =>
                                                     <Link
                                                         key={article[0]}
-                                                        to={url + convertArticleTitleIntoLink(article[1].title)}
+                                                        to={url + "/" + convertArticleTitleIntoLink(article[1].title)}
                                                         className="d-block"
-                                                        onClick={() => {
-                                                            setCurrentArticle(article[1]);
-                                                            setCurrentArticleLink(url + convertArticleTitleIntoLink(article[1].title))
-                                                        }}
                                                     >{article[1].title}</Link>
                                                 )
                                             }

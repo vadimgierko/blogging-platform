@@ -29,11 +29,8 @@ export default function UserBlogsListInDashboard({
         }
     }, [blogs, user]);
 
-    //const [currentBlogKey, setCurrentBlogKey] = useState(null);
-    //const [currentBlogLink, setCurrentBlogLink] = useState(null);
-
     function convertBlogTitleIntoLink(blogTitle) {
-        return ("/" + blogTitle.replace(/ /g, "-").toLowerCase());
+        return (blogTitle.replace(/ /g, "-").toLowerCase());
     }
 
     return (
@@ -74,7 +71,7 @@ export default function UserBlogsListInDashboard({
                                             </Link>
                                             <Link
                                                 className="text-primary"
-                                                to={`/blogs${convertBlogTitleIntoLink(blog[1].title)}`}
+                                                to={`/blogs/${convertBlogTitleIntoLink(blog[1].title)}`}
                                                 onClick={() => {
                                                     setCurrentBlogKey(blog[0]);
                                                     setCurrentBlogLink(`/blogs${convertBlogTitleIntoLink(blog[1].title)}`);

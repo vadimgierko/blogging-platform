@@ -60,7 +60,6 @@ export default function Header() {
                                         className="text-light text-muted"
                                         style={{textDecoration: "none"}}
                                         onClick={() => {
-                                            logOut();
                                             if (!isNavCollapsed) {
                                                 handleNavCollapse();
                                             }

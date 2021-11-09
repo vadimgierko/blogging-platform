@@ -1,4 +1,6 @@
-export default function UserProfile({userData}) {
+
+
+export default function BloggerProfile() {
     return (
         <>
             <h1>{userData.firstName + " " + userData.lastName}</h1>

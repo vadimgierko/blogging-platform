@@ -5,13 +5,13 @@ import { firebaseAuth, database } from "../firebase"; // + , storage
 import { onAuthStateChanged } from "firebase/auth";
 
 import {
-  ref,
-  set,
-  push,
-  child,
-  update,
-  onValue,
-  remove
+    ref,
+    set,
+    push,
+    child,
+    update,
+    onValue,
+    remove
 } from "firebase/database";
 
 const DatabaseContext = createContext();
@@ -23,7 +23,7 @@ export function DatabaseProvider({ children }) {
     const [user, setUser] = useState(null);
     const [userData, setUserData] = useState(null);
     const [blogs, setBlogs] = useState(null);
-    //const [users, setUsers] = useState(null);
+    const [bloggers, setBloggers] = useState(null);
     //const [items, setItems] = useState(null);
     //const [userItems, setUserItems] = useState(null);
 
@@ -145,16 +145,16 @@ export function DatabaseProvider({ children }) {
                   }
                 });
 
-                // //fetch users list
-                // const usersRef = ref(database, `users/`);
-                // onValue(usersRef, (snapshot) => {
-                //   const data = snapshot.val();
-                //   if (data) {
-                //     setUsers(data);
-                //   } else {
-                //     console.log("there are no users...");
-                //   }
-                // });
+                //fetch bloggers list
+                const bloggersRef = ref(database, `users/`);
+                onValue(bloggersRef, (snapshot) => {
+                  const data = snapshot.val();
+                  if (data) {
+                    setBloggers(data);
+                  } else {
+                    console.log("there are no bloggers...");
+                  }
+                });
 
                 
 
@@ -190,6 +190,17 @@ export function DatabaseProvider({ children }) {
                     setBlogs(data);
                   } else {
                     console.log("there are no blogs");
+                  }
+                });
+
+                //fetch bloggers list
+                const bloggersRef = ref(database, `users/`);
+                onValue(bloggersRef, (snapshot) => {
+                  const data = snapshot.val();
+                  if (data) {
+                    setBloggers(data);
+                  } else {
+                    console.log("there are no bloggers...");
                   }
                 });
 
@@ -230,7 +241,7 @@ export function DatabaseProvider({ children }) {
                 updateUserData,
                 blogs,
                 deleteBlog,
-                //users,
+                bloggers,
                 //items,
                 //userItems,
                 //addItem,

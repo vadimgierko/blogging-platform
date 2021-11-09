@@ -26,23 +26,28 @@ export default function BlogPage() {
         }
     }, [blogs, blogLink]);
 
-    function convertArticleTitleIntoLink(articleTitle) {
-        return (articleTitle.replace(/ /g, "-").toLowerCase());
-    }
+    // function convertArticleTitleIntoLink(articleTitle) {
+    //     return (articleTitle.replace(/ /g, "-").toLowerCase());
+    // }
 
     return (
         <div>
             {
                 blog ? (
                     <div>
-                        <h1>{blog.title}</h1>
-                        <p>{blog.description}</p>
+                        <div className="text-center">
+                            <h1>{blog.title}</h1>
+                            <p>{blog.description}</p>
+                        </div>
                         <hr />
                         {
                             blog.articles ? (
                             
                                 <div className="row">
                                     <Switch>
+                                        <Route exact path={path}>
+                                            <ArticleView />
+                                        </Route>
                                         <Route exact path={path + "/:articleLink"}>
                                             <ArticleView />
                                         </Route>
@@ -55,7 +60,7 @@ export default function BlogPage() {
                                                 Object.entries(blog.articles).map((article) =>
                                                     <Link
                                                         key={article[0]}
-                                                        to={url + "/" + convertArticleTitleIntoLink(article[1].title)}
+                                                        to={url + "/" + article[1].articleLink}
                                                         className="d-block"
                                                     >{article[1].title}</Link>
                                                 )

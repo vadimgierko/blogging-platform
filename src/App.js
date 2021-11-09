@@ -19,14 +19,6 @@ import { useDatabase } from "./hooks/use-database";
 function App() {
 
   const { user } = useAuth();
-  if (user) {
-    console.log("user:", user.uid, user.email);
-  }
-
-  const { blogs } = useDatabase();
-  if (blogs) {
-    console.log("blogs:", blogs);
-  }
 
   const [bloggersList, setBloggersList] = useState(null);
   const [bloggerData, setBloggerData] = useState(null);

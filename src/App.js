@@ -10,7 +10,6 @@ import SignInForm from "./components/SignInForm";
 import SignUpForm from "./components/SignUpForm";
 import Dashboard from "./components/Dashboard";
 import BloggersList from "./components/BloggersList";
-import UserProfile from "./components/UserProfile";
 import CreateBlogForm from "./components/CreateBlogForm";
 import CreateArticlePage from "./components/CreateArticlePage";
 import Footer from "./components/Footer";
@@ -18,28 +17,13 @@ import { useDatabase } from "./hooks/use-database";
 
 function App() {
 
-  const { user } = useAuth();
-  if (user) {
-    console.log("user:", user.uid, user.email);
-  }
-
-  const { blogs } = useDatabase();
-  if (blogs) {
-    console.log("blogs:", blogs);
-  }
-
-  const [bloggersList, setBloggersList] = useState(null);
-  const [bloggerData, setBloggerData] = useState(null);
+  //const { user } = useAuth();
 
   const [blogKeyForNewArticle, setBlogKeyForNewArticle] = useState(null);
   const [blogTitleForNewArticle, setBlogTitleForNewArticle] = useState(null);
 
   const [currentBlogLink, setCurrentBlogLink] = useState(null);
   const [currentBlogKey, setCurrentBlogKey] = useState(null);
-
-  if (currentBlogLink) {
-    console.log(currentBlogLink)
-  }
 
   return (
     <div className="App">
@@ -66,6 +50,9 @@ function App() {
           <Route path="/blogs/:blogLink">
             <BlogPage />
           </Route>
+          <Route path="/bloggers">
+            <BloggersList />
+          </Route>
           {/*<Route path="/blogs">
             <BlogsListPage
               setCurrentBlogKey={setCurrentBlogKey}
@@ -73,16 +60,7 @@ function App() {
             />
           </Route>
           
-          <Route path="/bloggers">
-            {bloggersList ? (
-              <BloggersList
-                bloggersList={bloggersList}
-                fetchBloggerData={fetchBloggerData}
-              />
-            ) : (
-              getBloggersList()
-            )}
-          </Route>
+          
           {isUserLogged && user && userData ? (
             <Route path="/create-blog">
               <CreateBlogForm

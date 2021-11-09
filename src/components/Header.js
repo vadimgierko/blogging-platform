@@ -42,13 +42,25 @@ export default function Header() {
                 <div className={`${isNavCollapsed ? "collapse" : null} navbar-collapse`} id="navbarColor01">
                     <ul className="navbar-nav me-auto">
                         <li className="nav-item">
-                            <Link className="nav-link" to="/" onClick={isNavCollapsed ? null : () => handleNavCollapse() }>Home</Link>
+                            <Link
+                                className="nav-link"
+                                to="/"
+                                onClick={isNavCollapsed ? null : () => handleNavCollapse() }
+                            >Home</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="/blogs" onClick={isNavCollapsed ? null : () => handleNavCollapse() }>Blogs</Link>
+                            <Link
+                                className="nav-link"
+                                to="/blogs"
+                                onClick={isNavCollapsed ? null : () => handleNavCollapse() }
+                            >Blogs</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="/bloggers" onClick={isNavCollapsed ? null : () => handleNavCollapse() }>Bloggers</Link>
+                            <Link
+                                className="nav-link"
+                                to="/bloggers"
+                                onClick={isNavCollapsed ? null : () => handleNavCollapse() }
+                            >Bloggers</Link>
                         </li>
                     </ul>
                     <div>

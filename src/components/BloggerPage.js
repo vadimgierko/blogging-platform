@@ -2,7 +2,7 @@ import { useDatabase } from "../hooks/use-database";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
-export default function BloggerProfile() {
+export default function BloggerPage() {
 
     const { userName } = useParams();
 
@@ -38,7 +38,7 @@ export default function BloggerProfile() {
     }, [blogs, userName, blogger]);
 
     return (
-        <>
+        <div className="BloggerPage">
             {
                 blogger ? (
                     <>
@@ -68,6 +68,6 @@ export default function BloggerProfile() {
                     </>
                 )
             }
-        </>
+        </div>
     );
 }

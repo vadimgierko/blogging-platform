@@ -14,6 +14,7 @@ import CreateBlogForm from "./components/CreateBlogForm";
 import CreateArticlePage from "./components/CreateArticlePage";
 import Footer from "./components/Footer";
 import { useDatabase } from "./hooks/use-database";
+import BloggerPage from "./components/BloggerPage";
 
 function App() {
 
@@ -50,17 +51,19 @@ function App() {
           <Route path="/blogs/:blogLink">
             <BlogPage />
           </Route>
+          <Route path="/blogs">
+            <BlogsListPage />
+          </Route>
+          <Route path="/bloggers/:userName">
+            <BloggerPage />
+          </Route>
           <Route path="/bloggers">
             <BloggersList />
           </Route>
-          {/*<Route path="/blogs">
-            <BlogsListPage
-              setCurrentBlogKey={setCurrentBlogKey}
-              setCurrentBlogLink={setCurrentBlogLink}
-            />
-          </Route>
           
           
+          
+          {/*
           {isUserLogged && user && userData ? (
             <Route path="/create-blog">
               <CreateBlogForm
@@ -69,20 +72,6 @@ function App() {
                 userFirstName={userData.firstName}
                 userLastName={userData.lastName}
               />
-            </Route>
-          ) : null}
-          {isUserLogged && user ? (
-            <Route path="/dashboard">
-              <Dashboard
-                userId={user.uid}
-                setBlogKeyForNewArticle={setBlogKeyForNewArticle}
-                setBlogTitleForNewArticle={setBlogTitleForNewArticle}
-              />
-            </Route>
-          ) : null}
-          {bloggerData ? (
-            <Route path={`/${bloggerData.userName}`}>
-              <UserProfile userData={bloggerData} />
             </Route>
           ) : null}
           {isUserLogged &&

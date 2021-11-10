@@ -1,60 +1,44 @@
-import { useState } from "react";
-import { ref, onValue } from "firebase/database";
-import { database } from '../firebase';
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDatabase } from "../hooks/use-database";
 
-export default function BlogsListPage({ setCurrentBlogLink, setCurrentBlogKey }) {
+export default function BlogsListPage() {
+
+    const { blogs } = useDatabase();
 
     const [blogsList, setBlogsList] = useState(null);
 
-    function getBlogsList() {
-        const blogsListRef = ref(database, 'blogs/');
-        onValue(blogsListRef, (snapshot) => {
-            if (snapshot) {
-              const blogsListObject = snapshot.val();
-              //console.log(bloggersListObject);
-              if (blogsListObject) {
-                const blogsListArray = Object.entries(blogsListObject);
-                setBlogsList(blogsListArray);
-              } else {
-                setBlogsList([]);
-              }
-            }
-        });
-    }
-
-    function convertBlogTitleIntoLink(blogTitle) {
-        return ("/" + blogTitle.replace(/ /g, "-").toLowerCase());
-    }
+    useEffect(() => {
+        if (blogs) {
+            setBlogsList(Object.entries(blogs));
+        }
+    }, [blogs]);
 
     return (
-        <>
-            {
-                blogsList ? (
-                    <div>
-                        <h1>Blogs</h1>
-                        <hr />
-                        {
-                            blogsList.map((blog) => 
-                                <div key={blog[0]}>
-                                    <Link
-                                        to={convertBlogTitleIntoLink(blog[1].title)}
-                                        onClick={() => {
-                                            setCurrentBlogKey(blog[0]);
-                                            setCurrentBlogLink(convertBlogTitleIntoLink(blog[1].title))
-                                        }}
-                                    >
-                                        <h3>{blog[1].title}</h3>
-                                    </Link>
-                                    <p><em>by {blog[1].author}</em></p>
-                                    <p>{blog[1].description}</p>
-                                    <hr />
-                                </div>
-                            )
-                        }
-                    </div>
-                ) : getBlogsList()
-            }
-        </>
+        <div className="BlogsList">
+            <div>
+                <h1>Blogs</h1>
+                <hr />
+                { blogsList && blogsList.length ? (
+                    blogsList.map((blog) => 
+                        <div key={blog[0]}>
+                            <Link to={"blogs/" + blog[1].blogLink}>
+                                <h3>{blog[1].title}</h3>
+                            </Link>
+                            <p>
+                                by
+                                <Link to={"bloggers/" + blog[1].userName} className="ms-2">
+                                    {blog[1].author}
+                                </Link>
+                            </p>
+                            <p>{blog[1].description}</p>
+                            <hr />
+                        </div>
+                    )) : (
+                        <p>Downloading blogs or... there is no blogs...</p>
+                    )
+                }
+            </div>
+        </div>
     );
 }

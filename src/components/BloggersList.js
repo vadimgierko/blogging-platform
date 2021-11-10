@@ -1,11 +1,8 @@
-import { Link, useRouteMatch, Switch, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDatabase } from "../hooks/use-database";
-import BloggerProfile from "./BloggerProfile";
 
 export default function BloggersList() {
-
-    let {path, url} = useRouteMatch();
 
     const { bloggers } = useDatabase();
 
@@ -19,39 +16,31 @@ export default function BloggersList() {
 
     return (
         <div>
-            <Switch>
-                <Route exact path={path}>
-                    <>
-                        <h1>Bloggers</h1>
-                        <hr />
-                        {
-                            bloggersList ? (
-                                bloggersList.map((blogger) => {
-                                    const bloggerId = blogger[0];
-                                    const bloggerData = blogger[1];
-                                    return (
-                                        <Link
-                                            key={bloggerId}
-                                            to={url + "/" + bloggerData.userName}
-                                            className="d-block my-2"
-                                            style={{textDecoration: "none"}}
-                                            onClick={() => console.log("Blogger Id:", bloggerId)}
-                                        >
-                                            <i className="bi bi-person-circle me-2"></i>
-                                            {bloggerData.firstName + " " + bloggerData.lastName + " | " + bloggerData.userName}
-                                        </Link>
-                                    );
-                                })
-                            ) : (
-                                <p>Downloading bloggers list...</p>
-                            )
-                        }
-                    </>
-                </Route>
-                <Route path={path + "/:userName"}>
-                    <BloggerProfile />
-                </Route>
-            </Switch>
+            <>
+                <h1>Bloggers</h1>
+                <hr />
+                {
+                    bloggersList ? (
+                        bloggersList.map((blogger) => {
+                            const bloggerId = blogger[0];
+                            const bloggerData = blogger[1];
+                            return (
+                                <Link
+                                    key={bloggerId}
+                                    to={"bloggers/" + bloggerData.userName}
+                                    className="d-block my-2"
+                                    style={{textDecoration: "none"}}
+                                >
+                                    <i className="bi bi-person-circle me-2"></i>
+                                    {bloggerData.firstName + " " + bloggerData.lastName + " | " + bloggerData.userName}
+                                </Link>
+                            );
+                        })
+                    ) : (
+                        <p>Downloading bloggers list...</p>
+                    )
+                }
+            </>
         </div>
     );
 }

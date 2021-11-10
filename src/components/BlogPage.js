@@ -16,7 +16,6 @@ export default function BlogPage() {
 
     useEffect(() => {
         if (blogs) {
-            console.log(blogs);
             const fetchedBlogs = Object.entries(blogs);
             const currentBlogArray = fetchedBlogs.filter(blog => blog[1].blogLink === blogLink); // array...
             const currentBlog = currentBlogArray[0][1];
@@ -26,10 +25,6 @@ export default function BlogPage() {
         }
     }, [blogs, blogLink]);
 
-    // function convertArticleTitleIntoLink(articleTitle) {
-    //     return (articleTitle.replace(/ /g, "-").toLowerCase());
-    // }
-
     return (
         <div>
             {
@@ -37,6 +32,12 @@ export default function BlogPage() {
                     <div>
                         <div className="text-center">
                             <h1>{blog.title}</h1>
+                            <p>
+                                by
+                                <Link to={"/bloggers/" + blog.userName} className="ms-2">
+                                    {blog.author}
+                                </Link>
+                            </p>
                             <p>{blog.description}</p>
                         </div>
                         <hr />

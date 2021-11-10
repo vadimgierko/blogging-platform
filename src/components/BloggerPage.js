@@ -2,7 +2,7 @@ import { useDatabase } from "../hooks/use-database";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
-export default function BloggerProfile() {
+export default function BloggerPage() {
 
     const { userName } = useParams();
 
@@ -38,7 +38,7 @@ export default function BloggerProfile() {
     }, [blogs, userName, blogger]);
 
     return (
-        <>
+        <div className="BloggerPage">
             {
                 blogger ? (
                     <>
@@ -52,9 +52,9 @@ export default function BloggerProfile() {
                             {
                                 bloggerBlogs && bloggerBlogs.length && bloggerBlogs[0] !== null ? (
                                     bloggerBlogs.map((blog) => 
-                                        <ul key={blog.blogLink}>
+                                        <li key={blog.blogLink}>
                                             <Link to={`/blogs/${blog.blogLink}`}>{blog.title}</Link>
-                                        </ul>
+                                        </li>
                                     )
                                 ) : (
                                     <p>Downloading blogger blogs...</p>
@@ -68,6 +68,6 @@ export default function BloggerProfile() {
                     </>
                 )
             }
-        </>
+        </div>
     );
 }

@@ -1,37 +1,30 @@
-import { useState } from "react";
-import { database } from "../firebase";
-import { ref, push, child, update } from "firebase/database";
+import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
+//import { useAuth } from "../hooks/use-auth";
+import { useDatabase } from "../hooks/use-database";
 
-export default function CreateBlogForm({ userId, userName, userFirstName, userLastName }) {
+export default function CreateBlogForm() {
+
+    //const { user } = useAuth();
+    const { userData, addBlog } = useDatabase();
 
     const [newBlogData, setNewBlogData] = useState({
-        author: userFirstName + " " + userLastName,
-        userId: userId,
-        userName: userName,
         title: "",
         description: "",
-        articles: []
+        articles: Array(0)
     });
 
     function handleSubmit() {
-        console.log(newBlogData);
-        saveNewBlog(newBlogData);
+        const blogLink = convertBlogTitleIntoLink(newBlogData.title);
+        const newBlogDataWithLink = {
+            ...newBlogData,
+            blogLink: blogLink
+        }
+        addBlog(newBlogDataWithLink);
     }
 
-    function saveNewBlog(newBlogData) {
-        
-        const blogData = {
-            ...newBlogData
-        };
-
-        const newBlogKey = push(child(ref(database), 'blogs')).key;
-
-        const updates = {};
-        updates['/blogs/' + newBlogKey] = blogData;
-        updates['/users/' + userId + '/blogs/' + newBlogKey] = blogData;
-
-        return update(ref(database), updates);
+    function convertBlogTitleIntoLink(blogTitle) {
+        return (blogTitle.replace(/ /g, "-").toLowerCase());
     }
 
     return (

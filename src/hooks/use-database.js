@@ -52,6 +52,18 @@ export function DatabaseProvider({ children }) {
     //   const deleteItem = (itemKey) => {
     //     remove(ref(database, "/items/" + user.uid + "/" + itemKey));
     //   };
+    const addBlog = (blogData) => {
+      const newBlogKey = push(child(ref(database), "blogs")).key;
+        if (newBlogKey) {
+          set(ref(database, "blogs/" + newBlogKey), {
+            ...blogData,
+            author: userData.firstName + " " + userData.lastName,
+            userName: userData.userName,
+            userId: user.uid,
+          });
+        }
+    }
+
     const deleteBlog = (blogKey) => {
         remove(ref(database, "blogs/" +  blogKey)).then(() => {
                 console.log("blog " + blogKey + " was deleted");
@@ -242,6 +254,7 @@ export function DatabaseProvider({ children }) {
                 blogs,
                 deleteBlog,
                 bloggers,
+                addBlog
                 //items,
                 //userItems,
                 //addItem,

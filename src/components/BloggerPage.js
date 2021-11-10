@@ -52,9 +52,9 @@ export default function BloggerPage() {
                             {
                                 bloggerBlogs && bloggerBlogs.length && bloggerBlogs[0] !== null ? (
                                     bloggerBlogs.map((blog) => 
-                                        <ul key={blog.blogLink}>
+                                        <li key={blog.blogLink}>
                                             <Link to={`/blogs/${blog.blogLink}`}>{blog.title}</Link>
-                                        </ul>
+                                        </li>
                                     )
                                 ) : (
                                     <p>Downloading blogger blogs...</p>

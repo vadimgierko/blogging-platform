@@ -11,6 +11,7 @@ export default function BlogsListPage() {
     useEffect(() => {
         if (blogs) {
             setBlogsList(Object.entries(blogs));
+            console.log(blogs)
         }
     }, [blogs]);
 

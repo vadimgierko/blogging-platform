@@ -60,20 +60,12 @@ function App() {
           <Route path="/bloggers">
             <BloggersList />
           </Route>
-          
+          <Route path="/create-blog">
+            <CreateBlogForm />
+          </Route>
           
           
           {/*
-          {isUserLogged && user && userData ? (
-            <Route path="/create-blog">
-              <CreateBlogForm
-                userId={user.uid}
-                userName={userData.userName}
-                userFirstName={userData.firstName}
-                userLastName={userData.lastName}
-              />
-            </Route>
-          ) : null}
           {isUserLogged &&
           user &&
           blogKeyForNewArticle &&

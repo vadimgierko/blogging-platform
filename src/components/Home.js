@@ -11,7 +11,9 @@ export default function Home() {
             <h3>Technologies used in building Blogging Platform:</h3>
             <hr />
             <ul>
-                <li>React (+ React Router + React Markdown)</li>
+                <li>React</li>
+                <li>React Router</li>
+                <li>React Markdown</li>
                 <li>Firebase</li>
                 <li>Bootstrap</li>
                 <li>Bootswatch</li>

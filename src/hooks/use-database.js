@@ -57,7 +57,7 @@ export function DatabaseProvider({ children }) {
         if (newBlogKey) {
           set(ref(database, "blogs/" + newBlogKey), {
             ...blogData,
-            author: userData.firstName + userData.lastName,
+            author: userData.firstName + " " + userData.lastName,
             userName: userData.userName,
             userId: user.uid,
           });

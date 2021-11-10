@@ -11,11 +11,20 @@ export default function CreateBlogForm() {
     const [newBlogData, setNewBlogData] = useState({
         title: "",
         description: "",
-        articles: []
+        articles: Array(0)
     });
 
     function handleSubmit() {
-        addBlog(newBlogData);
+        const blogLink = convertBlogTitleIntoLink(newBlogData.title);
+        const newBlogDataWithLink = {
+            ...newBlogData,
+            blogLink: blogLink
+        }
+        addBlog(newBlogDataWithLink);
+    }
+
+    function convertBlogTitleIntoLink(blogTitle) {
+        return (blogTitle.replace(/ /g, "-").toLowerCase());
     }
 
     return (

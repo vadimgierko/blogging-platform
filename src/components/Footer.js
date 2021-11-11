@@ -1,6 +1,6 @@
 export default function Footer() {
     return (
-        <p className="text-muted">
+        <p className="Footer text-muted">
             <a
                 className="nav-link text-center mb-3"
                 href="https://github.com/vadimgierko/blogging-platform"

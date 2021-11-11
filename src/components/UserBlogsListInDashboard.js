@@ -4,12 +4,7 @@ import { useAuth } from "../hooks/use-auth";
 import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
 import BlogEditionForm from "./BlogEditionForm";
 
-export default function UserBlogsListInDashboard({
-    setBlogKeyForNewArticle,
-    setBlogTitleForNewArticle,
-    setCurrentBlogKey,
-    setCurrentBlogLink
-    }) {
+export default function UserBlogsListInDashboard() {
 
     let {path, url} = useRouteMatch();
 
@@ -36,69 +31,71 @@ export default function UserBlogsListInDashboard({
     */
 
     return (
-        <Switch>
-            <Route exact path={path}>
-                <div>
-                    <Link
-                        to="/create-blog"
-                        type="button"
-                        className="btn btn-info d-block my-3"
-                    >Create new blog</Link>
-                    {
-                        userBlogs && userBlogs.length ?
-                            userBlogs.map((blog) =>
-                                <div className="container" key={blog[0]}>
-                                    <div className="row">
-                                        <div className="col">
-                                            <Link
-                                                to={url + "/" + blog[1].blogLink}
-                                            >
-                                                <h5>{blog[1].title}</h5>
-                                            </Link>
+        <div className="UserBlogsListInDashboard">
+            <Switch>
+                <Route exact path={path}>
+                    <div>
+                        <Link
+                            to="/create-blog"
+                            type="button"
+                            className="btn btn-info d-block my-3"
+                        >Create new blog</Link>
+                        {
+                            userBlogs && userBlogs.length ?
+                                userBlogs.map((blog) =>
+                                    <div className="container" key={blog[0]}>
+                                        <div className="row">
+                                            <div className="col">
+                                                <Link
+                                                    to={url + "/" + blog[1].blogLink}
+                                                >
+                                                    <h5>{blog[1].title}</h5>
+                                                </Link>
+                                            </div>
+                                            <div className="col-4 text-end">
+                                                <Link
+                                                    to={"/create-article/" + blog[0] + "/" + blog[1].title}
+                                                    className="text-info"
+                                                >
+                                                    <i className="bi bi-plus-square me-2" />
+                                                </Link>
+                                                <Link
+                                                    className="text-primary"
+                                                    to={`/blogs/${blog[1].blogLink}`}
+                                                >
+                                                    <i className="bi bi-eye me-2" />
+                                                </Link>
+                                                <Link
+                                                    className="text-danger"
+                                                    to="/dashboard/user-blogs"
+                                                    onClick={() => {
+                                                        // eslint-disable-next-line no-restricted-globals
+                                                        const wantToDeleteBlog = confirm("Are you sure, you want to delete this blog & all articles from this blog forever? There's no turning back... Delete blog?");
+                                                        if (wantToDeleteBlog) {
+                                                            deleteBlog(blog[0]);
+                                                        }
+                                                    }}
+                                                >
+                                                    <i className="bi bi-trash" />
+                                                </Link>
+                                            </div>
+                                            
                                         </div>
-                                        <div className="col-4 text-end">
-                                            <Link
-                                                to="/create-article"
-                                                className="text-info"
-                                            >
-                                                <i className="bi bi-plus-square me-2" />
-                                            </Link>
-                                            <Link
-                                                className="text-primary"
-                                                to={`/blogs/${blog[1].blogLink}`}
-                                            >
-                                                <i className="bi bi-eye me-2" />
-                                            </Link>
-                                            <Link
-                                                className="text-danger"
-                                                to="/dashboard/user-blogs"
-                                                onClick={() => {
-                                                    // eslint-disable-next-line no-restricted-globals
-                                                    const wantToDeleteBlog = confirm("Are you sure, you want to delete this blog & all articles from this blog forever? There's no turning back... Delete blog?");
-                                                    if (wantToDeleteBlog) {
-                                                        deleteBlog(blog[0]);
-                                                    }
-                                                }}
-                                            >
-                                                <i className="bi bi-trash" />
-                                            </Link>
-                                        </div>
-                                        
+                                        <p>{blog[1].description}</p>
+                                        <hr />
                                     </div>
-                                    <p>{blog[1].description}</p>
-                                    <hr />
+                                )
+                            :
+                                <div>
+                                    <h5 className="text-center">There is no blogs yet... Create one!</h5>
                                 </div>
-                            )
-                        :
-                            <div>
-                                <h5 className="text-center">There is no blogs yet... Create one!</h5>
-                            </div>
-                    }
-                </div>
-            </Route>
-            <Route path={path + "/:blogLink"}>
-                <BlogEditionForm />
-            </Route>
-        </Switch>
+                        }
+                    </div>
+                </Route>
+                <Route path={path + "/:blogLink"}>
+                    <BlogEditionForm />
+                </Route>
+            </Switch>
+        </div>
     );
 }

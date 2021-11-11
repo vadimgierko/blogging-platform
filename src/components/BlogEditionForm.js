@@ -26,17 +26,6 @@ export default function BlogEditionForm() {
         }
     }, [blogs, blogLink]);
 
-    // function getBlogData(blogKey) {
-    //     const blogRef = ref(database, 'users/' + userId + '/blogs/' + blogKey);
-    //     onValue(blogRef, (snapshot) => {
-    //         if (snapshot) {
-    //             const fetchedBlogData = snapshot.val();        
-    //             setBlogData(fetchedBlogData ? fetchedBlogData : null);
-    //             console.log("Current blog data fetched", fetchedBlogData);
-    //         }
-    //     });
-    // }
-
     // function deleteArticle(articleKey) {
     //     // eslint-disable-next-line no-restricted-globals
     //     const wantToDeleteArticle = confirm("Are you sure, you want to delete this article from this blog forever? There's no turning back... Delete blog?");
@@ -51,10 +40,6 @@ export default function BlogEditionForm() {
     //         remove(ref(database, 'blogs/' + blogKey + '/articles/' + articleKey));
     //     }
     // }
-
-    // useEffect(() => {
-    //     getBlogData(blogKey);
-    // }, [blogKey]);
 
     if (blog) {
         return (
@@ -86,7 +71,6 @@ export default function BlogEditionForm() {
                             className="btn btn-success mb-3 d-block"
                             style={{width: "100%"}}
                             onClick={() => {
-                                //console.log(blog, blogKey);
                                 updateBlog(blogKey, blog);
                             }}
                         >
@@ -134,7 +118,11 @@ export default function BlogEditionForm() {
                                     <hr />
                                 </div>
                             ))
-                        ) : (null)
+                        ) : (
+                            <div>
+                                There are no articles...
+                            </div>
+                        )
                     }
                 </div>
             </div>

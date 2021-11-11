@@ -1,20 +1,10 @@
-import { useState } from "react";
 import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
 import UserDataFormInDashboard from "./UserDataFormInDashboard";
 import UserBlogsListInDashboard from "./UserBlogsListInDashboard";
-import { useAuth } from "../hooks/use-auth";
 
-export default function Dashboard({
-    setBlogKeyForNewArticle,
-    setBlogTitleForNewArticle,
-    setCurrentBlogKey,
-    setCurrentBlogLink
-    }) {
+export default function Dashboard() {
 
     let {path, url} = useRouteMatch();
-
-    //const { user } = useAuth();
-    //const userId = user.uid;
     
     return (
         <div>
@@ -43,12 +33,7 @@ export default function Dashboard({
                     <UserDataFormInDashboard />
                 </Route>
                 <Route path={`${path}/user-blogs`}>
-                    <UserBlogsListInDashboard
-                        setBlogKeyForNewArticle={setBlogKeyForNewArticle}
-                        setBlogTitleForNewArticle={setBlogTitleForNewArticle}
-                        setCurrentBlogKey={setCurrentBlogKey}
-                        setCurrentBlogLink={setCurrentBlogLink}
-                    />
+                    <UserBlogsListInDashboard />
                 </Route>
             </Switch>
         </div>

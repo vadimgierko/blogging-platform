@@ -24,60 +24,66 @@ export function DatabaseProvider({ children }) {
     const [userData, setUserData] = useState(null);
     const [blogs, setBlogs] = useState(null);
     const [bloggers, setBloggers] = useState(null);
-    //const [items, setItems] = useState(null);
-    //const [userItems, setUserItems] = useState(null);
+    
+    const updateUserData = (userData) => {
+      set(ref(database, "users/" + user.uid), {
+          ...userData
+      });
+    };
 
-    //   const addItem = (item) => {
-    //     if (user) {
-    //       const newItem = {
-    //         ...item,
-    //         userId: user.uid
-    //       };
-
-    //       const newItemKey = push(child(ref(database), "items")).key;
-
-    //       const updates = {};
-    //       updates["/items/" + user.uid + "/" + newItemKey] = newItem;
-
-    //       return update(ref(database), updates);
-    //     }
-    //   };
-
-    //   const updateItem = (updatedItem, itemKey) => {
-    //     set(ref(database, "items/" + user.uid + "/" + itemKey), {
-    //       ...updatedItem
-    //     });
-    //   };
-
-    //   const deleteItem = (itemKey) => {
-    //     remove(ref(database, "/items/" + user.uid + "/" + itemKey));
-    //   };
     const addBlog = (blogData) => {
+
       const newBlogKey = push(child(ref(database), "blogs")).key;
-        if (newBlogKey) {
-          set(ref(database, "blogs/" + newBlogKey), {
-            ...blogData,
-            author: userData.firstName + " " + userData.lastName,
-            userName: userData.userName,
-            userId: user.uid,
-          });
-        }
+
+      if (newBlogKey) {
+        set(ref(database, "blogs/" + newBlogKey), {
+          ...blogData,
+          author: userData.firstName + " " + userData.lastName,
+          userName: userData.userName,
+          userId: user.uid,
+        });
+      }
     }
 
     const deleteBlog = (blogKey) => {
-        remove(ref(database, "blogs/" +  blogKey)).then(() => {
-                console.log("blog " + blogKey + " was deleted");
-            }).catch((error) => {
-                // An error ocurred
-                console.log(error.message);
-            });
+      remove(ref(database, "blogs/" +  blogKey)).then(() => {
+          console.log("blog " + blogKey + " was deleted");
+      }).catch((error) => {
+          // An error ocurred
+          console.log(error.message);
+      });
     }
 
-    const updateUserData = (userData) => {
-        set(ref(database, "users/" + user.uid), {
-            ...userData
-        });
+    const updateBlog = (blogKey, updatedBlogData) => {
+      set(ref(database, "blogs/" + blogKey), {
+          ...updatedBlogData
+      });
     };
+
+    const addArticle = (blogKey, blogTitle, article) => {
+
+      const newArticleKey = push(child(ref(database), "blogs/" + blogKey + "/articles/")).key;
+
+      if (newArticleKey) {
+        set(ref(database, "blogs/" + blogKey + "/articles/" + newArticleKey), {
+          ...article,
+          author: userData.firstName + " " + userData.lastName,
+          userName: userData.userName,
+          userId: user.uid,
+          blogKey: blogKey,
+          blogTitle: blogTitle
+        });
+      }
+    }
+
+    const deleteArticle = (blogKey, articleKey) => {
+      remove(ref(database, "blogs/" +  blogKey + "/articles/" + articleKey)).then(() => {
+          console.log("article " + articleKey + " in blog " + blogKey + " was deleted");
+      }).catch((error) => {
+          // An error ocurred
+          console.log(error.message);
+      });
+    }
 
     //   const getProfileImageURL = (profileImageRef) => {
     //     // get profile img url to users data:
@@ -254,13 +260,10 @@ export function DatabaseProvider({ children }) {
                 blogs,
                 deleteBlog,
                 bloggers,
-                addBlog
-                //items,
-                //userItems,
-                //addItem,
-                //updateItem,
-                //deleteItem,
-                
+                addBlog,
+                updateBlog,
+                addArticle,
+                deleteArticle
                 //uploadProfileImage,
                 //uploadItemImage
             }}

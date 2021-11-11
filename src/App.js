@@ -1,7 +1,5 @@
 import "./App.css";
-import { useAuth } from "./hooks/use-auth.js";
 import { Switch, Route } from "react-router-dom";
-import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import BlogsListPage from "./components/BlogsListPage";
@@ -13,18 +11,9 @@ import BloggersList from "./components/BloggersList";
 import CreateBlogForm from "./components/CreateBlogForm";
 import CreateArticlePage from "./components/CreateArticlePage";
 import Footer from "./components/Footer";
-import { useDatabase } from "./hooks/use-database";
 import BloggerPage from "./components/BloggerPage";
 
 function App() {
-
-  //const { user } = useAuth();
-
-  const [blogKeyForNewArticle, setBlogKeyForNewArticle] = useState(null);
-  const [blogTitleForNewArticle, setBlogTitleForNewArticle] = useState(null);
-
-  const [currentBlogLink, setCurrentBlogLink] = useState(null);
-  const [currentBlogKey, setCurrentBlogKey] = useState(null);
 
   return (
     <div className="App">
@@ -41,12 +30,7 @@ function App() {
             <SignUpForm />
           </Route>
           <Route path="/dashboard">
-            <Dashboard
-              setBlogKeyForNewArticle={setBlogKeyForNewArticle}
-              setBlogTitleForNewArticle={setBlogTitleForNewArticle}
-              setCurrentBlogKey={setCurrentBlogKey}
-              setCurrentBlogLink={setCurrentBlogLink}
-            />
+            <Dashboard />
           </Route>
           <Route path="/blogs/:blogLink">
             <BlogPage />
@@ -63,24 +47,9 @@ function App() {
           <Route path="/create-blog">
             <CreateBlogForm />
           </Route>
-          
-          
-          {/*
-          {isUserLogged &&
-          user &&
-          blogKeyForNewArticle &&
-          blogTitleForNewArticle ? (
-            <Route path="/create-article">
-              <CreateArticlePage
-                userId={user.uid}
-                userName={userData.userName}
-                userFirstName={userData.firstName}
-                userLastName={userData.lastName}
-                blogKey={blogKeyForNewArticle}
-                blogTitle={blogTitleForNewArticle}
-              />
-            </Route>
-          ) : null}*/}
+          <Route path="/create-article/:blogKey/:blogTitle">
+            <CreateArticlePage />
+          </Route>
         </Switch>
         <hr />
         <div className="text-center">

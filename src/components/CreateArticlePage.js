@@ -1,47 +1,37 @@
 import { useState } from "react";
-import { database } from "../firebase";
-import { ref, push, child, update } from "firebase/database";
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import MarkdownEditor from "./MarkdownEditor";
+import { useDatabase } from "../hooks/use-database";
 
-export default function CreateArticlePage({ userId, userName, userFirstName, userLastName, blogTitle, blogKey }) {
+export default function CreateArticlePage() {
+
+    const { blogKey } = useParams();
+    const { blogTitle } = useParams();
+
+    const { addArticle } = useDatabase();
 
     const [newArticleData, setNewArticleData] = useState({
-        author: userFirstName + " " + userLastName,
-        userId: userId,
-        userName: userName,
         title: "",
         description: "",
         createdAt: "",
-        blogTitle: blogTitle,
-        blogKey: blogKey,
         content: ""
     });
 
-    console.log("data passed to CreateArticlePage", newArticleData);
-
     function handleSubmit() {
-        //console.log(newArticleData);
-        saveNewArticle(newArticleData);
+        const articleLink = convertTitleIntoLink(newArticleData.title);
+        const newArticleDataWithLink = {
+            ...newArticleData,
+            articleLink: articleLink
+        }
+        addArticle(blogKey, blogTitle, newArticleDataWithLink);
     }
 
-    function saveNewArticle(newArticleData) {
-        
-        const articleData = {
-            ...newArticleData
-        };
-
-        const newArticleKey = push(child(ref(database), '/blogs/' + blogKey + '/articles/')).key;
-
-        const updates = {};
-        updates['/blogs/' + blogKey + '/articles/' + newArticleKey] = articleData;
-        updates['/users/' + userId + '/blogs/' + blogKey + '/articles/' + newArticleKey] = articleData;
-
-        return update(ref(database), updates);
+    function convertTitleIntoLink(title) {
+        return (title.replace(/ /g, "-").toLowerCase());
     }
 
     return (
-        <div className="container">
+        <div className="CreateArticlePage container">
             <form>
                 <h1>Create new article!</h1>
                 <hr />

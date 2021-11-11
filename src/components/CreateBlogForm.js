@@ -1,12 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from 'react-router-dom';
-//import { useAuth } from "../hooks/use-auth";
 import { useDatabase } from "../hooks/use-database";
 
 export default function CreateBlogForm() {
 
-    //const { user } = useAuth();
-    const { userData, addBlog } = useDatabase();
+    const { addBlog } = useDatabase();
 
     const [newBlogData, setNewBlogData] = useState({
         title: "",

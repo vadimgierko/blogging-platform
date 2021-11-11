@@ -32,15 +32,17 @@ export function DatabaseProvider({ children }) {
     };
 
     const addBlog = (blogData) => {
+
       const newBlogKey = push(child(ref(database), "blogs")).key;
-        if (newBlogKey) {
-          set(ref(database, "blogs/" + newBlogKey), {
-            ...blogData,
-            author: userData.firstName + " " + userData.lastName,
-            userName: userData.userName,
-            userId: user.uid,
-          });
-        }
+
+      if (newBlogKey) {
+        set(ref(database, "blogs/" + newBlogKey), {
+          ...blogData,
+          author: userData.firstName + " " + userData.lastName,
+          userName: userData.userName,
+          userId: user.uid,
+        });
+      }
     }
 
     const deleteBlog = (blogKey) => {
@@ -59,17 +61,28 @@ export function DatabaseProvider({ children }) {
     };
 
     const addArticle = (blogKey, blogTitle, article) => {
+
       const newArticleKey = push(child(ref(database), "blogs/" + blogKey + "/articles/")).key;
-        if (newArticleKey) {
-          set(ref(database, "blogs/" + blogKey + "/articles/" + newArticleKey), {
-            ...article,
-            author: userData.firstName + " " + userData.lastName,
-            userName: userData.userName,
-            userId: user.uid,
-            blogKey: blogKey,
-            blogTitle: blogTitle
-          });
-        }
+
+      if (newArticleKey) {
+        set(ref(database, "blogs/" + blogKey + "/articles/" + newArticleKey), {
+          ...article,
+          author: userData.firstName + " " + userData.lastName,
+          userName: userData.userName,
+          userId: user.uid,
+          blogKey: blogKey,
+          blogTitle: blogTitle
+        });
+      }
+    }
+
+    const deleteArticle = (blogKey, articleKey) => {
+      remove(ref(database, "blogs/" +  blogKey + "/articles/" + articleKey)).then(() => {
+          console.log("article " + articleKey + " in blog " + blogKey + " was deleted");
+      }).catch((error) => {
+          // An error ocurred
+          console.log(error.message);
+      });
     }
 
     //   const getProfileImageURL = (profileImageRef) => {
@@ -249,7 +262,8 @@ export function DatabaseProvider({ children }) {
                 bloggers,
                 addBlog,
                 updateBlog,
-                addArticle,     
+                addArticle,
+                deleteArticle
                 //uploadProfileImage,
                 //uploadItemImage
             }}

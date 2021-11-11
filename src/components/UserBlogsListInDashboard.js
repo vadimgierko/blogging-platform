@@ -8,14 +8,13 @@ export default function UserBlogsListInDashboard() {
 
     let {path, url} = useRouteMatch();
 
-    const { blogs, deleteBlog } = useDatabase();
+    const { blogs, deleteBlog, deleteArticle } = useDatabase();
     const { user } = useAuth();
 
     const [userBlogs, setUserBlogs] = useState(null);
 
     useEffect(() => {
         if (blogs && user) {
-            console.log(blogs);
             const fetchedBlogs = Object.entries(blogs);
             const currentUserBLogs = fetchedBlogs.filter(blog => blog[1].userId === user.uid)
             setUserBlogs(currentUserBLogs);

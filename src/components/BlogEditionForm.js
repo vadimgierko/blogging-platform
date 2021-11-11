@@ -8,7 +8,7 @@ export default function BlogEditionForm() {
     let {path, url} = useRouteMatch();
     const { blogLink } = useParams();
 
-    const { blogs, deleteBlog, updateBlog } = useDatabase();
+    const { blogs, deleteBlog, updateBlog, deleteArticle } = useDatabase();
 
     const [blog, setBlog] = useState(null);
     const [blogKey, setBlogKey] = useState(null);
@@ -43,7 +43,7 @@ export default function BlogEditionForm() {
 
     if (blog) {
         return (
-            <div className="row">
+            <div className="BlogEditionForm row">
                 <div className="col">
                     <form>
                         <div className="mb-2">
@@ -108,7 +108,7 @@ export default function BlogEditionForm() {
                                             <button
                                                 className="btn btn-danger d-inline"
                                                 onClick={() => {
-                                                    //deleteArticle(article[0]);
+                                                    deleteArticle(blogKey, article[0]);
                                                 }}
                                             >
                                                 <i className="bi bi-trash" />

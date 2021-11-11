@@ -26,21 +26,6 @@ export default function BlogEditionForm() {
         }
     }, [blogs, blogLink]);
 
-    // function deleteArticle(articleKey) {
-    //     // eslint-disable-next-line no-restricted-globals
-    //     const wantToDeleteArticle = confirm("Are you sure, you want to delete this article from this blog forever? There's no turning back... Delete blog?");
-    //     if (wantToDeleteArticle) {
-    //         remove(ref(database, 'users/' + userId + '/blogs/' + blogKey + '/articles/' + articleKey)).then(() => {
-    //             console.log("article was deleted");
-    //             getBlogData(blogKey);
-    //         }).catch((error) => {
-    //             // An error ocurred
-    //             console.log(error.message);
-    //         });
-    //         remove(ref(database, 'blogs/' + blogKey + '/articles/' + articleKey));
-    //     }
-    // }
-
     if (blog) {
         return (
             <div className="BlogEditionForm row">
@@ -108,7 +93,11 @@ export default function BlogEditionForm() {
                                             <button
                                                 className="btn btn-danger d-inline"
                                                 onClick={() => {
-                                                    deleteArticle(blogKey, article[0]);
+                                                    // eslint-disable-next-line no-restricted-globals
+                                                    const wantToDeleteArticle = confirm("Are you sure, you want to delete this article from this blog forever? There's no turning back... Delete article?");
+                                                    if (wantToDeleteArticle) {
+                                                        deleteArticle(blogKey, article[0]);
+                                                    }
                                                 }}
                                             >
                                                 <i className="bi bi-trash" />

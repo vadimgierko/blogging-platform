@@ -29,9 +29,11 @@ export default function UserBlogsListInDashboard({
         }
     }, [blogs, user]);
 
+    /*
     function convertBlogTitleIntoLink(blogTitle) {
         return (blogTitle.replace(/ /g, "-").toLowerCase());
     }
+    */
 
     return (
         <Switch>
@@ -49,11 +51,7 @@ export default function UserBlogsListInDashboard({
                                     <div className="row">
                                         <div className="col">
                                             <Link
-                                                to={`${url}${convertBlogTitleIntoLink(blog[1].title)}`}
-                                                onClick={() => {
-                                                    setCurrentBlogKey(blog[0]);
-                                                    setCurrentBlogLink(`${url}${convertBlogTitleIntoLink(blog[1].title)}`);
-                                                }}
+                                                to={url + "/" + blog[1].blogLink}
                                             >
                                                 <h5>{blog[1].title}</h5>
                                             </Link>
@@ -62,20 +60,12 @@ export default function UserBlogsListInDashboard({
                                             <Link
                                                 to="/create-article"
                                                 className="text-info"
-                                                onClick={() => {
-                                                    setBlogKeyForNewArticle(blog[0]);
-                                                    setBlogTitleForNewArticle(blog[1].title);
-                                                }}
                                             >
                                                 <i className="bi bi-plus-square me-2" />
                                             </Link>
                                             <Link
                                                 className="text-primary"
-                                                to={`/blogs/${convertBlogTitleIntoLink(blog[1].title)}`}
-                                                onClick={() => {
-                                                    setCurrentBlogKey(blog[0]);
-                                                    setCurrentBlogLink(`/blogs${convertBlogTitleIntoLink(blog[1].title)}`);
-                                                }}
+                                                to={`/blogs/${blog[1].blogLink}`}
                                             >
                                                 <i className="bi bi-eye me-2" />
                                             </Link>
@@ -106,11 +96,9 @@ export default function UserBlogsListInDashboard({
                     }
                 </div>
             </Route>
-            {/*<Route path={currentBlogLink}>
-                <BlogEditionForm
-                    blogKey={currentBlogKey}
-                />
-            </Route>*/}
+            <Route path={path + "/:blogLink"}>
+                <BlogEditionForm />
+            </Route>
         </Switch>
     );
 }

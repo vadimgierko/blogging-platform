@@ -65,18 +65,24 @@ export function DatabaseProvider({ children }) {
     }
 
     const deleteBlog = (blogKey) => {
-        remove(ref(database, "blogs/" +  blogKey)).then(() => {
-                console.log("blog " + blogKey + " was deleted");
-            }).catch((error) => {
-                // An error ocurred
-                console.log(error.message);
-            });
+      remove(ref(database, "blogs/" +  blogKey)).then(() => {
+          console.log("blog " + blogKey + " was deleted");
+      }).catch((error) => {
+          // An error ocurred
+          console.log(error.message);
+      });
     }
 
     const updateUserData = (userData) => {
-        set(ref(database, "users/" + user.uid), {
-            ...userData
-        });
+      set(ref(database, "users/" + user.uid), {
+          ...userData
+      });
+    };
+
+    const updateBlog = (blogKey, updatedBlogData) => {
+      set(ref(database, "blogs/" + blogKey), {
+          ...updatedBlogData
+      });
     };
 
     //   const getProfileImageURL = (profileImageRef) => {
@@ -254,13 +260,8 @@ export function DatabaseProvider({ children }) {
                 blogs,
                 deleteBlog,
                 bloggers,
-                addBlog
-                //items,
-                //userItems,
-                //addItem,
-                //updateItem,
-                //deleteItem,
-                
+                addBlog,
+                updateBlog,       
                 //uploadProfileImage,
                 //uploadItemImage
             }}

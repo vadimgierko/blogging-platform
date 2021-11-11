@@ -1,43 +1,62 @@
 import { useState, useEffect } from "react";
-import { database } from "../firebase";
-import { ref, remove, onValue } from "firebase/database";
-import { Link } from "react-router-dom";
+import { Link, useParams, useRouteMatch } from "react-router-dom";
+import { useDatabase } from "../hooks/use-database";
 
-export default function BlogEditionForm({blogKey, userId, deleteBlog}) {
 
-    const [blogData, setBlogData] = useState(null);
+export default function BlogEditionForm() {
 
-    function getBlogData(blogKey) {
-        const blogRef = ref(database, 'users/' + userId + '/blogs/' + blogKey);
-        onValue(blogRef, (snapshot) => {
-            if (snapshot) {
-                const fetchedBlogData = snapshot.val();        
-                setBlogData(fetchedBlogData ? fetchedBlogData : null);
-                console.log("Current blog data fetched", fetchedBlogData);
-            }
-        });
-    }
+    let {path, url} = useRouteMatch();
+    const { blogLink } = useParams();
 
-    function deleteArticle(articleKey) {
-        // eslint-disable-next-line no-restricted-globals
-        const wantToDeleteArticle = confirm("Are you sure, you want to delete this article from this blog forever? There's no turning back... Delete blog?");
-        if (wantToDeleteArticle) {
-            remove(ref(database, 'users/' + userId + '/blogs/' + blogKey + '/articles/' + articleKey)).then(() => {
-                console.log("article was deleted");
-                getBlogData(blogKey);
-            }).catch((error) => {
-                // An error ocurred
-                console.log(error.message);
-            });
-            remove(ref(database, 'blogs/' + blogKey + '/articles/' + articleKey));
-        }
-    }
+    const { blogs, deleteBlog, updateBlog } = useDatabase();
+
+    const [blog, setBlog] = useState(null);
+    const [blogKey, setBlogKey] = useState(null);
 
     useEffect(() => {
-        getBlogData(blogKey);
-    }, [blogKey]);
+        if (blogs) {
+            const fetchedBlogs = Object.entries(blogs);
+            const currentBlogArray = fetchedBlogs.filter(blog => blog[1].blogLink === blogLink); // array...
+            const currentBlog = currentBlogArray[0][1];
+            const currentBlogKey = currentBlogArray[0][0];
+            setBlog(currentBlog);
+            setBlogKey(currentBlogKey);
+        } else {
+            console.log("there are no blogs or blogLink in BlogPage ...")
+        }
+    }, [blogs, blogLink]);
 
-    if (blogData) {
+    // function getBlogData(blogKey) {
+    //     const blogRef = ref(database, 'users/' + userId + '/blogs/' + blogKey);
+    //     onValue(blogRef, (snapshot) => {
+    //         if (snapshot) {
+    //             const fetchedBlogData = snapshot.val();        
+    //             setBlogData(fetchedBlogData ? fetchedBlogData : null);
+    //             console.log("Current blog data fetched", fetchedBlogData);
+    //         }
+    //     });
+    // }
+
+    // function deleteArticle(articleKey) {
+    //     // eslint-disable-next-line no-restricted-globals
+    //     const wantToDeleteArticle = confirm("Are you sure, you want to delete this article from this blog forever? There's no turning back... Delete blog?");
+    //     if (wantToDeleteArticle) {
+    //         remove(ref(database, 'users/' + userId + '/blogs/' + blogKey + '/articles/' + articleKey)).then(() => {
+    //             console.log("article was deleted");
+    //             getBlogData(blogKey);
+    //         }).catch((error) => {
+    //             // An error ocurred
+    //             console.log(error.message);
+    //         });
+    //         remove(ref(database, 'blogs/' + blogKey + '/articles/' + articleKey));
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     getBlogData(blogKey);
+    // }, [blogKey]);
+
+    if (blog) {
         return (
             <div className="row">
                 <div className="col">
@@ -49,8 +68,8 @@ export default function BlogEditionForm({blogKey, userId, deleteBlog}) {
                             <input
                                 type="text"
                                 className="form-control"
-                                defaultValue={blogData.title}
-                                onChange={(e) => setBlogData({...blogData, title: e.target.value})}
+                                defaultValue={blog.title}
+                                onChange={(e) => setBlog({...blog, title: e.target.value})}
                             />
                         </div>
                         <div className="mb-2">
@@ -58,15 +77,18 @@ export default function BlogEditionForm({blogKey, userId, deleteBlog}) {
                             <textarea
                                 type="text"
                                 className="form-control"
-                                defaultValue={blogData.description}
-                                onChange={(e) => setBlogData({...blogData, description: e.target.value})}
+                                defaultValue={blog.description}
+                                onChange={(e) => setBlog({...blog, description: e.target.value})}
                             />
                         </div>
                         <button
                             type="button"
                             className="btn btn-success mb-3 d-block"
                             style={{width: "100%"}}
-                            onClick={() => console.log(blogData)}
+                            onClick={() => {
+                                //console.log(blog, blogKey);
+                                updateBlog(blogKey, blog);
+                            }}
                         >
                             Save changes
                         </button>
@@ -74,7 +96,13 @@ export default function BlogEditionForm({blogKey, userId, deleteBlog}) {
                             to="/dashboard/user-blogs"
                             type="button"
                             className="btn btn-outline-danger mb-3 d-block"
-                            onClick={() => deleteBlog(blogKey)}
+                            onClick={() => {
+                                // eslint-disable-next-line no-restricted-globals
+                                const wantToDeleteBlog = confirm("Are you sure, you want to delete this blog & all articles from this blog forever? There's no turning back... Delete blog?");
+                                if (wantToDeleteBlog) {
+                                    deleteBlog(blogKey);
+                                }
+                            }}
                         >
                             Delete blog
                         </Link>
@@ -84,8 +112,8 @@ export default function BlogEditionForm({blogKey, userId, deleteBlog}) {
                     <h4 className="text-center">Articles</h4>
                     <hr />
                     {
-                        blogData.articles ? (
-                            Object.entries(blogData.articles).map((article) => (
+                        blog.articles ? (
+                            Object.entries(blog.articles).map((article) => (
                                 <div key={article[0]}>
                                     <div className="row">
                                         <div className="col">
@@ -96,7 +124,7 @@ export default function BlogEditionForm({blogKey, userId, deleteBlog}) {
                                             <button
                                                 className="btn btn-danger d-inline"
                                                 onClick={() => {
-                                                    deleteArticle(article[0]);
+                                                    //deleteArticle(article[0]);
                                                 }}
                                             >
                                                 <i className="bi bi-trash" />

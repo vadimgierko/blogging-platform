@@ -2,7 +2,13 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { firebaseAuth, database } from "../firebase"; // + , storage
-import { onAuthStateChanged } from "firebase/auth";
+
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "firebase/auth";
 
 import {
     ref,
@@ -20,255 +26,243 @@ export const useDatabase = () => useContext(DatabaseContext);
 
 export function DatabaseProvider({ children }) {
 
-    const [user, setUser] = useState(null);
-    const [userData, setUserData] = useState(null);
-    const [blogs, setBlogs] = useState(null);
-    const [bloggers, setBloggers] = useState(null);
-    
-    const updateUserData = (userData) => {
-      set(ref(database, "users/" + user.uid), {
-          ...userData
+  const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [blogs, setBlogs] = useState(null);
+  const [bloggers, setBloggers] = useState(null);
+
+  const signIn = (email, password) => {
+    return signInWithEmailAndPassword(firebaseAuth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        setUser(userCredential.user);
+        console.log("user is signed in");
+        return userCredential.user;
+      })
+      .catch((error) => {
+        alert(error.message);
       });
-    };
+  };
 
-    const addBlog = (blogData) => {
-
-      const newBlogKey = push(child(ref(database), "blogs")).key;
-
-      if (newBlogKey) {
-        set(ref(database, "blogs/" + newBlogKey), {
-          ...blogData,
-          author: userData.firstName + " " + userData.lastName,
-          userName: userData.userName,
-          userId: user.uid,
-        });
-      }
-    }
-
-    const deleteBlog = (blogKey) => {
-      remove(ref(database, "blogs/" +  blogKey)).then(() => {
-          console.log("blog " + blogKey + " was deleted");
-      }).catch((error) => {
-          // An error ocurred
-          console.log(error.message);
+  const signUp = (email, password) => {
+    return createUserWithEmailAndPassword(firebaseAuth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        setUser(userCredential.user);
+        console.log("user is sign up");
+        return userCredential.user;
+      })
+      .catch((error) => {
+        alert(error.message);
       });
-    }
+  };
 
-    const updateBlog = (blogKey, updatedBlogData) => {
-      set(ref(database, "blogs/" + blogKey), {
-          ...updatedBlogData
+  const logOut = () => {
+    return signOut(firebaseAuth)
+      .then(() => {
+        setUser(null);
+      })
+      .catch((error) => {
+        alert(error.message);
       });
-    };
+  };
+  
+  const updateUserData = (userData) => {
+    set(ref(database, "users/" + user.uid), {
+      ...userData
+    });
+  };
 
-    const addArticle = (blogKey, blogTitle, article) => {
+  const addBlog = (blogData) => {
 
-      const newArticleKey = push(child(ref(database), "blogs/" + blogKey + "/articles/")).key;
+    const newBlogKey = push(child(ref(database), "blogs")).key;
 
-      if (newArticleKey) {
-        set(ref(database, "blogs/" + blogKey + "/articles/" + newArticleKey), {
-          ...article,
-          author: userData.firstName + " " + userData.lastName,
-          userName: userData.userName,
-          userId: user.uid,
-          blogKey: blogKey,
-          blogTitle: blogTitle
-        });
-      }
-    }
-
-    const deleteArticle = (blogKey, articleKey) => {
-      remove(ref(database, "blogs/" +  blogKey + "/articles/" + articleKey)).then(() => {
-          console.log("article " + articleKey + " in blog " + blogKey + " was deleted");
-      }).catch((error) => {
-          // An error ocurred
-          console.log(error.message);
+    if (newBlogKey) {
+      set(ref(database, "blogs/" + newBlogKey), {
+        ...blogData,
+        author: userData.firstName + " " + userData.lastName,
+        userName: userData.userName,
+        userId: user.uid,
       });
     }
+  }
 
-    //   const getProfileImageURL = (profileImageRef) => {
-    //     // get profile img url to users data:
-    //     getDownloadURL(storageRef(storage, profileImageRef))
-    //     .then((url) => {
-    //       updateUserData({...userData, profileImageURL: url})
-    //     })
-    //     .catch((error) => {
-    //       console.log(error.message);
-    //     });
-    //   }
+  const deleteBlog = (blogKey) => {
+    remove(ref(database, "blogs/" +  blogKey)).then(() => {
+      console.log("blog " + blogKey + " was deleted");
+    }).catch((error) => {
+      // An error ocurred
+      console.log(error.message);
+    });
+  }
 
-    //   const uploadProfileImage = (image) => {
-    //     // Create a reference to 'profileImage.jpg'
-    //     const profileImageRef = storageRef(storage, `images/profileImages/${user.uid}/profileImg.png`);
+  const updateBlog = (blogKey, updatedBlogData) => {
+    set(ref(database, "blogs/" + blogKey), {
+      ...updatedBlogData
+    });
+  };
 
-    //     uploadBytes(profileImageRef, image).then((snapshot) => {
-    //         if (snapshot) {
-    //           getProfileImageURL(profileImageRef);
-    //         } else {
-    //           console.log("file is not uploaded yet...")
-    //         }
-    //     });
-    //   };
+  const addArticle = (blogKey, blogTitle, article) => {
 
-    //   const getItemImageURL = (itemImageRef, itemKey, item) => {
-    //     getDownloadURL(storageRef(storage, itemImageRef))
-    //     .then((url) => {
-    //       console.log("img url", url);
-    //       const updatedItem = {
-    //         ...item,
-    //         itemImageURL: url
-    //       }
-    //       updateItem(updatedItem, itemKey);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error.message);
-    //     });
-    //   }
+    const newArticleKey = push(child(ref(database), "blogs/" + blogKey + "/articles/")).key;
 
-    //   const uploadItemImage = (image, itemKey, item) => {
-    //     const itemImageRef = storageRef(storage, `images/itemsImages/${user.uid}/${itemKey}/itemImg.png`);
+    if (newArticleKey) {
+      set(ref(database, "blogs/" + blogKey + "/articles/" + newArticleKey), {
+        ...article,
+        author: userData.firstName + " " + userData.lastName,
+        userName: userData.userName,
+        userId: user.uid,
+        blogKey: blogKey,
+        blogTitle: blogTitle
+      });
+    }
+  }
 
-    //     uploadBytes(itemImageRef, image).then((snapshot) => {
-    //         if (snapshot) {
-    //           getItemImageURL(itemImageRef, itemKey, item);
-    //         } else {
-    //           console.log("file is not uploaded yet...")
-    //         }
-    //     });
-    //   }
+  // const updateArticle = (blogKey, blogTitle, article) => {
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
-            if (user) {
+  //   const newArticleKey = push(child(ref(database), "blogs/" + blogKey + "/articles/")).key;
 
-                setUser(user);
+  //   if (newArticleKey) {
+  //     set(ref(database, "blogs/" + blogKey + "/articles/" + newArticleKey), {
+  //       ...article,
+  //       author: userData.firstName + " " + userData.lastName,
+  //       userName: userData.userName,
+  //       userId: user.uid,
+  //       blogKey: blogKey,
+  //       blogTitle: blogTitle
+  //     });
+  //   }
+  // }
 
-                const userDataRef = ref(database, `users/${user.uid}`);
-                onValue(userDataRef, (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        setUserData(data);
-                    } else {
-                        console.log("there are no user data...");
-                    }
-                });
+  const deleteArticle = (blogKey, articleKey) => {
+    remove(ref(database, "blogs/" +  blogKey + "/articles/" + articleKey)).then(() => {
+        console.log("article " + articleKey + " in blog " + blogKey + " was deleted");
+    }).catch((error) => {
+        // An error ocurred
+        console.log(error.message);
+    });
+  }
 
-                //fetch blogs list
-                const blogsRef = ref(database, "blogs/");
-                onValue(blogsRef, (snapshot) => {
-                  const data = snapshot.val();
-                  if (data) {
-                    setBlogs(data);
-                  } else {
-                    console.log("there are no blogs");
-                  }
-                });
+  //   const getProfileImageURL = (profileImageRef) => {
+  //     // get profile img url to users data:
+  //     getDownloadURL(storageRef(storage, profileImageRef))
+  //     .then((url) => {
+  //       updateUserData({...userData, profileImageURL: url})
+  //     })
+  //     .catch((error) => {
+  //       console.log(error.message);
+  //     });
+  //   }
 
-                //fetch bloggers list
-                const bloggersRef = ref(database, `users/`);
-                onValue(bloggersRef, (snapshot) => {
-                  const data = snapshot.val();
-                  if (data) {
-                    setBloggers(data);
-                  } else {
-                    console.log("there are no bloggers...");
-                  }
-                });
+  //   const uploadProfileImage = (image) => {
+  //     // Create a reference to 'profileImage.jpg'
+  //     const profileImageRef = storageRef(storage, `images/profileImages/${user.uid}/profileImg.png`);
 
-                
+  //     uploadBytes(profileImageRef, image).then((snapshot) => {
+  //         if (snapshot) {
+  //           getProfileImageURL(profileImageRef);
+  //         } else {
+  //           console.log("file is not uploaded yet...")
+  //         }
+  //     });
+  //   };
 
-                // // fetch all items
-                // const itemsRef = ref(database, "items/");
-                // onValue(itemsRef, (snapshot) => {
-                //   const data = snapshot.val();
-                //   if (data) {
-                //     setItems(data);
-                //   } else {
-                //     console.log("there are no items");
-                //   }
-                // });
-                // // fetch user items after log in
-                // const userItemsRef = ref(database, "items/" + user.uid);
-                // onValue(userItemsRef, (snapshot) => {
-                //   const data = snapshot.val();
-                //   if (data) {
-                //     setUserItems(data);
-                //   } else {
-                //     console.log("there are no items");
-                //   }
-                // });
+  //   const getItemImageURL = (itemImageRef, itemKey, item) => {
+  //     getDownloadURL(storageRef(storage, itemImageRef))
+  //     .then((url) => {
+  //       console.log("img url", url);
+  //       const updatedItem = {
+  //         ...item,
+  //         itemImageURL: url
+  //       }
+  //       updateItem(updatedItem, itemKey);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error.message);
+  //     });
+  //   }
+
+  //   const uploadItemImage = (image, itemKey, item) => {
+  //     const itemImageRef = storageRef(storage, `images/itemsImages/${user.uid}/${itemKey}/itemImg.png`);
+
+  //     uploadBytes(itemImageRef, image).then((snapshot) => {
+  //         if (snapshot) {
+  //           getItemImageURL(itemImageRef, itemKey, item);
+  //         } else {
+  //           console.log("file is not uploaded yet...")
+  //         }
+  //     });
+  //   }
+
+  useEffect(() => {
+    onAuthStateChanged(firebaseAuth, (user) => {
+      if (user) {
+        setUser(user);
+
+        const userDataRef = ref(database, `users/${user.uid}`);
+        onValue(userDataRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                setUserData(data);
             } else {
-                setUser(null);
-                setUserData(null);
-
-                //fetch blogs list
-                const blogsRef = ref(database, "blogs/");
-                onValue(blogsRef, (snapshot) => {
-                  const data = snapshot.val();
-                  if (data) {
-                    setBlogs(data);
-                  } else {
-                    console.log("there are no blogs");
-                  }
-                });
-
-                //fetch bloggers list
-                const bloggersRef = ref(database, `users/`);
-                onValue(bloggersRef, (snapshot) => {
-                  const data = snapshot.val();
-                  if (data) {
-                    setBloggers(data);
-                  } else {
-                    console.log("there are no bloggers...");
-                  }
-                });
-
-                //setUserItems(null);
-
-                // //fetch users list
-                // const usersRef = ref(database, `users/`);
-                // onValue(usersRef, (snapshot) => {
-                //   const data = snapshot.val();
-                //   if (data) {
-                //     setUsers(data);
-                //   } else {
-                //     console.log("there are no users...");
-                //   }
-                // });
-                // // fetch all items
-                // const itemsRef = ref(database, "items/");
-                // onValue(itemsRef, (snapshot) => {
-                //   const data = snapshot.val();
-                //   if (data) {
-                //     setItems(data);
-                //   } else {
-                //     console.log("there are no items");
-                //   }
-                // });
-                console.log("user is logged out");
+                console.log("there are no user data...");
             }
         });
-        // Cleanup subscription on unmount
-        return () => unsubscribe();
-    }, []);
+      } else {
+        setUser(null);
+        setUserData(null);
+        console.log("user is logged out");
+      }
+    });
+  }, []);
 
-    return (
-        <DatabaseContext.Provider
-            value={{
-                user,
-                userData,
-                updateUserData,
-                blogs,
-                deleteBlog,
-                bloggers,
-                addBlog,
-                updateBlog,
-                addArticle,
-                deleteArticle
-                //uploadProfileImage,
-                //uploadItemImage
-            }}
-        >
-            {children}
-        </DatabaseContext.Provider>
-    );
+  // fetch blogs & bloggers list every time, regardless of whether the user is logged or not:
+  useEffect(() => {
+
+    //fetch blogs list
+    const blogsRef = ref(database, "blogs/");
+    onValue(blogsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setBlogs(data);
+        //console.log("blogs:", data)
+      } else {
+        console.log("there are no blogs");
+      }
+    });
+
+    //fetch bloggers list
+    const bloggersRef = ref(database, `users/`);
+    onValue(bloggersRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setBloggers(data);
+        //console.log("bloggers:", data)
+      } else {
+        console.log("there are no bloggers...");
+      }
+    });
+  }, []);
+
+  const value = {
+    signIn,
+    signUp,
+    logOut,
+    user,
+    userData,
+    updateUserData,
+    blogs,
+    deleteBlog,
+    bloggers,
+    addBlog,
+    updateBlog,
+    addArticle,
+    deleteArticle
+    //uploadProfileImage,
+    //uploadItemImage
+  }
+
+  return (
+    <DatabaseContext.Provider value={value} >{children}</DatabaseContext.Provider>
+  );
 }

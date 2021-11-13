@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useDatabase } from "../hooks/use-database";
-import { useAuth } from "../hooks/use-auth";
 import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
 import BlogEditionForm from "./BlogEditionForm";
 
@@ -8,8 +7,7 @@ export default function UserBlogsListInDashboard() {
 
     let {path, url} = useRouteMatch();
 
-    const { blogs, deleteBlog, deleteArticle } = useDatabase();
-    const { user } = useAuth();
+    const { user, blogs, deleteBlog, deleteArticle } = useDatabase();
 
     const [userBlogs, setUserBlogs] = useState(null);
 

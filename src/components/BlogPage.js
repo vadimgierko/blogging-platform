@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, Switch, Route, useRouteMatch, useParams } from "react-router-dom";
 import { useDatabase } from "../hooks/use-database";
-//import { useAuth } from "../hooks/use-auth";
 import ArticleView from "./ArticleView";
 
 export default function BlogPage() {
@@ -9,7 +8,6 @@ export default function BlogPage() {
     let {path, url} = useRouteMatch();
     const { blogLink } = useParams();
 
-    //const { user } = useAuth();
     const { blogs, deleteBlog } = useDatabase();
 
     const [blog, setBlog] = useState(null);

@@ -2,14 +2,11 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 export default function MarkdownEditor({ articleData, setArticleData }) {
-    //console.log("content passed for edition:", content);
-    
-    //const [contentForEdition, setContentForEdition] = useState(articleData.content);
 
     return (
         <div className="row">
-            <div className="col-lg mt-2 mx-2" style={{marginBottom: 90}}>
-                <p className="text-center">Write your content here using Markdown Syntax</p>
+            <div className="Editor col-lg mt-2 mx-2" style={{marginBottom: 90}}>
+                <p className="text-center">Write your content here using Markdown Syntax (ommit title)</p>
                 <hr />
                 <textarea
                     defaultValue={articleData.content}
@@ -17,10 +14,11 @@ export default function MarkdownEditor({ articleData, setArticleData }) {
                     style={{width: "100%", height: "80%"}}
                 />
             </div>
-            <div className="col-lg m-2">
+            <div className="RenderedView col-lg m-2">
                 <p className="text-center">Here you can see how your article would be looking like</p>
                 <hr />
                 <div>
+                    <h1>{articleData.title}</h1>
                     <ReactMarkdown children={articleData.content} remarkPlugins={[remarkGfm]} />
                 </div>
             </div>

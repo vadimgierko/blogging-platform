@@ -44,7 +44,13 @@ export default function ArticleView() {
         <div className="col-8">
             {
                 article ? (
-                    <ReactMarkdown children={article.content} remarkPlugins={[remarkGfm]} />
+                    <div>
+                        <h1>{article.title}</h1>
+                        <p><em>Published:</em> {article.createdAt}</p>
+                        <p><em>Description:</em> {article.description}</p>
+                        <hr />
+                        <ReactMarkdown children={article.content} remarkPlugins={[remarkGfm]} />
+                    </div>
                 ) : (
                     <p>Downloading article...</p>
                 )

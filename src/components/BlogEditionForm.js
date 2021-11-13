@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { Link, useParams, useRouteMatch } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useDatabase } from "../hooks/use-database";
 
 
 export default function BlogEditionForm() {
 
-    let {path, url} = useRouteMatch();
     const { blogLink } = useParams();
 
     const { blogs, deleteBlog, updateBlog, deleteArticle } = useDatabase();

@@ -208,6 +208,7 @@ export function DatabaseProvider({ children }) {
         const data = snapshot.val();
         if (data) {
           setBlogs(data);
+          //console.log("blogs:", data)
         } else {
           console.log("there are no blogs");
         }
@@ -219,6 +220,7 @@ export function DatabaseProvider({ children }) {
         const data = snapshot.val();
         if (data) {
           setBloggers(data);
+          //console.log("bloggers:", data)
         } else {
           console.log("there are no bloggers...");
         }

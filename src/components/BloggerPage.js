@@ -26,13 +26,22 @@ export default function BloggerPage() {
         if (blogs) {
             if (blogger && userName) {
                 const blogsArray = Object.entries(blogs);
+                let userBlogs = [];
+                for (let i = 0; i < blogsArray.length; i++) {
+                    if (blogsArray[i][1].userName === userName) {
+                        userBlogs = [...userBlogs, blogsArray[i][1]]
+                    }
+                }
+                /*
                 const userBlogs = blogsArray.map((blog) => {
                     if (blog[1].userName === userName) {
                         return {...blog[1]};
                     }
                     return null;
                 });
+                */
                 setBloggerBlogs(userBlogs);
+                //console.log("userBlogs:", userBlogs)
             }
         }
     }, [blogs, userName, blogger]);

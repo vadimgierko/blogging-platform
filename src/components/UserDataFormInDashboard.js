@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../hooks/use-auth";
 import { useDatabase } from "../hooks/use-database";
 
 export default function UserDataFormInDashboard() {
 
-    const { user } = useAuth();
-    const { userData, updateUserData } = useDatabase();
-    //const userId = user.uid;
+    const { user, userData, updateUserData } = useDatabase();
     
     const [currentUserData, setCurrentUserData] = useState(null);
 

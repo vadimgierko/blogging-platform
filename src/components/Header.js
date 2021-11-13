@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react/cjs/react.development';
-import { useAuth } from '../hooks/use-auth';
+import { useDatabase } from "../hooks/use-database";
 
 export default function Header() {
-    const { user, logOut } = useAuth();
+    const { user, logOut } = useDatabase();
 
     const [isNavCollapsed, setIsNavCollapsed] = useState(true);
     

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link } from 'react-router-dom';
-import { useAuth } from '../hooks/use-auth';
+import { useDatabase } from "../hooks/use-database";
 
 export default function SignInForm() {
 
-    const { signIn } = useAuth();
+    const { signIn } = useDatabase();
 
     const [userSignInData, setUserSignInData] = useState({
         email: "",

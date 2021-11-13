@@ -2,7 +2,13 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { firebaseAuth, database } from "../firebase"; // + , storage
-import { onAuthStateChanged } from "firebase/auth";
+
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "firebase/auth";
 
 import {
     ref,
@@ -24,6 +30,42 @@ export function DatabaseProvider({ children }) {
     const [userData, setUserData] = useState(null);
     const [blogs, setBlogs] = useState(null);
     const [bloggers, setBloggers] = useState(null);
+
+    const signIn = (email, password) => {
+      return signInWithEmailAndPassword(firebaseAuth, email, password)
+        .then((userCredential) => {
+          // Signed in
+          setUser(userCredential.user);
+          console.log("user is signed in");
+          return userCredential.user;
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    };
+  
+    const signUp = (email, password) => {
+      return createUserWithEmailAndPassword(firebaseAuth, email, password)
+        .then((userCredential) => {
+          // Signed in
+          setUser(userCredential.user);
+          console.log("user is sign up");
+          return userCredential.user;
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    };
+  
+    const logOut = () => {
+      return signOut(firebaseAuth)
+        .then(() => {
+          setUser(null);
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    };
     
     const updateUserData = (userData) => {
       set(ref(database, "users/" + user.uid), {
@@ -186,6 +228,9 @@ export function DatabaseProvider({ children }) {
     return (
       <DatabaseContext.Provider
         value={{
+          signIn,
+          signUp,
+          logOut,
           user,
           userData,
           updateUserData,

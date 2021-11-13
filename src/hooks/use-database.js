@@ -27,7 +27,7 @@ export function DatabaseProvider({ children }) {
     
     const updateUserData = (userData) => {
       set(ref(database, "users/" + user.uid), {
-          ...userData
+        ...userData
       });
     };
 
@@ -47,16 +47,16 @@ export function DatabaseProvider({ children }) {
 
     const deleteBlog = (blogKey) => {
       remove(ref(database, "blogs/" +  blogKey)).then(() => {
-          console.log("blog " + blogKey + " was deleted");
+        console.log("blog " + blogKey + " was deleted");
       }).catch((error) => {
-          // An error ocurred
-          console.log(error.message);
+        // An error ocurred
+        console.log(error.message);
       });
     }
 
     const updateBlog = (blogKey, updatedBlogData) => {
       set(ref(database, "blogs/" + blogKey), {
-          ...updatedBlogData
+        ...updatedBlogData
       });
     };
 
@@ -137,138 +137,70 @@ export function DatabaseProvider({ children }) {
     //   }
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
-            if (user) {
+      onAuthStateChanged(firebaseAuth, (user) => {
+        if (user) {
+          setUser(user);
 
-                setUser(user);
+          const userDataRef = ref(database, `users/${user.uid}`);
+          onValue(userDataRef, (snapshot) => {
+              const data = snapshot.val();
+              if (data) {
+                  setUserData(data);
+              } else {
+                  console.log("there are no user data...");
+              }
+          });
+        } else {
+          setUser(null);
+          setUserData(null);
+          console.log("user is logged out");
+        }
+      });
+    }, []);
 
-                const userDataRef = ref(database, `users/${user.uid}`);
-                onValue(userDataRef, (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        setUserData(data);
-                    } else {
-                        console.log("there are no user data...");
-                    }
-                });
+    useEffect(() => {
 
-                //fetch blogs list
-                const blogsRef = ref(database, "blogs/");
-                onValue(blogsRef, (snapshot) => {
-                  const data = snapshot.val();
-                  if (data) {
-                    setBlogs(data);
-                  } else {
-                    console.log("there are no blogs");
-                  }
-                });
+      //fetch blogs list
+      const blogsRef = ref(database, "blogs/");
+      onValue(blogsRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          setBlogs(data);
+        } else {
+          console.log("there are no blogs");
+        }
+      });
 
-                //fetch bloggers list
-                const bloggersRef = ref(database, `users/`);
-                onValue(bloggersRef, (snapshot) => {
-                  const data = snapshot.val();
-                  if (data) {
-                    setBloggers(data);
-                  } else {
-                    console.log("there are no bloggers...");
-                  }
-                });
-
-                
-
-                // // fetch all items
-                // const itemsRef = ref(database, "items/");
-                // onValue(itemsRef, (snapshot) => {
-                //   const data = snapshot.val();
-                //   if (data) {
-                //     setItems(data);
-                //   } else {
-                //     console.log("there are no items");
-                //   }
-                // });
-                // // fetch user items after log in
-                // const userItemsRef = ref(database, "items/" + user.uid);
-                // onValue(userItemsRef, (snapshot) => {
-                //   const data = snapshot.val();
-                //   if (data) {
-                //     setUserItems(data);
-                //   } else {
-                //     console.log("there are no items");
-                //   }
-                // });
-            } else {
-                setUser(null);
-                setUserData(null);
-
-                //fetch blogs list
-                const blogsRef = ref(database, "blogs/");
-                onValue(blogsRef, (snapshot) => {
-                  const data = snapshot.val();
-                  if (data) {
-                    setBlogs(data);
-                  } else {
-                    console.log("there are no blogs");
-                  }
-                });
-
-                //fetch bloggers list
-                const bloggersRef = ref(database, `users/`);
-                onValue(bloggersRef, (snapshot) => {
-                  const data = snapshot.val();
-                  if (data) {
-                    setBloggers(data);
-                  } else {
-                    console.log("there are no bloggers...");
-                  }
-                });
-
-                //setUserItems(null);
-
-                // //fetch users list
-                // const usersRef = ref(database, `users/`);
-                // onValue(usersRef, (snapshot) => {
-                //   const data = snapshot.val();
-                //   if (data) {
-                //     setUsers(data);
-                //   } else {
-                //     console.log("there are no users...");
-                //   }
-                // });
-                // // fetch all items
-                // const itemsRef = ref(database, "items/");
-                // onValue(itemsRef, (snapshot) => {
-                //   const data = snapshot.val();
-                //   if (data) {
-                //     setItems(data);
-                //   } else {
-                //     console.log("there are no items");
-                //   }
-                // });
-                console.log("user is logged out");
-            }
-        });
-        // Cleanup subscription on unmount
-        return () => unsubscribe();
+      //fetch bloggers list
+      const bloggersRef = ref(database, `users/`);
+      onValue(bloggersRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          setBloggers(data);
+        } else {
+          console.log("there are no bloggers...");
+        }
+      });
     }, []);
 
     return (
-        <DatabaseContext.Provider
-            value={{
-                user,
-                userData,
-                updateUserData,
-                blogs,
-                deleteBlog,
-                bloggers,
-                addBlog,
-                updateBlog,
-                addArticle,
-                deleteArticle
-                //uploadProfileImage,
-                //uploadItemImage
-            }}
-        >
-            {children}
-        </DatabaseContext.Provider>
+      <DatabaseContext.Provider
+        value={{
+          user,
+          userData,
+          updateUserData,
+          blogs,
+          deleteBlog,
+          bloggers,
+          addBlog,
+          updateBlog,
+          addArticle,
+          deleteArticle
+          //uploadProfileImage,
+          //uploadItemImage
+        }}
+      >
+        {children}
+      </DatabaseContext.Provider>
     );
 }

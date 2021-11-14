@@ -8,7 +8,7 @@ export default function BlogPage() {
     let {path, url} = useRouteMatch();
     const { blogLink } = useParams();
 
-    const { blogs, deleteBlog } = useDatabase();
+    const { blogs } = useDatabase();
 
     const [blog, setBlog] = useState(null);
 
@@ -57,11 +57,12 @@ export default function BlogPage() {
                                         <ul>
                                             {
                                                 Object.entries(blog.articles).map((article) =>
-                                                    <Link
-                                                        key={article[0]}
-                                                        to={url + "/" + article[1].articleLink}
-                                                        className="d-block"
-                                                    >{article[1].title}</Link>
+                                                    <li key={article[0]}>
+                                                        <Link
+                                                            to={url + "/" + article[1].articleLink}
+                                                            className="d-block"
+                                                        >{article[1].title}</Link>
+                                                    </li>
                                                 )
                                             }
                                         </ul>

@@ -8,21 +8,16 @@ export default function Dashboard() {
     
     return (
         <div>
-            <div className="row justify-content-between">
-                <div className="col-4">
-                    <h1>Dashboard</h1>
-                </div>
-                <div className="col-4 text-end">
-                    <Link
-                        to={`${url}/user-data`}
-                        className="me-2"
-                    >Your profile data</Link>
-                    <span> | </span>
-                    <Link
-                        to={`${url}/user-blogs`}
-                        className="ms-2"
-                    >Your blogs</Link>
-                </div>
+            <div className="text-center">
+                <Link
+                    to={`/dashboard/user-data`}
+                    className="me-2"
+                >Your profile data</Link>
+                <span> | </span>
+                <Link
+                    to={`/dashboard/user-blogs`}
+                    className="ms-2"
+                >Your blogs</Link>
             </div>
             <hr />
             <Switch>

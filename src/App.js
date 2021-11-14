@@ -12,6 +12,7 @@ import CreateBlogForm from "./components/CreateBlogForm";
 import CreateArticlePage from "./components/CreateArticlePage";
 import Footer from "./components/Footer";
 import BloggerPage from "./components/BloggerPage";
+import UpdateArticlePage from "./components/UpdateArticlePage";
 
 function App() {
 
@@ -49,6 +50,9 @@ function App() {
           </Route>
           <Route path="/create-article/:blogKey/:blogTitle">
             <CreateArticlePage />
+          </Route>
+          <Route path="/edit-article/:blogKey/:articleKey">
+            <UpdateArticlePage />
           </Route>
         </Switch>
         <hr />

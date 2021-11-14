@@ -11,12 +11,13 @@ export default function Home() {
             <h3>Technologies used in building Blogging Platform:</h3>
             <hr />
             <ul>
-                <li>React</li>
-                <li>React Router</li>
-                <li>React Markdown</li>
-                <li>Firebase</li>
-                <li>Bootstrap</li>
-                <li>Bootswatch</li>
+                <li>React 17</li>
+                <li>React Router 5.2</li>
+                <li>React Context</li>
+                <li>React Markdown 7 & remark-gfm</li>
+                <li>Firebase 9.1</li>
+                <li>Bootstrap 5.1</li>
+                <li>Bootswatch 5.1</li>
             </ul>
         </div>
     );

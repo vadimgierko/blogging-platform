@@ -67,7 +67,7 @@ export default function SignUpForm() {
                     type="button"
                     className="btn btn-primary mb-3"
                     onClick={() => {
-                        signUp(userSignUpData.email, userSignUpData.password);
+                        signUp(userSignUpData);
                     }}
                 >
                     Create account

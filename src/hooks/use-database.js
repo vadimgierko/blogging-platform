@@ -44,13 +44,20 @@ export function DatabaseProvider({ children }) {
       });
   };
 
-  const signUp = (email, password) => {
-    return createUserWithEmailAndPassword(firebaseAuth, email, password)
+  const signUp = (signUpData) => {
+    return createUserWithEmailAndPassword(firebaseAuth, signUpData.email, signUpData.password)
       .then((userCredential) => {
         // Signed in
         setUser(userCredential.user);
-        console.log("user is sign up");
-        return userCredential.user;
+        console.log("user is sign up. userCredential.user: ", userCredential.user);
+        // create user in database with signUpData:
+        set(ref(database, "users/" + userCredential.user.uid), {
+          firstName: signUpData.firstName,
+          lastName: signUpData.lastName,
+          userName: signUpData.userName,
+          email: signUpData.email,
+        });
+        //return userCredential.user;
       })
       .catch((error) => {
         alert(error.message);

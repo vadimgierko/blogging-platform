@@ -28,7 +28,7 @@ export default function BlogEditionForm() {
     if (blog) {
         return (
             <div className="BlogEditionForm row">
-                <div className="col">
+                <div className="col-lg">
                     <form>
                         <div className="mb-2">
                             <h4 className="text-center">Blog</h4>
@@ -76,7 +76,7 @@ export default function BlogEditionForm() {
                         </Link>
                     </form>
                 </div>
-                <div className="col">
+                <div className="col-lg">
                     <h4 className="text-center">Articles</h4>
                     <hr />
                     {
@@ -84,11 +84,11 @@ export default function BlogEditionForm() {
                             Object.entries(blog.articles).map((article) => (
                                 <div key={article[0]}>
                                     <div className="row">
-                                        <div className="col">
+                                        <div className="col-md">
                                             <h5>{article[1].title}</h5>
                                             <p>{article[1].description}</p>
                                         </div>
-                                        <div className="col-4 text-end">
+                                        <div className="col-md text-end">
                                             <Link
                                                 to={"/edit-article/" + blogKey + "/" + article[0]}
                                                 className="btn btn-secondary d-inline"

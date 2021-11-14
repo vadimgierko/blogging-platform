@@ -7,7 +7,7 @@ export default function BlogEditionForm() {
 
     const { blogLink } = useParams();
 
-    const { blogs, deleteBlog, updateBlog, deleteArticle } = useDatabase();
+    const { blogs, deleteBlog, updateBlog, deleteArticle, updateArticle } = useDatabase();
 
     const [blog, setBlog] = useState(null);
     const [blogKey, setBlogKey] = useState(null);
@@ -89,6 +89,12 @@ export default function BlogEditionForm() {
                                             <p>{article[1].description}</p>
                                         </div>
                                         <div className="col-4 text-end">
+                                            <Link
+                                                to={"/edit-article/" + blogKey + "/" + article[0]}
+                                                className="btn btn-secondary d-inline"
+                                            >
+                                                <i className="bi bi-pencil" />
+                                            </Link>
                                             <button
                                                 className="btn btn-danger d-inline"
                                                 onClick={() => {

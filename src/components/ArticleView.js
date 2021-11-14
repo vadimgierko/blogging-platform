@@ -47,6 +47,7 @@ export default function ArticleView() {
                     <div>
                         <h1>{article.title}</h1>
                         <p><em>Published:</em> {article.createdAt}</p>
+                        <p><em>Updated:</em> {article.updatedAt ? article.updatedAt : article.createdAt}</p>
                         <p><em>Description:</em> {article.description}</p>
                         <hr />
                         <ReactMarkdown children={article.content} remarkPlugins={[remarkGfm]} />

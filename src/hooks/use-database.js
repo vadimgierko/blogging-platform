@@ -118,28 +118,21 @@ export function DatabaseProvider({ children }) {
     }
   }
 
-  // const updateArticle = (blogKey, blogTitle, article) => {
-
-  //   const newArticleKey = push(child(ref(database), "blogs/" + blogKey + "/articles/")).key;
-
-  //   if (newArticleKey) {
-  //     set(ref(database, "blogs/" + blogKey + "/articles/" + newArticleKey), {
-  //       ...article,
-  //       author: userData.firstName + " " + userData.lastName,
-  //       userName: userData.userName,
-  //       userId: user.uid,
-  //       blogKey: blogKey,
-  //       blogTitle: blogTitle
-  //     });
-  //   }
-  // }
+  const updateArticle = (blogKey, articleKey, updatedArticleData) => {
+    if (updatedArticleData) {
+      set(ref(database, "blogs/" + blogKey + "/articles/" + articleKey), {
+        ...updatedArticleData
+      });
+    } else {
+      alert("There is no data to update... The article isn't updated.");
+    }
+  }
 
   const deleteArticle = (blogKey, articleKey) => {
     remove(ref(database, "blogs/" +  blogKey + "/articles/" + articleKey)).then(() => {
-        console.log("article " + articleKey + " in blog " + blogKey + " was deleted");
+      console.log("article " + articleKey + " in blog " + blogKey + " was deleted");
     }).catch((error) => {
-        // An error ocurred
-        console.log(error.message);
+      console.log(error.message);
     });
   }
 
@@ -257,7 +250,8 @@ export function DatabaseProvider({ children }) {
     addBlog,
     updateBlog,
     addArticle,
-    deleteArticle
+    deleteArticle,
+    updateArticle,
     //uploadProfileImage,
     //uploadItemImage
   }

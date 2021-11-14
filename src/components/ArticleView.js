@@ -11,30 +11,24 @@ export default function ArticleView() {
     const { blogs } = useDatabase();
     const [article, setArticle] = useState(null);
 
-    // ARTICLES ? "DOWNLOADING ARTICLE" : "THERE IS NO ARTICLES" !!!
-
     useEffect(() => {
         
         if (blogs) {
-            //console.log("article params:", blogLink, articleLink);
-            const fetchedBlogs = Object.entries(blogs);
-            const currentBlogArray = fetchedBlogs.filter(blog => blog[1].blogLink === blogLink); // array...
-            const currentBlog = currentBlogArray[0][1];
-            //console.log("current blog:", currentBlog);
-            const fetchedArticles = Object.entries(currentBlog.articles);
-            //console.log("fetched articles:", fetchedArticles);
+            const currentBlog = Object.entries(blogs).find(blog => blog[1].blogLink === blogLink)[1];
+            console.log("currentBlog:", currentBlog);
             if (articleLink) {
-                const currentArticleArray = fetchedArticles.filter(article => article[1].articleLink === articleLink);
-                //console.log("current article array after filtering:", currentArticleArray)
-                const currentArticle = currentArticleArray[0][1];
-                //console.log("current article:", currentArticle);
+                const currentArticle = Object.entries(currentBlog.articles).find(article => article[1].articleLink === articleLink)[1];
                 setArticle(currentArticle);
             } else {
                 // if no article link = blogs/current-blog-page
                 // show the last (the newest) article
-                if (fetchedArticles && fetchedArticles.length) {
-                    const newestArticle = fetchedArticles[fetchedArticles.length - 1][1];
+                const articles = currentBlog.articles ? Object.entries(currentBlog.articles) : null;
+                if (articles && articles.length) {
+                    const newestArticle = articles[articles.length - 1][1];
+                    console.log("newestArticle:", newestArticle)
                     setArticle(newestArticle);
+                } else {
+                    console.log("there are no articles")
                 }
             }
         }
@@ -46,14 +40,14 @@ export default function ArticleView() {
                 article ? (
                     <div>
                         <h1>{article.title}</h1>
-                        <p><em>Published:</em> {article.createdAt}</p>
+                        <p><em>Published:</em> {article.createdAt ? article.createdAt : (article.updatedAt ? article.updatedAt : "article was published before createdAt function came up ;-)")}</p>
                         <p><em>Updated:</em> {article.updatedAt ? article.updatedAt : article.createdAt}</p>
                         <p><em>Description:</em> {article.description}</p>
                         <hr />
                         <ReactMarkdown children={article.content} remarkPlugins={[remarkGfm]} />
                     </div>
                 ) : (
-                    <p>Downloading article...</p>
+                    <p>There are no articles or downloading article...</p>
                 )
             }
         </div>

@@ -37,10 +37,20 @@ export default function SignInForm() {
                     </div>
                 </div>
                 <Link
-                    to="/dashboard"
+                    to={userSignInData.email && userSignInData.password ? "/dashboard" : "/login"}
                     type="button"
                     className="btn btn-primary mb-3"
-                    onClick={() => signIn(userSignInData.email, userSignInData.password)}
+                    onClick={() => {
+                        if (userSignInData.email) {
+                            if (userSignInData.password) {
+                                signIn(userSignInData.email, userSignInData.password);
+                            } else {
+                                alert("You need to input your password to log in!");
+                            }
+                        } else {
+                            alert("You need to input your email to log in!");
+                        }
+                    }}
                 >
                     Log in
                 </Link>

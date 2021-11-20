@@ -8,7 +8,7 @@ export default function Footer() {
                 rel="noreferrer"
                 style={{display: "inline"}}
             >Blogging Platform</a>
-            & 
+            & its feature
             <a
                 className="nav-link text-center mb-3"
                 href="https://github.com/vadimgierko/markdown-text-editor"

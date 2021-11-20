@@ -14,21 +14,28 @@ export default function UpdateArticlePage() {
     const [updatedArticleData, setUpdatedArticleData] = useState(null);
 
     function handleSubmit() {
-        // update article link in the case if title changed:
-        const articleLink = convertTitleIntoLink(updatedArticleData.title);
-        // set date of update:
-        const date = new Date();
-        const day = date.getUTCDate();
-        const month = date.getUTCMonth() + 1;
-        const year = date.getUTCFullYear();
-        const updatedAt = year + "." + month + "." + day;
-        // update updatedData with new link & updateAt date:
-        const updatedArticleDataWithLink = {
-            ...updatedArticleData,
-            articleLink: articleLink,
-            updatedAt: updatedAt
+        if (
+            updatedArticleData.title.replace(/\s/g, '').length &&
+            updatedArticleData.description.replace(/\s/g, '').length
+        ) {
+            // update article link in the case if title changed:
+            const articleLink = convertTitleIntoLink(updatedArticleData.title);
+            // set date of update:
+            const date = new Date();
+            const day = date.getUTCDate();
+            const month = date.getUTCMonth() + 1;
+            const year = date.getUTCFullYear();
+            const updatedAt = year + "." + month + "." + day;
+            // update updatedData with new link & updateAt date:
+            const updatedArticleDataWithLink = {
+                ...updatedArticleData,
+                articleLink: articleLink,
+                updatedAt: updatedAt
+            }
+            updateArticle(blogKey, articleKey, updatedArticleDataWithLink);
+        } else {
+            alert("You need to complete all input fields (not only white spaces...) to create new article... Try again!");
         }
-        updateArticle(blogKey, articleKey, updatedArticleDataWithLink);
     }
 
     useEffect(() => {

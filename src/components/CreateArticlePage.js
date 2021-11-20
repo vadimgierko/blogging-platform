@@ -18,18 +18,25 @@ export default function CreateArticlePage() {
     });
 
     function handleSubmit() {
-        const articleLink = convertTitleIntoLink(newArticleData.title);
-        const date = new Date();
-        const day = date.getUTCDate();
-        const month = date.getUTCMonth() + 1;
-        const year = date.getUTCFullYear();
-        const createdAt = year + "." + month + "." + day;
-        const newArticleDataWithLink = {
-            ...newArticleData,
-            articleLink: articleLink,
-            createdAt: createdAt
+        if (
+            newArticleData.title.replace(/\s/g, '').length &&
+            newArticleData.description.replace(/\s/g, '').length
+        ) {
+            const articleLink = convertTitleIntoLink(newArticleData.title);
+            const date = new Date();
+            const day = date.getUTCDate();
+            const month = date.getUTCMonth() + 1;
+            const year = date.getUTCFullYear();
+            const createdAt = year + "." + month + "." + day;
+            const newArticleDataWithLink = {
+                ...newArticleData,
+                articleLink: articleLink,
+                createdAt: createdAt
+            }
+            addArticle(blogKey, blogTitle, newArticleDataWithLink);
+        } else {
+            alert("You need to complete all input fields (not only white spaces...) to create new article... Try again!");
         }
-        addArticle(blogKey, blogTitle, newArticleDataWithLink);
     }
 
     return (

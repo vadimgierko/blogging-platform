@@ -4,7 +4,7 @@ import { useDatabase } from "../hooks/use-database";
 
 export default function UserDataFormInDashboard() {
 
-    const { user, userData, updateUserData } = useDatabase();
+    const { user, userData, updateUserData, deleteUserAccount } = useDatabase();
     
     const [currentUserData, setCurrentUserData] = useState(null);
 
@@ -61,40 +61,67 @@ export default function UserDataFormInDashboard() {
                                 onChange={(e) => setCurrentUserData({...currentUserData, userName: e.target.value})}
                             />
                         </div>
-                        <div className="mb-2">
-                            <p>Your email:</p>
-                            <input
-                                type="input"
-                                className="form-control"
-                                defaultValue={currentUserData ? currentUserData.email : null}
-                                onChange={(e) => setCurrentUserData({...currentUserData, email: e.target.value})}
-                            />
-                        </div>
                         <Link
                             to="/dashboard"
                             type="button"
                             className="btn btn-success d-block mb-3"
-                            onClick={() => updateUserData(currentUserData)}
+                            onClick={() => {
+                                if (
+                                    currentUserData.firstName.replace(/\s/g, '').length &&
+                                    currentUserData.lastName.replace(/\s/g, '').length &&
+                                    currentUserData.userName.replace(/\s/g, '').length
+                                ) {
+                                    updateUserData(currentUserData);
+                                } else {
+                                    alert("You need to complete all input fields (not only white spaces...) to update your account data!");
+                                } 
+                            }}
                         >Save changes</Link>
                         <Link
-                            to="/"
+                            to="/dashboard"
                             type="button"
                             className="btn btn-outline-danger d-block mb-3"
                             onClick={() => {
                                 // eslint-disable-next-line no-restricted-globals
                                 const wantToDelete = confirm("Are you sure, you want to delete your account & your articles forever? There's no turning back... Delete account?");
                                 if (wantToDelete) {
-                                    //deleteAccount(userId); => CREATE DELETE USER IN USE-DATABASE !!!
+                                    //alert("Sorry, for a moment there are no delete account function in this app... Please, contact to the owner of this app to delete your account manually.");
+                                    deleteUserAccount();
                                 }
                             }}
                         >Delete my account</Link>
                     </form>
                 ) : (
                     <div>
-                        <h2>Downloading data...</h2>
+                        <h2>Downloading data or there is no data...</h2>
+                        <Link
+                            to="/dashboard"
+                            type="button"
+                            className="btn btn-outline-danger d-block mb-3"
+                            onClick={() => {
+                                // eslint-disable-next-line no-restricted-globals
+                                const wantToDelete = confirm("Are you sure, you want to delete your account & your articles forever? There's no turning back... If you want to delete your account, press OK & delete your blogs & user Data at first.");
+                                if (wantToDelete) {
+                                    //alert("Sorry, for a moment there are no delete account function in this app... Please, contact to the owner of this app to delete your account manually.");
+                                    deleteUserAccount();
+                                }
+                            }}
+                        >Delete my account</Link>
                     </div>
                 )
             }
         </>
     );
 }
+
+/*=======  EMAIL CHANGING DELETED UNTIL THERE WILL BE A FUNCTION FOR IT ======
+<div className="mb-2">
+    <p>Your email:</p>
+    <input
+        type="input"
+        className="form-control"
+        defaultValue={currentUserData ? currentUserData.email : null}
+        onChange={(e) => setCurrentUserData({...currentUserData, email: e.target.value})}
+    />
+</div>
+*/

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDatabase } from "../hooks/use-database";
-
+import convertTitleIntoLink from "../functions/convertTitleIntoLink";
 
 export default function BlogEditionForm() {
 
@@ -38,7 +38,7 @@ export default function BlogEditionForm() {
                                 type="text"
                                 className="form-control"
                                 defaultValue={blog.title}
-                                onChange={(e) => setBlog({...blog, title: e.target.value})}
+                                onChange={(e) => setBlog({...blog, title: e.target.value, blogLink: convertTitleIntoLink(e.target.value)})}
                             />
                         </div>
                         <div className="mb-2">
@@ -50,16 +50,24 @@ export default function BlogEditionForm() {
                                 onChange={(e) => setBlog({...blog, description: e.target.value})}
                             />
                         </div>
-                        <button
+                        <Link
+                            to="/dashboard/user-blogs"
                             type="button"
                             className="btn btn-success mb-3 d-block"
                             style={{width: "100%"}}
                             onClick={() => {
-                                updateBlog(blogKey, blog);
+                                if (
+                                    blog.title.replace(/\s/g, '').length &&
+                                    blog.description.replace(/\s/g, '').length
+                                ) {
+                                    updateBlog(blogKey, blog);
+                                } else {
+                                    alert("You need to complete all input fields (not only white spaces...) to update your blog data... Try again!");
+                                }
                             }}
                         >
                             Save changes
-                        </button>
+                        </Link>
                         <Link
                             to="/dashboard/user-blogs"
                             type="button"

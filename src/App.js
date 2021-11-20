@@ -13,8 +13,22 @@ import CreateArticlePage from "./components/CreateArticlePage";
 import Footer from "./components/Footer";
 import BloggerPage from "./components/BloggerPage";
 import UpdateArticlePage from "./components/UpdateArticlePage";
+import { useDatabase } from "./hooks/use-database";
+import { useEffect, useState } from "react/cjs/react.development";
 
 function App() {
+
+  const [userId, setUserId] = useState(null);
+
+  const { user } = useDatabase();
+
+  useEffect(() => {
+    if (user) {
+      setUserId(user.uid);
+    } else {
+      setUserId(null);
+    }
+  }, [user]);
 
   return (
     <div className="App">
@@ -31,7 +45,21 @@ function App() {
             <SignUpForm />
           </Route>
           <Route path="/dashboard">
-            <Dashboard />
+            {
+              userId
+              ? <Dashboard />
+              : (
+                <div>
+                  <h3>Something went wrong...</h3>
+                  <ul>
+                    <li>...wait for a data download or...</li>
+                    <li>...try to sign in one more time or...</li>
+                    <li>...create an account with create account button if don't have one or...</li>
+                    <li>...check your Internet connection...</li>
+                  </ul>
+                </div>
+              )
+            }
           </Route>
           <Route path="/blogs/:blogLink">
             <BlogPage />

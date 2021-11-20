@@ -7,7 +7,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  deleteUser
 } from "firebase/auth";
 
 import {
@@ -143,6 +144,54 @@ export function DatabaseProvider({ children }) {
     });
   }
 
+  const deleteUserAccount = () => {
+    console.log("deleteUser operations:");
+    const userForDelete = firebaseAuth.currentUser;
+    console.log("userForDelete:", userForDelete);
+    const userIdForDelete = userForDelete.uid;
+    console.log("userIdForDelete:", userIdForDelete);
+
+    if (userForDelete && userIdForDelete) {
+      // 1. delete user blogs:
+      const userBlogsForDelete = Object.entries(blogs).filter(blog => blog[1].userId === userIdForDelete);
+      console.log("userBlogsForDelete:", userBlogsForDelete);
+      let userBlogsKeysForDelete = [];
+      for (let i = 0; i < userBlogsForDelete.length; i++) {
+        const key = userBlogsForDelete[i][0];
+        userBlogsKeysForDelete.push(key);
+      }
+      console.log("userBlogsKeysForDelete:", userBlogsKeysForDelete);
+      for (let n = 0; n < userBlogsKeysForDelete.length; n++) {
+        const key = userBlogsKeysForDelete[n];
+        remove(ref(database, "blogs/" + key)).then(() => {
+          console.log("Blog " + key + " of deleted user " + userIdForDelete + " was deleted...");
+          // 2. then finally delete user data:
+          remove(ref(database, "users/" + userForDelete.uid)).then(() => {
+            console.log("User data of deleted user " + userIdForDelete + " was deleted...");
+            // 3. delete user
+            // eslint-disable-next-line no-restricted-globals
+            const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
+            if (confirmAccountDeletion) {
+              deleteUser(userForDelete).then(() => {
+                console.log("User " + userIdForDelete + " was deleted.");
+              }).catch((error) => {
+                alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
+              });
+            }
+          }).catch((error) => {
+            // An error ocurred
+            alert(error.message);
+          });
+        }).catch((error) => {
+          // An error ocurred
+          alert(error.message);
+        });
+      }
+    } else {
+      alert("You need to be signed in to delete your account. Try again!")
+    }
+  }
+
   //   const getProfileImageURL = (profileImageRef) => {
   //     // get profile img url to users data:
   //     getDownloadURL(storageRef(storage, profileImageRef))
@@ -259,6 +308,7 @@ export function DatabaseProvider({ children }) {
     addArticle,
     deleteArticle,
     updateArticle,
+    deleteUserAccount
     //uploadProfileImage,
     //uploadItemImage
   }

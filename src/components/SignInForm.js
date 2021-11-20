@@ -40,7 +40,17 @@ export default function SignInForm() {
                     to="/dashboard"
                     type="button"
                     className="btn btn-primary mb-3"
-                    onClick={() => signIn(userSignInData.email, userSignInData.password)}
+                    onClick={() => {
+                        if (userSignInData.email.replace(/\s/g, '').length) {
+                            if (userSignInData.password.replace(/\s/g, '').length) {
+                                signIn(userSignInData.email, userSignInData.password);
+                            } else {
+                                alert("You need to input your password (& not only white spaces...) to log in!");
+                            }
+                        } else {
+                            alert("You need to input your email (& not only white spaces...) to log in!");
+                        }
+                    }}
                 >
                     Log in
                 </Link>

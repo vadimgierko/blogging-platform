@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from 'react-router-dom';
 import { useDatabase } from "../hooks/use-database";
+import convertTitleIntoLink from "../functions/convertTitleIntoLink";
 
 export default function CreateBlogForm() {
 
@@ -13,16 +14,19 @@ export default function CreateBlogForm() {
     });
 
     function handleSubmit() {
-        const blogLink = convertBlogTitleIntoLink(newBlogData.title);
-        const newBlogDataWithLink = {
-            ...newBlogData,
-            blogLink: blogLink
-        }
-        addBlog(newBlogDataWithLink);
-    }
-
-    function convertBlogTitleIntoLink(blogTitle) {
-        return (blogTitle.replace(/ /g, "-").toLowerCase());
+        if (
+            newBlogData.title.replace(/\s/g, '').length &&
+            newBlogData.description.replace(/\s/g, '').length
+        ) {
+            const blogLink = convertTitleIntoLink(newBlogData.title);
+            const newBlogDataWithLink = {
+                ...newBlogData,
+                blogLink: blogLink
+            }
+            addBlog(newBlogDataWithLink);
+        } else {
+            alert("You need to complete all input fields (not only white spaces...) to create new blog... Try again!");
+        }  
     }
 
     return (

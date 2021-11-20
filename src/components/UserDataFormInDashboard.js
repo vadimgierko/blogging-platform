@@ -78,7 +78,7 @@ export default function UserDataFormInDashboard() {
                             }}
                         >Save changes</Link>
                         <Link
-                            to="/"
+                            to="/dashboard"
                             type="button"
                             className="btn btn-outline-danger d-block mb-3"
                             onClick={() => {

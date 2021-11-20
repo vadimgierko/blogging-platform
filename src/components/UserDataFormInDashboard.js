@@ -4,7 +4,7 @@ import { useDatabase } from "../hooks/use-database";
 
 export default function UserDataFormInDashboard() {
 
-    const { user, userData, updateUserData } = useDatabase();
+    const { user, userData, updateUserData, deleteUserAccount } = useDatabase();
     
     const [currentUserData, setCurrentUserData] = useState(null);
 
@@ -85,15 +85,28 @@ export default function UserDataFormInDashboard() {
                                 // eslint-disable-next-line no-restricted-globals
                                 const wantToDelete = confirm("Are you sure, you want to delete your account & your articles forever? There's no turning back... Delete account?");
                                 if (wantToDelete) {
-                                    //deleteAccount(userId); => CREATE DELETE USER IN USE-DATABASE !!!
-                                    alert("Sorry, for a moment there are no delete account function in this app... Please, contact to the owner of this app to delete your account manually.");
+                                    //alert("Sorry, for a moment there are no delete account function in this app... Please, contact to the owner of this app to delete your account manually.");
+                                    deleteUserAccount();
                                 }
                             }}
                         >Delete my account</Link>
                     </form>
                 ) : (
                     <div>
-                        <h2>Downloading data...</h2>
+                        <h2>Downloading data or there is no data...</h2>
+                        <Link
+                            to="/dashboard"
+                            type="button"
+                            className="btn btn-outline-danger d-block mb-3"
+                            onClick={() => {
+                                // eslint-disable-next-line no-restricted-globals
+                                const wantToDelete = confirm("Are you sure, you want to delete your account & your articles forever? There's no turning back... If you want to delete your account, press OK & delete your blogs & user Data at first.");
+                                if (wantToDelete) {
+                                    //alert("Sorry, for a moment there are no delete account function in this app... Please, contact to the owner of this app to delete your account manually.");
+                                    deleteUserAccount();
+                                }
+                            }}
+                        >Delete my account</Link>
                     </div>
                 )
             }

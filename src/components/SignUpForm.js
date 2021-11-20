@@ -67,7 +67,16 @@ export default function SignUpForm() {
                     type="button"
                     className="btn btn-primary mb-3"
                     onClick={() => {
-                        signUp(userSignUpData);
+                        if (
+                            userSignUpData.email &&
+                            userSignUpData.firstName &&
+                            userSignUpData.lastName &&
+                            userSignUpData.password &&
+                            userSignUpData.userName) {
+                                signUp(userSignUpData);
+                        } else {
+                            alert("You need to complete all input fields to create an account!");
+                        }
                     }}
                 >
                     Create account

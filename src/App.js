@@ -50,7 +50,13 @@ function App() {
               ? <Dashboard />
               : (
                 <div>
-                  <h3>Try to sign in one more time or create an account with sign up button if don't have one!</h3>
+                  <h3>Something went wrong...</h3>
+                  <ul>
+                    <li>...wait for a data download or...</li>
+                    <li>...try to sign in one more time or...</li>
+                    <li>...create an account with create account button if don't have one or...</li>
+                    <li>...check your Internet connection...</li>
+                  </ul>
                 </div>
               )
             }

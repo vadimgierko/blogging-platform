@@ -26,8 +26,7 @@ export default function CreateBlogForm() {
             addBlog(newBlogDataWithLink);
         } else {
             alert("You need to complete all input fields (not only white spaces...) to create new blog... Try again!");
-        }
-        
+        }  
     }
 
     return (

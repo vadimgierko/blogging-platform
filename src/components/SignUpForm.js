@@ -68,14 +68,15 @@ export default function SignUpForm() {
                     className="btn btn-primary mb-3"
                     onClick={() => {
                         if (
-                            userSignUpData.email &&
-                            userSignUpData.firstName &&
-                            userSignUpData.lastName &&
-                            userSignUpData.password &&
-                            userSignUpData.userName) {
+                            userSignUpData.email.replace(/\s/g, '').length &&
+                            userSignUpData.firstName.replace(/\s/g, '').length &&
+                            userSignUpData.lastName.replace(/\s/g, '').length &&
+                            userSignUpData.password.replace(/\s/g, '').length &&
+                            userSignUpData.userName.replace(/\s/g, '').length
+                            ) {
                                 signUp(userSignUpData);
                         } else {
-                            alert("You need to complete all input fields to create an account!");
+                            alert("You need to complete all input fields (not only white spaces...) to create an account!");
                         }
                     }}
                 >

@@ -41,14 +41,14 @@ export default function SignInForm() {
                     type="button"
                     className="btn btn-primary mb-3"
                     onClick={() => {
-                        if (userSignInData.email) {
-                            if (userSignInData.password) {
+                        if (userSignInData.email.replace(/\s/g, '').length) {
+                            if (userSignInData.password.replace(/\s/g, '').length) {
                                 signIn(userSignInData.email, userSignInData.password);
                             } else {
-                                alert("You need to input your password to log in!");
+                                alert("You need to input your password (& not only white spaces...) to log in!");
                             }
                         } else {
-                            alert("You need to input your email to log in!");
+                            alert("You need to input your email (& not only white spaces...) to log in!");
                         }
                     }}
                 >

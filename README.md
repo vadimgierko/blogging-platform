@@ -1,15 +1,21 @@
 # Blogging Platform
 
-It's a place, where you can:
+## About App
+This is my newest, most complex & advanced responsive full-stack single-page application, which supports all kinds of CRUD features, in which I have used all of my previous knowledge and skills in the field of front-end development (React, Bootstrap) and realtime database integration (Firebase).
 
-- run your blog for free after creating an user account
+## Blogging Platform allows you to:
+
+- create & run your blog (or many blogs) for free after creating a free user account,
+- write & edit your articles with simple & intuitive markdown text editor, which was also created by myself (see project repo here: https://github.com/vadimgierko/markdown-text-editor or try it here: https://vadimgierko.github.io/markdown-text-editor/),
 - read published blogs without authentication
 
-## Technologies
+## Technologies used in the project
 
-- React
-- React Routing
-- React Markdown
-- Firebase
-- Bootstrap
-- Bootswatch
+- React 17
+- React Context
+- React Router 5.2 (dynamic & nested routing)
+- React Markdown 7 & remark-gfm
+- Firebase 9.1 (authentication, realtime database, security rules)
+- Bootstrap 5.1
+- Bootswatch 5.1
+- GitHub Pages 3.2

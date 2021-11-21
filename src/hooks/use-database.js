@@ -152,41 +152,70 @@ export function DatabaseProvider({ children }) {
     console.log("userIdForDelete:", userIdForDelete);
 
     if (userForDelete && userIdForDelete) {
-      // 1. delete user blogs:
+      // 1. delete user data first:
+      remove(ref(database, "users/" + userForDelete.uid)).then(() => {
+        console.log("User data of deleted user " + userIdForDelete + " was deleted...");
+      }).catch((error) => {
+        // An error ocurred
+        alert(error.message);
+      });
+      
+      // 2. delete user blogs in for loop:
       const userBlogsForDelete = Object.entries(blogs).filter(blog => blog[1].userId === userIdForDelete);
       console.log("userBlogsForDelete:", userBlogsForDelete);
-      let userBlogsKeysForDelete = [];
-      for (let i = 0; i < userBlogsForDelete.length; i++) {
-        const key = userBlogsForDelete[i][0];
-        userBlogsKeysForDelete.push(key);
-      }
-      console.log("userBlogsKeysForDelete:", userBlogsKeysForDelete);
-      for (let n = 0; n < userBlogsKeysForDelete.length; n++) {
-        const key = userBlogsKeysForDelete[n];
-        remove(ref(database, "blogs/" + key)).then(() => {
-          console.log("Blog " + key + " of deleted user " + userIdForDelete + " was deleted...");
-          // 2. then finally delete user data:
-          remove(ref(database, "users/" + userForDelete.uid)).then(() => {
-            console.log("User data of deleted user " + userIdForDelete + " was deleted...");
-            // 3. delete user
-            // eslint-disable-next-line no-restricted-globals
-            const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
-            if (confirmAccountDeletion) {
-              deleteUser(userForDelete).then(() => {
-                console.log("User " + userIdForDelete + " was deleted.");
-              }).catch((error) => {
-                alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
-              });
-            }
+      if (userBlogsForDelete && userBlogsForDelete.length) {
+        let userBlogsKeysForDelete = [];
+        for (let i = 0; i < userBlogsForDelete.length; i++) {
+          const key = userBlogsForDelete[i][0];
+          userBlogsKeysForDelete.push(key);
+        }
+        console.log("userBlogsKeysForDelete:", userBlogsKeysForDelete);
+        if (userBlogsKeysForDelete && userBlogsKeysForDelete.length) {
+          for (let n = 0; n < userBlogsKeysForDelete.length; n++) {
+            const key = userBlogsKeysForDelete[n];
+            remove(ref(database, "blogs/" + key)).then(() => {
+              console.log("Blog " + key + " of deleted user " + userIdForDelete + " was deleted...");
+              // 2. delete user in the last loop
+              if (n === userBlogsKeysForDelete.length - 1) {
+                // eslint-disable-next-line no-restricted-globals
+                const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
+                if (confirmAccountDeletion) {
+                  deleteUser(userForDelete).then(() => {
+                    console.log("User " + userIdForDelete + " was deleted.");
+                  }).catch((error) => {
+                    alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
+                  });
+                }
+              }
+            }).catch((error) => {
+              // An error ocurred
+              alert(error.message);
+            });
+          }
+        } else {
+          console.log("There are no user blogs to delete... So delete user.");
+          // eslint-disable-next-line no-restricted-globals
+          const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
+          if (confirmAccountDeletion) {
+            deleteUser(userForDelete).then(() => {
+              console.log("User " + userIdForDelete + " was deleted.");
+            }).catch((error) => {
+              alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
+            });
+          }
+        }
+      } else {
+        console.log("There are no user blogs to delete... So delete user.");
+        // eslint-disable-next-line no-restricted-globals
+        const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
+        if (confirmAccountDeletion) {
+          deleteUser(userForDelete).then(() => {
+            console.log("User " + userIdForDelete + " was deleted.");
           }).catch((error) => {
-            // An error ocurred
-            alert(error.message);
+            alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
           });
-        }).catch((error) => {
-          // An error ocurred
-          alert(error.message);
-        });
-      }
+        }
+      }  
     } else {
       alert("You need to be signed in to delete your account. Try again!")
     }

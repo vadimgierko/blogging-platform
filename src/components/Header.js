@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react/cjs/react.development';
+import { useEffect } from 'react';
 import { useDatabase } from "../hooks/use-database";
 
 export default function Header() {

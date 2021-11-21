@@ -14,7 +14,7 @@ import Footer from "./components/Footer";
 import BloggerPage from "./components/BloggerPage";
 import UpdateArticlePage from "./components/UpdateArticlePage";
 import { useDatabase } from "./hooks/use-database";
-import { useEffect, useState } from "react/cjs/react.development";
+import { useEffect, useState } from "react";
 
 function App() {
 

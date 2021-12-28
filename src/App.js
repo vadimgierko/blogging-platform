@@ -15,6 +15,7 @@ import BloggerPage from "./components/BloggerPage";
 import UpdateArticlePage from "./components/UpdateArticlePage";
 import { useDatabase } from "./hooks/use-database";
 import { useEffect, useState } from "react";
+import ArticleView from "./components/ArticleView";
 
 function App() {
 
@@ -50,7 +51,7 @@ function App() {
               ? <Dashboard />
               : (
                 <div>
-                  <h3>Something went wrong...</h3>
+                  <h3>Downloading data...</h3>
                   <ul>
                     <li>...wait for a data download or...</li>
                     <li>...try to sign in one more time or...</li>
@@ -60,6 +61,9 @@ function App() {
                 </div>
               )
             }
+          </Route>
+          <Route path="/blogs/:blogLink/:articleLink">
+            <ArticleView />
           </Route>
           <Route path="/blogs/:blogLink">
             <BlogPage />

@@ -15,8 +15,7 @@ export default function BlogPage() {
     useEffect(() => {
         if (blogs) {
             const fetchedBlogs = Object.entries(blogs);
-            const currentBlogArray = fetchedBlogs.filter(blog => blog[1].blogLink === blogLink); // array...
-            const currentBlog = currentBlogArray[0][1];
+            const currentBlog = fetchedBlogs.find(blog => blog[1].blogLink === blogLink)[1];
             setBlog(currentBlog);
         } else {
             console.log("there are no blogs or blogLink in BlogPage ...")
@@ -41,32 +40,20 @@ export default function BlogPage() {
                         <hr />
                         {
                             blog.articles ? (
-                            
-                                <div className="row">
-                                    <Switch>
-                                        <Route exact path={path}>
-                                            <ArticleView />
-                                        </Route>
-                                        <Route exact path={path + "/:articleLink"}>
-                                            <ArticleView />
-                                        </Route>
-                                    </Switch>
-                                    <div className="col-4">
-                                        <h5>Table of content</h5>
-                                        <hr />
-                                        <ul>
-                                            {
-                                                Object.entries(blog.articles).map((article) =>
-                                                    <li key={article[0]}>
-                                                        <Link
-                                                            to={url + "/" + article[1].articleLink}
-                                                            className="d-block"
-                                                        >{article[1].title}</Link>
-                                                    </li>
-                                                )
-                                            }
-                                        </ul>
-                                    </div>
+                                <div>
+                                    <h5 className="text-center">Table of content</h5>
+                                    <ul>
+                                        {
+                                            Object.entries(blog.articles).map((article) =>
+                                                <li key={article[0]}>
+                                                    <Link
+                                                        to={url + "/" + article[1].articleLink}
+                                                        className="d-block"
+                                                    >{article[1].title}</Link>
+                                                </li>
+                                            )
+                                        }
+                                    </ul>
                                 </div>
                             ) : (
                                 <div>

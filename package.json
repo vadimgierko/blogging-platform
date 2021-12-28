@@ -1,7 +1,7 @@
 {
   "name": "blogging-platform",
   "version": "0.1.0",
-  "homepage": "https://vadimgierko.github.io/blogging-platform/",
+  "homepage": "https://vadimgierko.github.io/blogging-platform",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",

@@ -17,7 +17,9 @@ export default function ArticleView() {
             const currentBlog = Object.entries(blogs).find(blog => blog[1].blogLink === blogLink)[1];
             console.log("currentBlog:", currentBlog);
             if (articleLink) {
+                console.log("article link:", articleLink);
                 const currentArticle = Object.entries(currentBlog.articles).find(article => article[1].articleLink === articleLink)[1];
+                console.log("currentArticle found by articleLink", currentArticle);
                 setArticle(currentArticle);
             } else {
                 // if no article link = blogs/current-blog-page
@@ -35,14 +37,15 @@ export default function ArticleView() {
     }, [blogs, blogLink, articleLink]);
 
     return (
-        <div className="col-8">
+        <div>
             {
                 article ? (
                     <div>
-                        <h1>{article.title}</h1>
-                        <p><em>Published:</em> {article.createdAt ? article.createdAt : (article.updatedAt ? article.updatedAt : "article was published before createdAt function came up ;-)")}</p>
-                        <p><em>Updated:</em> {article.updatedAt ? article.updatedAt : article.createdAt}</p>
-                        <p><em>Description:</em> {article.description}</p>
+                        <div className="article-header text-center">
+                            <h1>{article.title}</h1>
+                            <p>{article.createdAt ? article.createdAt : null}{article.updatedAt ? (article.updatedAt === article.createdAt ? null : " / " + article.updatedAt) : null}</p>
+                            <p>{article.description}</p>
+                        </div>
                         <hr />
                         <ReactMarkdown children={article.content} remarkPlugins={[remarkGfm]} />
                     </div>

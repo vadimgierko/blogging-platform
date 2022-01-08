@@ -2,15 +2,15 @@ import "./App.css";
 import { Switch, Route } from "react-router-dom";
 import Header from "./components/organisms/Header";
 import Home from "./components/Home";
-import BlogsListPage from "./components/BlogsListPage";
-import BlogPage from "./components/BlogPage";
+import BlogsList from "./components/organisms/BlogsList";
+import Blog from "./components/organisms/Blog";
 import SignInForm from "./components/SignInForm";
 import SignUpForm from "./components/SignUpForm";
 import Dashboard from "./components/Dashboard";
 import BloggersList from "./components/BloggersList";
 import CreateBlogForm from "./components/CreateBlogForm";
 import CreateArticlePage from "./components/CreateArticlePage";
-import Footer from "./components/Footer";
+import Footer from "./components/organisms/Footer";
 import BloggerPage from "./components/BloggerPage";
 import UpdateArticlePage from "./components/UpdateArticlePage";
 import { useDatabase } from "./hooks/use-database";
@@ -66,10 +66,10 @@ function App() {
             <ArticleView />
           </Route>
           <Route path="/blogs/:blogLink">
-            <BlogPage />
+            <Blog />
           </Route>
           <Route path="/blogs">
-            <BlogsListPage />
+            <BlogsList />
           </Route>
           <Route path="/bloggers/:userName">
             <BloggerPage />
@@ -87,10 +87,7 @@ function App() {
             <UpdateArticlePage />
           </Route>
         </Switch>
-        <hr />
-        <div className="text-center">
-          <Footer />
-        </div>
+        <Footer />
       </div>
     </div>
   );

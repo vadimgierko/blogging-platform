@@ -5,7 +5,7 @@ export default function LinkButton({ to, style, onClick, text, isCollapsed }) {
         <Link
             type="button"
             to={to}
-            className={"btn btn-outline-" + style + (isCollapsed ? " ms-2" : " mt-3 d-block")}
+            className={"link-button btn btn-outline-" + style + (isCollapsed ? " ms-2" : " mt-3 d-block")}
             onClick={onClick}
         >{text}</Link>
     );

@@ -1,6 +1,6 @@
 import "./App.css";
 import { Switch, Route } from "react-router-dom";
-import Header from "./components/Header";
+import Header from "./components/organisms/Header";
 import Home from "./components/Home";
 import BlogsListPage from "./components/BlogsListPage";
 import BlogPage from "./components/BlogPage";
@@ -21,7 +21,7 @@ function App() {
 
   const [userId, setUserId] = useState(null);
 
-  const { user } = useDatabase();
+  const { user, logOut } = useDatabase();
 
   useEffect(() => {
     if (user) {
@@ -33,7 +33,7 @@ function App() {
 
   return (
     <div className="App">
-      <Header />
+      <Header user={user} logOut={logOut} />
       <div className="container" style={{ marginTop: 120 }}>
         <Switch>
           <Route exact path="/">

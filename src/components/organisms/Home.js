@@ -1,6 +1,6 @@
 export default function Home() {
     return (
-        <div>
+        <section className="home">
             <h1>What you can do with Blogging Platform</h1>
             <hr />
             <ul>
@@ -21,6 +21,6 @@ export default function Home() {
                 <li>Bootswatch 5.1</li>
                 <li>GitHub Pages 3.2 (hosting)</li>
             </ul>
-        </div>
+        </section>
     );
 }

@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useParams } from "react-router-dom";
-import { useDatabase } from "../hooks/use-database";
+import { useDatabase } from "../../hooks/use-database";
+import SectionHeader from "../molecules/SectionHeader";
 
-export default function ArticleView() {
+export default function Article() {
 
     const { articleLink } = useParams();
     const { blogLink } = useParams();
@@ -36,23 +37,13 @@ export default function ArticleView() {
         }
     }, [blogs, blogLink, articleLink]);
 
+    if (!article) return <p>There are no article or downloading article...</p>;
+
     return (
-        <div>
-            {
-                article ? (
-                    <div>
-                        <div className="article-header text-center">
-                            <h1>{article.title}</h1>
-                            <p>{article.createdAt ? article.createdAt : null}{article.updatedAt ? (article.updatedAt === article.createdAt ? null : " / " + article.updatedAt) : null}</p>
-                            <p>{article.description}</p>
-                        </div>
-                        <hr />
-                        <ReactMarkdown children={article.content} remarkPlugins={[remarkGfm]} />
-                    </div>
-                ) : (
-                    <p>There are no articles or downloading article...</p>
-                )
-            }
-        </div>
+        <article className="article">
+            <SectionHeader item={article} />
+            <hr />
+            <ReactMarkdown children={article.content} remarkPlugins={[remarkGfm]} />
+        </article>
     );
 }

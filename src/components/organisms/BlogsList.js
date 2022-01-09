@@ -11,7 +11,9 @@ export default function BlogsList() {
         <div className="blogs-list">
             <div>
                 <h1>Blogs</h1>
-                {Object.entries(blogs).map(blog => <BlogCard blog={blog} /> )}
+                {
+                    Object.entries(blogs).map((blog, i) => <BlogCard key={"blog-card-" + i} blog={blog[1]} />)
+                }
             </div>
         </div>
     );

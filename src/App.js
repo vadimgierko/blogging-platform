@@ -1,21 +1,21 @@
 import "./App.css";
 import { Switch, Route } from "react-router-dom";
 import Header from "./components/organisms/Header";
-import Home from "./components/Home";
+import Home from "./components/organisms/Home";
 import BlogsList from "./components/organisms/BlogsList";
 import Blog from "./components/organisms/Blog";
 import SignInForm from "./components/SignInForm";
 import SignUpForm from "./components/SignUpForm";
 import Dashboard from "./components/Dashboard";
-import BloggersList from "./components/BloggersList";
+import BloggersList from "./components/organisms/BloggersList";
 import CreateBlogForm from "./components/CreateBlogForm";
 import CreateArticlePage from "./components/CreateArticlePage";
 import Footer from "./components/organisms/Footer";
-import BloggerPage from "./components/BloggerPage";
+import Blogger from "./components/organisms/Blogger";
 import UpdateArticlePage from "./components/UpdateArticlePage";
 import { useDatabase } from "./hooks/use-database";
 import { useEffect, useState } from "react";
-import ArticleView from "./components/ArticleView";
+import Article from "./components/organisms/Article";
 
 function App() {
 
@@ -63,7 +63,7 @@ function App() {
             }
           </Route>
           <Route path="/blogs/:blogLink/:articleLink">
-            <ArticleView />
+            <Article />
           </Route>
           <Route path="/blogs/:blogLink">
             <Blog />
@@ -72,7 +72,7 @@ function App() {
             <BlogsList />
           </Route>
           <Route path="/bloggers/:userName">
-            <BloggerPage />
+            <Blogger />
           </Route>
           <Route path="/bloggers">
             <BloggersList />

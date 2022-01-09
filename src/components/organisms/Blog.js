@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useRouteMatch, useParams } from "react-router-dom";
 import { useDatabase } from "../../hooks/use-database";
-import BlogHeader from "../molecules/BlogHeader";
 import TableOfContent from "../molecules/TableOfContent";
+import SectionHeader from "../molecules/SectionHeader";
 
 export default function Blog() {
 
@@ -26,13 +26,13 @@ export default function Blog() {
     if (!blog) return <p>Downloading data or there is no data...</p>
 
     return (
-        <div className="blog-page">
-            <BlogHeader blog={blog} />
+        <section className="blog">
+            <SectionHeader item={blog} />
             {
                 blog.articles
                 ? <TableOfContent articles={blog.articles} url={url} />
                 : <p>There are no articles yet...</p>
             }
-        </div>
+        </section>
     );
 }

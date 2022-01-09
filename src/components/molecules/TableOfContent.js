@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function TableOfContent({ articles, url }) {
     return (
-        <div className="table-of-content">
+        <nav className="table-of-content">
             <hr />
             <h5 className="text-center">Table of content</h5>
             <ul>
@@ -17,6 +17,6 @@ export default function TableOfContent({ articles, url }) {
                     )
                 }
             </ul>
-        </div>
+        </nav>
     );
 }

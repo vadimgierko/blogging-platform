@@ -32,7 +32,9 @@ export function DatabaseProvider({ children }) {
   const [blogs, setBlogs] = useState(null);
   const [bloggers, setBloggers] = useState(null);
 
-  const signIn = (email, password) => {
+  const signIn = (signInData) => {
+    const email = signInData.email;
+    const password = signInData.password;
     return signInWithEmailAndPassword(firebaseAuth, email, password)
       .then((userCredential) => {
         // Signed in

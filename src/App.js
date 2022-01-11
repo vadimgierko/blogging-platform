@@ -4,8 +4,6 @@ import Header from "./components/organisms/Header";
 import Home from "./components/organisms/Home";
 import BlogsList from "./components/organisms/BlogsList";
 import Blog from "./components/organisms/Blog";
-import SignInForm from "./components/SignInForm";
-import SignUpForm from "./components/SignUpForm";
 import Dashboard from "./components/Dashboard";
 import BloggersList from "./components/organisms/BloggersList";
 import CreateBlogForm from "./components/CreateBlogForm";
@@ -16,12 +14,14 @@ import UpdateArticlePage from "./components/UpdateArticlePage";
 import { useDatabase } from "./hooks/use-database";
 import { useEffect, useState } from "react";
 import Article from "./components/organisms/Article";
+import Form from "./components/organisms/Form";
+import { SIGN_IN, SIGN_UP } from "./initial-data/form-structure-templates";
 
 function App() {
 
   const [userId, setUserId] = useState(null);
 
-  const { user, logOut } = useDatabase();
+  const { user, signIn, signUp, logOut } = useDatabase();
 
   useEffect(() => {
     if (user) {
@@ -40,10 +40,22 @@ function App() {
             <Home />
           </Route>
           <Route path="/login">
-            <SignInForm />
+            <Form
+              formClassname="sign-in-form"
+              structure={SIGN_IN}
+              onSubmit={signIn}
+              to="/dashboard"
+              text="log in"
+            />
           </Route>
           <Route path="/signup">
-            <SignUpForm />
+            <Form
+              formClassname="sign-up-form"
+              structure={SIGN_UP}
+              onSubmit={signUp}
+              to="/dashboard"
+              text="create account"
+            />
           </Route>
           <Route path="/dashboard">
             {

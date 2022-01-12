@@ -1,11 +1,8 @@
 import "./App.css";
 import { Switch, Route } from "react-router-dom";
 import Header from "./components/organisms/Header";
-import Home from "./components/organisms/Home";
 import BlogsList from "./components/organisms/BlogsList";
 import Blog from "./components/organisms/Blog";
-import SignInForm from "./components/SignInForm";
-import SignUpForm from "./components/SignUpForm";
 import Dashboard from "./components/Dashboard";
 import BloggersList from "./components/organisms/BloggersList";
 import CreateBlogForm from "./components/CreateBlogForm";
@@ -16,8 +13,11 @@ import UpdateArticlePage from "./components/UpdateArticlePage";
 import { useDatabase } from "./hooks/use-database";
 import { useEffect, useState } from "react";
 import Article from "./components/organisms/Article";
+import SignIn from "./components/pages/SignIn";
+import SignUp from "./components/pages/SignUp";
+import About from "./components/pages/About";
 
-function App() {
+export default function App() {
 
   const [userId, setUserId] = useState(null);
 
@@ -34,16 +34,16 @@ function App() {
   return (
     <div className="App">
       <Header user={user} logOut={logOut} />
-      <div className="container" style={{ marginTop: 120 }}>
+      <main className="container" style={{ marginTop: 120 }}>
         <Switch>
           <Route exact path="/">
-            <Home />
+            <About />
           </Route>
           <Route path="/login">
-            <SignInForm />
+            <SignIn />
           </Route>
           <Route path="/signup">
-            <SignUpForm />
+            <SignUp />
           </Route>
           <Route path="/dashboard">
             {
@@ -87,10 +87,8 @@ function App() {
             <UpdateArticlePage />
           </Route>
         </Switch>
-        <Footer />
-      </div>
+      </main>
+      <Footer />
     </div>
   );
 }
-
-export default App;

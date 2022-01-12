@@ -1,6 +1,6 @@
-export default function Home() {
+export default function About() {
     return (
-        <section className="home">
+        <article className="about-page">
             <h1>What you can do with Blogging Platform</h1>
             <hr />
             <ul>
@@ -16,11 +16,12 @@ export default function Home() {
                 <li>React Router 5.2 (HashRouter, dynamic & nested routing)</li>
                 <li>React Context</li>
                 <li>React Markdown 7 & remark-gfm</li>
-                <li>Firebase 9.1 (authentication, realtime database, security rules)</li>
+                <li>Firebase 9.1 (auth, realtime database, security rules)</li>
                 <li>Bootstrap 5.1</li>
                 <li>Bootswatch 5.1</li>
-                <li>GitHub Pages 3.2 (hosting)</li>
+                <li>GitHub Pages 3.2</li>
+                <li>Atomic Web Design</li>
             </ul>
-        </section>
+        </article>
     );
 }

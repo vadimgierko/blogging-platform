@@ -1,26 +1,20 @@
-import { useState } from "react";
-import { Link } from 'react-router-dom';
 import { useDatabase } from "../hooks/use-database";
 import convertTitleIntoLink from "../functions/convertTitleIntoLink";
+import Form from "./organisms/Form";
+import { CREATE_BLOG } from "../initial-data/form-structure-templates";
 
 export default function CreateBlogForm() {
 
     const { addBlog } = useDatabase();
 
-    const [newBlogData, setNewBlogData] = useState({
-        title: "",
-        description: "",
-        articles: Array(0)
-    });
-
-    function handleSubmit() {
+    function handleSubmit(blog) {
         if (
-            newBlogData.title.replace(/\s/g, '').length &&
-            newBlogData.description.replace(/\s/g, '').length
+            blog.title.replace(/\s/g, '').length &&
+            blog.description.replace(/\s/g, '').length
         ) {
-            const blogLink = convertTitleIntoLink(newBlogData.title);
+            const blogLink = convertTitleIntoLink(blog.title);
             const newBlogDataWithLink = {
-                ...newBlogData,
+                ...blog,
                 blogLink: blogLink
             }
             addBlog(newBlogDataWithLink);
@@ -30,38 +24,16 @@ export default function CreateBlogForm() {
     }
 
     return (
-        <div className="container">
-            <form>
-                <h1>Create new blog!</h1>
-                <hr />
-                <div className="mb-2">
-                    <p>New blog title goes here:</p>
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="title"
-                        onChange={(e) => setNewBlogData({...newBlogData, title: e.target.value})}
-                    />
-                </div>
-                <div className="mb-2">
-                    <p>New blog description goes here:</p>
-                    <textarea
-                        type="text"
-                        className="form-control"
-                        placeholder="description"
-                        onChange={(e) => setNewBlogData({...newBlogData, description: e.target.value})}
-                    />
-                </div>
-                
-                <Link
-                    to="/dashboard/user-blogs"
-                    type="button"
-                    className="btn btn-primary mb-3"
-                    onClick={handleSubmit}
-                >
-                    Create new blog
-                </Link>
-            </form>
+        <div className="create-blog-section container">
+            <h1>Create new blog!</h1>
+            <hr />
+            <Form
+                structure={CREATE_BLOG}
+                text="create blog"
+                to="/dashboard/user-blogs"
+                formClassname="create-blog-form"
+                onSubmit={handleSubmit}
+            />            
         </div>
     );
 }

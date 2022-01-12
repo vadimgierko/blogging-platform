@@ -1,8 +1,8 @@
-import { useDatabase } from "../hooks/use-database";
-import Form from "./organisms/Form";
-import { SIGN_UP } from "../initial-data/form-structure-templates";
+import { useDatabase } from "../../hooks/use-database";
+import Form from "../organisms/Form";
+import { SIGN_UP } from "../../initial-data/form-structure-templates";
 
-export default function SignUpForm() {
+export default function SignUp() {
 
     const { signUp } = useDatabase();
 
@@ -21,7 +21,7 @@ export default function SignUpForm() {
     }
 
     return (
-        <div className="sign-up-section container">
+        <div className="sign-up-page container">
             <h1>Create account!</h1>
             <hr />
             <Form

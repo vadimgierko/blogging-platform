@@ -1,6 +1,6 @@
-export default function Home() {
+export default function About() {
     return (
-        <section className="home">
+        <article className="about-page">
             <h1>What you can do with Blogging Platform</h1>
             <hr />
             <ul>
@@ -22,6 +22,6 @@ export default function Home() {
                 <li>GitHub Pages 3.2</li>
                 <li>Atomic Web Design</li>
             </ul>
-        </section>
+        </article>
     );
 }

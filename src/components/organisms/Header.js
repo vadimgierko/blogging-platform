@@ -6,7 +6,7 @@ import LinkButton from '../atoms/LinkButton';
 const NAVLINKS = [
     {
         to: "/",
-        text: "Home",
+        text: "About",
     },
     {
         to: "/blogs",

@@ -1,8 +1,8 @@
-import { useDatabase } from "../hooks/use-database";
-import Form from "./organisms/Form";
-import { SIGN_IN } from "../initial-data/form-structure-templates";
+import { useDatabase } from "../../hooks/use-database";
+import Form from "../organisms/Form";
+import { SIGN_IN } from "../../initial-data/form-structure-templates";
 
-export default function SignInForm() {
+export default function SignIn() {
 
     const { signIn } = useDatabase();
 
@@ -19,7 +19,7 @@ export default function SignInForm() {
     }
 
     return (
-        <div className="sign-in-section container">
+        <div className="sign-in-page container">
             <h1>Sign in!</h1>
             <hr />
             <Form

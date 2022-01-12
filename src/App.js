@@ -14,14 +14,14 @@ import UpdateArticlePage from "./components/UpdateArticlePage";
 import { useDatabase } from "./hooks/use-database";
 import { useEffect, useState } from "react";
 import Article from "./components/organisms/Article";
-import Form from "./components/organisms/Form";
-import { SIGN_IN, SIGN_UP } from "./initial-data/form-structure-templates";
+import SignInForm from "./components/SignInForm";
+import SignUpForm from "./components/SignUpForm";
 
 function App() {
 
   const [userId, setUserId] = useState(null);
 
-  const { user, signIn, signUp, logOut } = useDatabase();
+  const { user, logOut } = useDatabase();
 
   useEffect(() => {
     if (user) {
@@ -40,22 +40,10 @@ function App() {
             <Home />
           </Route>
           <Route path="/login">
-            <Form
-              formClassname="sign-in-form"
-              structure={SIGN_IN}
-              onSubmit={signIn}
-              to="/dashboard"
-              text="log in"
-            />
+            <SignInForm />
           </Route>
           <Route path="/signup">
-            <Form
-              formClassname="sign-up-form"
-              structure={SIGN_UP}
-              onSubmit={signUp}
-              to="/dashboard"
-              text="create account"
-            />
+            <SignUpForm />
           </Route>
           <Route path="/dashboard">
             {

@@ -31,3 +31,8 @@ export const SIGN_UP = {
     },
     ...SIGN_IN
 };
+
+export const CREATE_BLOG = {
+    title: {},
+    description: {}
+}

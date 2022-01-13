@@ -21,7 +21,7 @@ export default function App() {
 
   const [userId, setUserId] = useState(null);
 
-  const { user, logOut } = useDatabase();
+  const { user, userPublicData, logOut } = useDatabase();
 
   useEffect(() => {
     if (user) {
@@ -33,7 +33,11 @@ export default function App() {
 
   return (
     <div className="App">
-      <Header user={user} logOut={logOut} />
+      <Header 
+        userFirstName={user && userPublicData ? userPublicData.firstName : null}
+        userLastName={user && userPublicData ? userPublicData.lastName : null}
+        logOut={logOut} 
+      />
       <main className="container" style={{ marginTop: 120 }}>
         <Switch>
           <Route exact path="/">
@@ -46,7 +50,7 @@ export default function App() {
             <SignUp />
           </Route>
           <Route path="/dashboard">
-            <Dashboard />
+            <Dashboard userId={userId} />
           </Route>
           <Route path="/blogs/:blogLink/:articleLink">
             <Article />

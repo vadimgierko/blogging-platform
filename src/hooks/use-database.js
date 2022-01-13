@@ -1,5 +1,3 @@
-//import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
-
 import { createContext, useContext, useState, useEffect } from "react";
 import { firebaseAuth, database } from "../firebase"; // + , storage
 
@@ -18,7 +16,9 @@ import {
     child,
     //update,
     onValue,
-    remove
+    remove,
+    query,
+    limitToFirst
 } from "firebase/database";
 
 const DatabaseContext = createContext();
@@ -28,9 +28,15 @@ export const useDatabase = () => useContext(DatabaseContext);
 export function DatabaseProvider({ children }) {
 
   const [user, setUser] = useState(null);
-  const [userData, setUserData] = useState(null);
+  const [userPrivateData, setUserPrivateData] = useState();
+  const [userPublicData, setUserPublicData] = useState();
+  const [userBlogsList, setUserBlogsList] = useState();
+  const [users, setUsers] = useState();
+  const [currentUserData, setCurrentUserData] = useState();
+
+  const [userData, setUserData] = useState(null); // delete it !
   const [blogs, setBlogs] = useState(null);
-  const [bloggers, setBloggers] = useState(null);
+  //const [bloggers, setBloggers] = useState(null);
 
   const signIn = (signInData) => {
     const email = signInData.email;
@@ -76,9 +82,39 @@ export function DatabaseProvider({ children }) {
         alert(error.message);
       });
   };
+
+  //============ new ===========
+  function fetchUsersList() {
+    const listRef = query(ref(database, "users/list"), limitToFirst(3));
+    onValue(listRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("users list object:", data);
+      setUsers(data);
+    });
+  }
+
+  function fetchCurrentUserData(userId) {
+    const currentUserDataRef = ref(database, "users/" + userId + "/publicData");
+    onValue(currentUserDataRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("current user data object:", data);
+      setCurrentUserData(data);
+    });
+  }
+
+  function fetchUserBlogsList(userId) {
+    const currentUserDataRef = ref(database, "users/" + userId + "/publicData/blogs");
+    onValue(currentUserDataRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("current user blogs list data object:", data);
+      setUserBlogsList(data);
+    });
+  }
+
+  //====================================================
   
-  const updateUserData = (userData) => {
-    set(ref(database, "users/" + user.uid), {
+  const updateUserPublicData = (userData) => {
+    set(ref(database, "users/" + user.uid + "/publicData/data"), {
       ...userData
     });
   };
@@ -223,74 +259,29 @@ export function DatabaseProvider({ children }) {
     }
   }
 
-  //   const getProfileImageURL = (profileImageRef) => {
-  //     // get profile img url to users data:
-  //     getDownloadURL(storageRef(storage, profileImageRef))
-  //     .then((url) => {
-  //       updateUserData({...userData, profileImageURL: url})
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.message);
-  //     });
-  //   }
-
-  //   const uploadProfileImage = (image) => {
-  //     // Create a reference to 'profileImage.jpg'
-  //     const profileImageRef = storageRef(storage, `images/profileImages/${user.uid}/profileImg.png`);
-
-  //     uploadBytes(profileImageRef, image).then((snapshot) => {
-  //         if (snapshot) {
-  //           getProfileImageURL(profileImageRef);
-  //         } else {
-  //           console.log("file is not uploaded yet...")
-  //         }
-  //     });
-  //   };
-
-  //   const getItemImageURL = (itemImageRef, itemKey, item) => {
-  //     getDownloadURL(storageRef(storage, itemImageRef))
-  //     .then((url) => {
-  //       console.log("img url", url);
-  //       const updatedItem = {
-  //         ...item,
-  //         itemImageURL: url
-  //       }
-  //       updateItem(updatedItem, itemKey);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.message);
-  //     });
-  //   }
-
-  //   const uploadItemImage = (image, itemKey, item) => {
-  //     const itemImageRef = storageRef(storage, `images/itemsImages/${user.uid}/${itemKey}/itemImg.png`);
-
-  //     uploadBytes(itemImageRef, image).then((snapshot) => {
-  //         if (snapshot) {
-  //           getItemImageURL(itemImageRef, itemKey, item);
-  //         } else {
-  //           console.log("file is not uploaded yet...")
-  //         }
-  //     });
-  //   }
-
   useEffect(() => {
     onAuthStateChanged(firebaseAuth, (user) => {
       if (user) {
         setUser(user);
-
-        const userDataRef = ref(database, `users/${user.uid}`);
-        onValue(userDataRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                setUserData(data);
-            } else {
-                console.log("there are no user data...");
-            }
+        console.log("user logged in. user:", user);
+        //setUserPrivateData
+        const userPrivateDataRef = ref(database, "users/" + user.uid + "/privateData");
+        onValue(userPrivateDataRef, (snapshot) => {
+          const data = snapshot.val();
+          console.log("user private data:", data);
+          setUserPrivateData(data);
+        });
+        //setUserPublicData
+        const userPublicDataRef = ref(database, "users/" + user.uid + "/publicData/data");
+        onValue(userPublicDataRef, (snapshot) => {
+          const data = snapshot.val();
+          console.log("user public data:", data);
+          setUserPublicData(data);
         });
       } else {
         setUser(null);
-        setUserData(null);
+        setUserPrivateData(null);
+        setUserPublicData(null);
         console.log("user is logged out");
       }
     });
@@ -312,16 +303,16 @@ export function DatabaseProvider({ children }) {
     });
 
     //fetch bloggers list
-    const bloggersRef = ref(database, `users/`);
-    onValue(bloggersRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setBloggers(data);
-        //console.log("bloggers:", data)
-      } else {
-        console.log("there are no bloggers...");
-      }
-    });
+    // const bloggersRef = ref(database, `users/`);
+    // onValue(bloggersRef, (snapshot) => {
+    //   const data = snapshot.val();
+    //   if (data) {
+    //     setBloggers(data);
+    //     //console.log("bloggers:", data)
+    //   } else {
+    //     console.log("there are no bloggers...");
+    //   }
+    // });
   }, []);
 
   const value = {
@@ -329,19 +320,23 @@ export function DatabaseProvider({ children }) {
     signUp,
     logOut,
     user,
-    userData,
-    updateUserData,
+    userPrivateData,
+    userPublicData,
+    users,
+    fetchUsersList,
+    fetchCurrentUserData,
+    fetchUserBlogsList,
+    userBlogsList,
+    updateUserPublicData,
     blogs,
     deleteBlog,
-    bloggers,
+    //bloggers,
     addBlog,
     updateBlog,
     addArticle,
     deleteArticle,
     updateArticle,
     deleteUserAccount
-    //uploadProfileImage,
-    //uploadItemImage
   }
 
   return (

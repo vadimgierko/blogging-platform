@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import NavLink from '../atoms/NavLink';
 import LinkButton from '../atoms/LinkButton';
+import { useDatabase } from '../../hooks/use-database';
 
 const NAVLINKS = [
     {
@@ -39,13 +40,15 @@ const PRIVATE_LINK_BUTTONS = [
     },
 ];
 
-export default function Header({ user, logOut }) {
+export default function Header({ userFirstName, userLastName, logOut }) {
 
     const [isNavCollapsed, setIsNavCollapsed] = useState(true);
     
     const handleNavCollapse = () => {
         setIsNavCollapsed(!isNavCollapsed);
     };
+
+    const { fetchUsersList } = useDatabase();
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
@@ -71,7 +74,14 @@ export default function Header({ user, logOut }) {
                                 <li key={"nav-item-" + i} className="nav-item">
                                     <NavLink 
                                         to={navLink.to}
-                                        onClick={isNavCollapsed ? null : () => handleNavCollapse()}
+                                        onClick={() => {
+                                            if (!isNavCollapsed) {
+                                                handleNavCollapse();
+                                            }
+                                            if (navLink.text === "Bloggers") {
+                                                fetchUsersList();
+                                            }
+                                        }}
                                         text={navLink.text}
                                     />
                                 </li>
@@ -80,7 +90,7 @@ export default function Header({ user, logOut }) {
                     </ul>
                     <div>
                         {
-                            user ?
+                            userFirstName ?
                                 <>
                                     <Link
                                         to="/dashboard"
@@ -93,7 +103,7 @@ export default function Header({ user, logOut }) {
                                         }}
                                     >
                                         <span className="me-2"><i className="bi bi-person-circle"></i></span>
-                                        <span className="me-4">{user.email}</span>
+                                        <span className="me-3">{userFirstName} {userLastName}</span>
                                     </Link>
                                     {
                                         PRIVATE_LINK_BUTTONS.map((btn, i) => (

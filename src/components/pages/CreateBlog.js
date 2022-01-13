@@ -1,9 +1,9 @@
-import { useDatabase } from "../hooks/use-database";
-import convertTitleIntoLink from "../functions/convertTitleIntoLink";
-import Form from "./organisms/Form";
-import { CREATE_BLOG } from "../initial-data/form-structure-templates";
+import { useDatabase } from "../../hooks/use-database";
+import convertTitleIntoLink from "../../functions/convertTitleIntoLink";
+import Form from "../organisms/Form";
+import { CREATE_BLOG } from "../../initial-data/form-structure-templates";
 
-export default function CreateBlogForm() {
+export default function CreateBlog() {
 
     const { addBlog } = useDatabase();
 

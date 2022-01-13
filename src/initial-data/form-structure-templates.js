@@ -19,7 +19,7 @@ export const SIGN_IN = {
     },
 };
 
-export const SIGN_UP = {
+export const EDIT_USER_DATA = {
     firstName: {
         placeholder: "input your real first name"
     },
@@ -28,7 +28,11 @@ export const SIGN_UP = {
     },
     userName: {
         placeholder: "input your user name using lower case letters only"
-    },
+    }
+};
+
+export const SIGN_UP = {
+    ...EDIT_USER_DATA,
     ...SIGN_IN
 };
 

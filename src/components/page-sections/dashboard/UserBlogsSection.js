@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useDatabase } from "../../../hooks/use-database";
 import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
 import BlogEditionSection from "./BlogEditionSection";
@@ -8,19 +7,7 @@ export default function UserBlogsSection() {
 
     let {path, url} = useRouteMatch();
 
-    const { user, blogs, deleteBlog, deleteArticle } = useDatabase();
-
-    const [userBlogs, setUserBlogs] = useState(null);
-
-    useEffect(() => {
-        if (blogs && user) {
-            const fetchedBlogs = Object.entries(blogs);
-            const currentUserBLogs = fetchedBlogs.filter(blog => blog[1].userId === user.uid)
-            setUserBlogs(currentUserBLogs);
-        } else {
-            console.log("there are no user and blogs...")
-        }
-    }, [blogs, user]);
+    const { userBlogsList, deleteBlog } = useDatabase();
 
     return (
         <div className="user-blogs-section-in-dashboard">
@@ -33,9 +20,9 @@ export default function UserBlogsSection() {
                             text="create new blog"
                         />
                         {
-                            userBlogs && userBlogs.length ?
-                                userBlogs.map((blog) =>
-                                    <div className="container" key={blog[0]}>
+                            userBlogsList ?
+                                Object.entries(userBlogsList).map((blog) =>
+                                    <div key={blog[0]}>
                                         <div className="row">
                                             <div className="col">
                                                 <Link
@@ -73,13 +60,12 @@ export default function UserBlogsSection() {
                                             </div>
                                             
                                         </div>
-                                        <p>{blog[1].description}</p>
                                         <hr />
                                     </div>
                                 )
                             :
                                 <div>
-                                    <h5 className="text-center">There is no blogs yet... Create one!</h5>
+                                    <h5 className="text-center">There are no blogs yet... Create one!</h5>
                                 </div>
                         }
                     </div>

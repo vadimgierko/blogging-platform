@@ -5,7 +5,7 @@ import { EDIT_USER_DATA } from "../../../initial-data/form-structure-templates";
 
 export default function UserDataSection() {
 
-    const { user, userPublicData, updateUserPublicData, deleteUserAccount } = useDatabase();
+    const { userPublicData, updateUserPublicData, deleteUserAccount } = useDatabase();
 
     function handleSubmit(data) {
         if (
@@ -19,7 +19,6 @@ export default function UserDataSection() {
         }
     }
 
-    if (!user) return <p>You need to be logged to see your dashboard.</p>
     if (!userPublicData) return <p>Downloading your data...</p>
     
     return (

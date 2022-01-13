@@ -30,6 +30,7 @@ export function DatabaseProvider({ children }) {
   const [user, setUser] = useState(null);
   const [userPrivateData, setUserPrivateData] = useState();
   const [userPublicData, setUserPublicData] = useState();
+  const [userBlogsList, setUserBlogsList] = useState();
   const [users, setUsers] = useState();
   const [currentUserData, setCurrentUserData] = useState();
 
@@ -98,6 +99,15 @@ export function DatabaseProvider({ children }) {
       const data = snapshot.val();
       console.log("current user data object:", data);
       setCurrentUserData(data);
+    });
+  }
+
+  function fetchUserBlogsList(userId) {
+    const currentUserDataRef = ref(database, "users/" + userId + "/publicData/blogs");
+    onValue(currentUserDataRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("current user blogs list data object:", data);
+      setUserBlogsList(data);
     });
   }
 
@@ -315,6 +325,8 @@ export function DatabaseProvider({ children }) {
     users,
     fetchUsersList,
     fetchCurrentUserData,
+    fetchUserBlogsList,
+    userBlogsList,
     updateUserPublicData,
     blogs,
     deleteBlog,

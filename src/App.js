@@ -50,7 +50,7 @@ export default function App() {
             <SignUp />
           </Route>
           <Route path="/dashboard">
-            <Dashboard />
+            <Dashboard userId={userId} />
           </Route>
           <Route path="/blogs/:blogLink/:articleLink">
             <Article />

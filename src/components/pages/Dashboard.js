@@ -1,10 +1,15 @@
 import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
 import UserDataSection from "../page-sections/dashboard/UserDataSection";
 import UserBlogsSection from "../page-sections/dashboard/UserBlogsSection";
+import { useDatabase } from "../../hooks/use-database";
 
-export default function Dashboard() {
+export default function Dashboard({ userId }) {
 
     let {path} = useRouteMatch();
+
+    const { fetchUserBlogsList } = useDatabase();
+
+    if (!userId) return <p>You need to be logged to see your dashboard...</p>
     
     return (
         <div className="dashboard-page">
@@ -17,6 +22,7 @@ export default function Dashboard() {
                 <Link
                     to={`/dashboard/user-blogs`}
                     className="ms-2"
+                    onClick={() => fetchUserBlogsList(userId)}
                 >Your blogs</Link>
             </nav>
             <hr />

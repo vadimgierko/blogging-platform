@@ -5,7 +5,7 @@ import { EDIT_USER_DATA } from "../../../initial-data/form-structure-templates";
 
 export default function UserDataSection() {
 
-    const { user, userData, updateUserData, deleteUserAccount } = useDatabase();
+    const { user, userPublicData, updateUserPublicData, deleteUserAccount } = useDatabase();
 
     function handleSubmit(data) {
         if (
@@ -13,20 +13,20 @@ export default function UserDataSection() {
             data.lastName.replace(/\s/g, '').length &&
             data.userName.replace(/\s/g, '').length
         ) {
-            updateUserData(data);
+            updateUserPublicData(data);
         } else {
             alert("You need to complete all input fields (not only white spaces...) to update your account data!");
         }
     }
 
     if (!user) return <p>You need to be logged to see your dashboard.</p>
-    if (!userData) return <p>Downloading your data...</p>
+    if (!userPublicData) return <p>Downloading your data...</p>
     
     return (
         <div className="edit-user-data-section">
             <Form 
                 structure={EDIT_USER_DATA}
-                data={userData}
+                data={userPublicData}
                 onSubmit={handleSubmit}
                 to="/dashboard"
                 text="save changes"

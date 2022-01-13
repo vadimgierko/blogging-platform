@@ -39,7 +39,7 @@ const PRIVATE_LINK_BUTTONS = [
     },
 ];
 
-export default function Header({ user, logOut }) {
+export default function Header({ userFirstName, userLastName, logOut }) {
 
     const [isNavCollapsed, setIsNavCollapsed] = useState(true);
     
@@ -80,7 +80,7 @@ export default function Header({ user, logOut }) {
                     </ul>
                     <div>
                         {
-                            user ?
+                            userFirstName ?
                                 <>
                                     <Link
                                         to="/dashboard"
@@ -93,7 +93,7 @@ export default function Header({ user, logOut }) {
                                         }}
                                     >
                                         <span className="me-2"><i className="bi bi-person-circle"></i></span>
-                                        <span className="me-4">{user.email}</span>
+                                        <span className="me-3">{userFirstName} {userLastName}</span>
                                     </Link>
                                     {
                                         PRIVATE_LINK_BUTTONS.map((btn, i) => (

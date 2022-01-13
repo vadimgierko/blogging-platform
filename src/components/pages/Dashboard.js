@@ -1,14 +1,14 @@
 import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
-import UserDataFormInDashboard from "./UserDataFormInDashboard";
-import UserBlogsListInDashboard from "./UserBlogsListInDashboard";
+import UserDataSection from "../page-sections/dashboard/UserDataSection";
+import UserBlogsSection from "../page-sections/dashboard/UserBlogsSection";
 
 export default function Dashboard() {
 
     let {path} = useRouteMatch();
     
     return (
-        <div>
-            <div className="text-center">
+        <div className="dashboard-page">
+            <nav className="dashboard-nav text-center">
                 <Link
                     to={`/dashboard/user-data`}
                     className="me-2"
@@ -18,17 +18,17 @@ export default function Dashboard() {
                     to={`/dashboard/user-blogs`}
                     className="ms-2"
                 >Your blogs</Link>
-            </div>
+            </nav>
             <hr />
             <Switch>
                 <Route exact path={path}>
-                    <UserDataFormInDashboard />
+                    <UserDataSection />
                 </Route>
                 <Route path={`${path}/user-data`}>
-                    <UserDataFormInDashboard />
+                    <UserDataSection />
                 </Route>
                 <Route path={`${path}/user-blogs`}>
-                    <UserBlogsListInDashboard />
+                    <UserBlogsSection />
                 </Route>
             </Switch>
         </div>

@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { useDatabase } from "../hooks/use-database";
+import { useDatabase } from "../../../hooks/use-database";
 import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
-import BlogEditionForm from "./BlogEditionForm";
+import BlogEditionSection from "./BlogEditionSection";
+import LinkButton from "../../atoms/LinkButton";
 
-export default function UserBlogsListInDashboard() {
+export default function UserBlogsSection() {
 
     let {path, url} = useRouteMatch();
 
@@ -21,22 +22,16 @@ export default function UserBlogsListInDashboard() {
         }
     }, [blogs, user]);
 
-    /*
-    function convertBlogTitleIntoLink(blogTitle) {
-        return (blogTitle.replace(/ /g, "-").toLowerCase());
-    }
-    */
-
     return (
-        <div className="UserBlogsListInDashboard">
+        <div className="user-blogs-section-in-dashboard">
             <Switch>
                 <Route exact path={path}>
                     <div>
-                        <Link
+                        <LinkButton
                             to="/create-blog"
-                            type="button"
-                            className="btn btn-info d-block my-3"
-                        >Create new blog</Link>
+                            style="info mb-3"
+                            text="create new blog"
+                        />
                         {
                             userBlogs && userBlogs.length ?
                                 userBlogs.map((blog) =>
@@ -90,7 +85,7 @@ export default function UserBlogsListInDashboard() {
                     </div>
                 </Route>
                 <Route path={path + "/:blogLink"}>
-                    <BlogEditionForm />
+                    <BlogEditionSection />
                 </Route>
             </Switch>
         </div>

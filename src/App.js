@@ -1,21 +1,21 @@
 import "./App.css";
 import { Switch, Route } from "react-router-dom";
 import Header from "./components/organisms/Header";
-import BlogsList from "./components/organisms/BlogsList";
+import Blogs from "./components/pages/Blogs";
 import Blog from "./components/organisms/Blog";
-import Dashboard from "./components/Dashboard";
-import BloggersList from "./components/organisms/BloggersList";
-import CreateBlogForm from "./components/CreateBlogForm";
-import CreateArticlePage from "./components/CreateArticlePage";
+import Dashboard from "./components/pages/Dashboard";
+import Bloggers from "./components/pages/Bloggers";
+import CreateBlog from "./components/pages/CreateBlog";
+import CreateArticle from "./components/pages/CreateArticle";
 import Footer from "./components/organisms/Footer";
 import Blogger from "./components/organisms/Blogger";
-import UpdateArticlePage from "./components/UpdateArticlePage";
 import { useDatabase } from "./hooks/use-database";
 import { useEffect, useState } from "react";
 import Article from "./components/organisms/Article";
 import SignIn from "./components/pages/SignIn";
 import SignUp from "./components/pages/SignUp";
 import About from "./components/pages/About";
+import UpdateArticle from "./components/pages/UpdateArticle";
 
 export default function App() {
 
@@ -46,21 +46,7 @@ export default function App() {
             <SignUp />
           </Route>
           <Route path="/dashboard">
-            {
-              userId
-              ? <Dashboard />
-              : (
-                <div>
-                  <h3>Downloading data...</h3>
-                  <ul>
-                    <li>...wait for a data download or...</li>
-                    <li>...try to sign in one more time or...</li>
-                    <li>...create an account with create account button if don't have one or...</li>
-                    <li>...check your Internet connection...</li>
-                  </ul>
-                </div>
-              )
-            }
+            <Dashboard />
           </Route>
           <Route path="/blogs/:blogLink/:articleLink">
             <Article />
@@ -69,22 +55,22 @@ export default function App() {
             <Blog />
           </Route>
           <Route path="/blogs">
-            <BlogsList />
+            <Blogs />
           </Route>
           <Route path="/bloggers/:userName">
             <Blogger />
           </Route>
           <Route path="/bloggers">
-            <BloggersList />
+            <Bloggers />
           </Route>
           <Route path="/create-blog">
-            <CreateBlogForm />
+            <CreateBlog />
           </Route>
           <Route path="/create-article/:blogKey/:blogTitle">
-            <CreateArticlePage />
+            <CreateArticle />
           </Route>
           <Route path="/edit-article/:blogKey/:articleKey">
-            <UpdateArticlePage />
+            <UpdateArticle />
           </Route>
         </Switch>
       </main>

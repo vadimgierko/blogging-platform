@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useParams } from 'react-router-dom';
-import MarkdownEditor from "./MarkdownEditor";
-import { useDatabase } from "../hooks/use-database";
-import convertTitleIntoLink from "../functions/convertTitleIntoLink";
+import MarkdownEditor from "../page-sections/create-article/MarkdownEditor";
+import { useDatabase } from "../../hooks/use-database";
+import convertTitleIntoLink from "../../functions/convertTitleIntoLink";
 
 export default function CreateArticlePage() {
 
@@ -40,8 +40,8 @@ export default function CreateArticlePage() {
     }
 
     return (
-        <div className="CreateArticlePage container">
-            <form>
+        <div className="create-article-page container">
+            <form className="create-article-form">
                 <h1>Create new article!</h1>
                 <hr />
                 <div className="row">

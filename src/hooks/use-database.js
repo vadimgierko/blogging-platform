@@ -51,12 +51,6 @@ export function DatabaseProvider({ children }) {
     const email = signInData.email;
     const password = signInData.password;
     return signInWithEmailAndPassword(firebaseAuth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        setUser(userCredential.user);
-        console.log("user is signed in");
-        return userCredential.user;
-      })
       .catch((error) => {
         alert(error.message);
       });
@@ -66,16 +60,45 @@ export function DatabaseProvider({ children }) {
     return createUserWithEmailAndPassword(firebaseAuth, signUpData.email, signUpData.password)
       .then((userCredential) => {
         // Signed in
-        setUser(userCredential.user);
+        //setUser(userCredential.user);
         console.log("user is sign up. userCredential.user: ", userCredential.user);
-        // create user in database with signUpData:
+        
+        // create user in database:
         set(ref(database, "users/" + userCredential.user.uid), {
+          privateData: {
+            email: signUpData.email
+          },
+          publicData: {
+            data: {
+              firstName: signUpData.firstName,
+              lastName: signUpData.lastName,
+              userName: signUpData.userName
+            }
+          }          
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+
+        // add user's public data into users list ordered by keys:
+        set(ref(database, "users/listOrderedByKeys/" + userCredential.user.uid), {
           firstName: signUpData.firstName,
           lastName: signUpData.lastName,
-          userName: signUpData.userName,
-          email: signUpData.email,
+          userName: signUpData.userName
+        })
+        .catch((error) => {
+          alert(error.message);
         });
-        //return userCredential.user;
+
+        // add user's public data into users list ordered by user name:
+        set(ref(database, "users/listOrderedByUserName/" + signUpData.userName), {
+          firstName: signUpData.firstName,
+          lastName: signUpData.lastName,
+          userId: userCredential.user.uid
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
       })
       .catch((error) => {
         alert(error.message);

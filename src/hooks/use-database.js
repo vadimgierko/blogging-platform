@@ -27,16 +27,25 @@ export const useDatabase = () => useContext(DatabaseContext);
 
 export function DatabaseProvider({ children }) {
 
+  //==================== current logged user:
+  //
   const [user, setUser] = useState(null);
   const [userPrivateData, setUserPrivateData] = useState();
   const [userPublicData, setUserPublicData] = useState();
   const [userBlogsList, setUserBlogsList] = useState();
-  const [users, setUsers] = useState();
-  const [currentUserData, setCurrentUserData] = useState();
 
-  const [userData, setUserData] = useState(null); // delete it !
-  const [blogs, setBlogs] = useState(null);
-  //const [bloggers, setBloggers] = useState(null);
+  //============================ bloggers:
+  //
+  const [usersListOrderedByUserName, setUsersListOrderedByUserName] = useState();
+  const [usersListOrderedByKeys, setUsersListOrderedByKeys] = useState();
+  const [bloggerPublicData, setBloggerPublicData] = useState();
+  const [bloggerBlogsList, setBloggerBlogsList] = useState();
+  const [bloggerId, setBloggerId] = useState();
+
+  //========================= blog
+  const [blog, setBlog] = useState();
+
+  const [blogs, setBlogs] = useState();
 
   const signIn = (signInData) => {
     const email = signInData.email;
@@ -83,25 +92,46 @@ export function DatabaseProvider({ children }) {
       });
   };
 
-  //============ new ===========
-  function fetchUsersList() {
-    const listRef = query(ref(database, "users/list"), limitToFirst(3));
+  //============================== fetch ===========================
+  //
+  function fetchUsersListOrderedByUserName() {
+    const listRef = query(ref(database, "users/listOrderedByUserName"), limitToFirst(10));
     onValue(listRef, (snapshot) => {
       const data = snapshot.val();
-      console.log("users list object:", data);
-      setUsers(data);
+      console.log("users list ordered by user name object:", data);
+      setUsersListOrderedByUserName(data);
     });
   }
 
-  function fetchCurrentUserData(userId) {
-    const currentUserDataRef = ref(database, "users/" + userId + "/publicData");
-    onValue(currentUserDataRef, (snapshot) => {
+  function fetchUsersListOrderedByKeys() {
+    const listRef = query(ref(database, "users/listOrderedByKeys"), limitToFirst(10));
+    onValue(listRef, (snapshot) => {
       const data = snapshot.val();
-      console.log("current user data object:", data);
-      setCurrentUserData(data);
+      console.log("users list ordered by user id object:", data);
+      setUsersListOrderedByKeys(data);
     });
   }
 
+  function fetchBloggerPublicData(userId) {
+    const bloggerPublicDataRef = ref(database, "users/" + userId + "/publicData/data");
+    onValue(bloggerPublicDataRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("blogger public data object:", data);
+      setBloggerPublicData(data);
+    });
+  }
+
+  function fetchBloggerBlogsList(userId) {
+    const bloggerBlogsListRef = ref(database, "users/" + userId + "/publicData/blogs");
+    onValue(bloggerBlogsListRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("blogger blogs list object:", data);
+      setBloggerBlogsList(data);
+    });
+  }
+
+  //============== fetch user
+  //
   function fetchUserBlogsList(userId) {
     const currentUserDataRef = ref(database, "users/" + userId + "/publicData/blogs");
     onValue(currentUserDataRef, (snapshot) => {
@@ -110,6 +140,34 @@ export function DatabaseProvider({ children }) {
       setUserBlogsList(data);
     });
   }
+
+  //============= fetch blog
+  //
+  function fetchBlog(blogKey) {
+    const blogRef = ref(database, "blogs/" + blogKey);
+    onValue(blogRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("blog object:", data);
+      setBlog(data);
+    });
+  }
+
+  //=============== get
+
+  function getBloggerIdByUserName(userName) {
+    const bloggerRef = ref(database, "users/listOrderedByUserName/" + userName);
+    onValue(bloggerRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        console.log("blogger id got by user name:", data.userId);
+        setBloggerId(data.userId);
+      } else {
+        console.log("There is no user with user name:", userName);
+      }
+    });
+  }
+
+  //function getBlogKeyByBlogLink(blogLink) 
 
   //====================================================
   
@@ -126,8 +184,8 @@ export function DatabaseProvider({ children }) {
     if (newBlogKey) {
       set(ref(database, "blogs/" + newBlogKey), {
         ...blogData,
-        author: userData.firstName + " " + userData.lastName,
-        userName: userData.userName,
+        author: userPublicData.firstName + " " + userPublicData.lastName,
+        userName: userPublicData.userName,
         userId: user.uid,
       });
     }
@@ -155,8 +213,8 @@ export function DatabaseProvider({ children }) {
     if (newArticleKey) {
       set(ref(database, "blogs/" + blogKey + "/articles/" + newArticleKey), {
         ...article,
-        author: userData.firstName + " " + userData.lastName,
-        userName: userData.userName,
+        author: userPublicData.firstName + " " + userPublicData.lastName,
+        userName: userPublicData.userName,
         userId: user.uid,
         blogKey: blogKey,
         blogTitle: blogTitle
@@ -259,6 +317,15 @@ export function DatabaseProvider({ children }) {
     }
   }
 
+  //==== THIS IS FOR DELETE !!!!!!!!!!!!!!!
+  function fetchBlogs() {
+    const blogsRef = ref(database, "blogs");
+    onValue(blogsRef, (snapshot) => {
+      const data = snapshot.val();
+      setBlogs(data);
+    });
+  }
+
   useEffect(() => {
     onAuthStateChanged(firebaseAuth, (user) => {
       if (user) {
@@ -287,34 +354,6 @@ export function DatabaseProvider({ children }) {
     });
   }, []);
 
-  // fetch blogs & bloggers list every time, regardless of whether the user is logged or not:
-  useEffect(() => {
-
-    //fetch blogs list
-    const blogsRef = ref(database, "blogs/");
-    onValue(blogsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setBlogs(data);
-        //console.log("blogs:", data)
-      } else {
-        console.log("there are no blogs");
-      }
-    });
-
-    //fetch bloggers list
-    // const bloggersRef = ref(database, `users/`);
-    // onValue(bloggersRef, (snapshot) => {
-    //   const data = snapshot.val();
-    //   if (data) {
-    //     setBloggers(data);
-    //     //console.log("bloggers:", data)
-    //   } else {
-    //     console.log("there are no bloggers...");
-    //   }
-    // });
-  }, []);
-
   const value = {
     signIn,
     signUp,
@@ -322,15 +361,29 @@ export function DatabaseProvider({ children }) {
     user,
     userPrivateData,
     userPublicData,
-    users,
-    fetchUsersList,
-    fetchCurrentUserData,
+    //=== users lists:
+    fetchUsersListOrderedByKeys,
+    fetchUsersListOrderedByUserName,
+    usersListOrderedByKeys,
+    usersListOrderedByUserName,
+    //=== blogger:
+    fetchBloggerPublicData,
+    bloggerPublicData,
+    fetchBloggerBlogsList,
+    bloggerBlogsList,
+    getBloggerIdByUserName,
+    bloggerId,
+    setBloggerId,
+    //====== blog:
+    blog,
+    fetchBlog,
+    //========
     fetchUserBlogsList,
     userBlogsList,
     updateUserPublicData,
     blogs,
+    fetchBlogs,
     deleteBlog,
-    //bloggers,
     addBlog,
     updateBlog,
     addArticle,

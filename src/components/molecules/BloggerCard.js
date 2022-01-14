@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 export default function BloggerCard({ bloggerData }) {
+
     return (
         <div className="blogger-card">
             <hr />
@@ -10,7 +11,7 @@ export default function BloggerCard({ bloggerData }) {
                 style={{textDecoration: "none"}}
             >
                 <i className="bi bi-person-circle me-2"></i>
-                {bloggerData.firstName + " " + bloggerData.lastName + " | " + bloggerData.userName}
+                {bloggerData.firstName + " " + bloggerData.lastName + " | @" + bloggerData.userName}
             </Link>
         </div>
     );

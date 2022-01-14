@@ -1,9 +1,14 @@
+import { useEffect } from "react";
 import { useDatabase } from "../../hooks/use-database";
 import BlogCard from "../molecules/BlogCard";
 
 export default function Blogs() {
 
-    const { blogs } = useDatabase();
+    const { blogs, fetchBlogs } = useDatabase();
+
+    useEffect(() => {
+        fetchBlogs();
+    }, []);
 
     if (!blogs) return <p>Downloading blogs or... there is no blogs...</p>;
 

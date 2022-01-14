@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import NavLink from '../atoms/NavLink';
 import LinkButton from '../atoms/LinkButton';
-import { useDatabase } from '../../hooks/use-database';
 
 const NAVLINKS = [
     {
@@ -48,8 +47,6 @@ export default function Header({ userFirstName, userLastName, logOut }) {
         setIsNavCollapsed(!isNavCollapsed);
     };
 
-    const { fetchUsersList } = useDatabase();
-
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
             <div className="container">
@@ -77,9 +74,6 @@ export default function Header({ userFirstName, userLastName, logOut }) {
                                         onClick={() => {
                                             if (!isNavCollapsed) {
                                                 handleNavCollapse();
-                                            }
-                                            if (navLink.text === "Bloggers") {
-                                                fetchUsersList();
                                             }
                                         }}
                                         text={navLink.text}

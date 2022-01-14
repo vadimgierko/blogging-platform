@@ -9,9 +9,19 @@ export default function Blog() {
     let { url } = useRouteMatch();
     const { blogLink } = useParams();
 
-    const { blogs } = useDatabase();
+    const { blogs, fetchBlogs } = useDatabase();
 
     const [blog, setBlog] = useState(null);
+
+    // useEffect(() => {
+    //     if (blogLink) {
+    //         //
+    //     }
+    // }, [blogLink]);
+
+    useEffect(() => {
+        fetchBlogs();
+    }, []);
 
     useEffect(() => {
         if (blogs) {

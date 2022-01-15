@@ -19,6 +19,10 @@ export default function Blog() {
     //     }
     // }, [blogLink]);
 
+    // this will be deleted
+    // here will be fetching the blog according to its link:
+    // getBlogByLink
+    // => fetchBlog(blogLink)
     useEffect(() => {
         fetchBlogs();
     }, []);
@@ -28,6 +32,7 @@ export default function Blog() {
             const fetchedBlogs = Object.entries(blogs);
             const currentBlog = fetchedBlogs.find(blog => blog[1].blogLink === blogLink)[1];
             setBlog(currentBlog);
+            console.log("blog articles:", currentBlog.articles);
         } else {
             console.log("there are no blogs or blogLink in BlogPage ...")
         }

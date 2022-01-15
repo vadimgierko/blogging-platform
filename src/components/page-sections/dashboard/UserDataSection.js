@@ -39,8 +39,8 @@ export default function UserDataSection() {
                     // eslint-disable-next-line no-restricted-globals
                     const wantToDelete = confirm("Are you sure, you want to delete your account & your articles forever? There's no turning back... Delete account?");
                     if (wantToDelete) {
-                        //alert("Sorry, for a moment there are no delete account function in this app... Please, contact to the owner of this app to delete your account manually.");
-                        deleteUserAccount();
+                        alert("Sorry, for a moment delete account function is being updating, so it's off... Please, contact to the owner of this app to delete your account manually or wait for the updates.");
+                        //deleteUserAccount();
                     }
                 }}
             />

@@ -105,14 +105,64 @@ export function DatabaseProvider({ children }) {
       });
   };
 
-  const logOut = () => {
-    return signOut(firebaseAuth)
-      .then(() => {
-        setUser(null);
+  const updateUserPublicData = (userData) => {
+    // save prev userName val:
+    const prevUserName = userPublicData.userName;
+    // update user data:
+    set(ref(database, "users/" + user.uid + "/publicData/data"), {
+      ...userData
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+
+    // update user's public data in users list ordered by keys:
+    set(ref(database, "users/listOrderedByKeys/" + user.uid), {
+      ...userData
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+
+    // update user's public data in users list ordered by user name:
+    if (userData.userName === prevUserName) {
+      // if userName wasn't updated:
+      set(ref(database, "users/listOrderedByUserName/" + prevUserName), {
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        userId: user.uid
       })
       .catch((error) => {
         alert(error.message);
       });
+    } else {
+      // if userName was updated:
+      // delete prev userName record:
+      remove(ref(database, "users/listOrderedByUserName/" + prevUserName))
+      .then(() => console.log(prevUserName, "record was deleted from database."))
+      .catch((error) => {
+        alert(error.message);
+      });
+      // set new userName record:
+      set(ref(database, "users/listOrderedByUserName/" + userData.userName), {
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        userId: user.uid
+      })
+      .then(() => console.log(userData.userName, "record was added to database."))
+      .catch((error) => {
+        alert(error.message);
+      });
+    }
+  };
+
+  const logOut = async () => {
+    try {
+      await signOut(firebaseAuth);
+      setUser(null);
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   //============================== fetch ===========================
@@ -193,12 +243,6 @@ export function DatabaseProvider({ children }) {
   //function getBlogKeyByBlogLink(blogLink) 
 
   //====================================================
-  
-  const updateUserPublicData = (userData) => {
-    set(ref(database, "users/" + user.uid + "/publicData/data"), {
-      ...userData
-    });
-  };
 
   const addBlog = (blogData) => {
 
@@ -263,6 +307,7 @@ export function DatabaseProvider({ children }) {
     });
   }
 
+  //=============== FIX THIS !!!!!!!!!!!!!!!!!!!!!!!
   const deleteUserAccount = () => {
     console.log("deleteUser operations:");
     const userForDelete = firebaseAuth.currentUser;

@@ -6,6 +6,8 @@ export default function Blogs() {
 
     const { blogs, fetchBlogs } = useDatabase();
 
+    // this will be deleted
+    // here will be fetching the blogsList object limeted to some num
     useEffect(() => {
         fetchBlogs();
     }, []);

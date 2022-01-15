@@ -3,6 +3,7 @@ export default function About() {
         <article className="about-page">
             <h1>What you can do with Blogging Platform</h1>
             <hr />
+            <p style={{color: "red"}}>NOTE: I'm currently updating the app according to new database structure & security rules, so some of features, like create new account, new article or blog, and delete an account, update article or blog are off for a few days...</p>
             <ul>
                 <li>create & run your blog (or many blogs) after creating a free user account</li>
                 <li>write & edit your articles with simple & intuitive <a href="https://vadimgierko.github.io/markdown-text-editor/" rel="noreferrer" target="_blank">markdown text editor</a>, which was also created by myself</li>

@@ -85,7 +85,8 @@ export default function UpdateArticle() {
                 to="/dashboard/user-blogs"
                 type="button"
                 className="btn btn-primary mb-3"
-                onClick={handleSubmit}
+                //onClick={handleSubmit}
+                onClick={() => alert("I'm currently updating the app according to new database structure & security rules, so you can't update an article at the moment... Sorry, wait a few days!")}
             >
                 Update article
             </Link>   

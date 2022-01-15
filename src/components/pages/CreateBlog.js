@@ -32,7 +32,9 @@ export default function CreateBlog() {
                 text="create blog"
                 to="/dashboard/user-blogs"
                 formClassname="create-blog-form"
-                onSubmit={handleSubmit}
+                //onSubmit={handleSubmit}
+                onSubmit={() => alert("I'm currently updating the app according to new database structure & security rules, so you can't create a blog at the moment... Sorry, wait a few days!")}
+
             />            
         </div>
     );

@@ -74,7 +74,8 @@ export default function CreateArticlePage() {
                 to="/dashboard/user-blogs"
                 type="button"
                 className="btn btn-primary mb-3"
-                onClick={handleSubmit}
+                //onClick={handleSubmit}
+                onClick={() => alert("I'm currently updating the app according to new database structure & security rules, so you can't create an article at the moment... Sorry, wait a few days!")}
             >
                 Create new article
             </Link>

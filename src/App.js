@@ -11,7 +11,7 @@ import Footer from "./components/organisms/Footer";
 import Blogger from "./components/pages/Blogger";
 import { useDatabase } from "./hooks/use-database";
 import { useEffect, useState } from "react";
-import Article from "./components/organisms/Article";
+import Article from "./components/pages/Article";
 import SignIn from "./components/pages/SignIn";
 import SignUp from "./components/pages/SignUp";
 import About from "./components/pages/About";

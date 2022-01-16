@@ -44,8 +44,8 @@ export function DatabaseProvider({ children }) {
 
   //========================= blog
   const [blog, setBlog] = useState();
-
-  const [blogs, setBlogs] = useState();
+  const [blogsListOrderedByKeys, setBlogsListOrderedByKeys] = useState();
+  const [blogKey, setBlogKey] = useState();
 
   //======================== article
   const [article, setArticle] = useState();
@@ -172,85 +172,85 @@ export function DatabaseProvider({ children }) {
   };
 
   // THIS FUNCTION IS OFF FOR A MOMENT (delete this comment, when fix)
-  const deleteUserAccount = () => {
-    console.log("deleteUser operations:");
-    const userForDelete = firebaseAuth.currentUser;
-    console.log("userForDelete:", userForDelete);
-    const userIdForDelete = userForDelete.uid;
-    console.log("userIdForDelete:", userIdForDelete);
+  // const deleteUserAccount = () => {
+  //   console.log("deleteUser operations:");
+  //   const userForDelete = firebaseAuth.currentUser;
+  //   console.log("userForDelete:", userForDelete);
+  //   const userIdForDelete = userForDelete.uid;
+  //   console.log("userIdForDelete:", userIdForDelete);
 
-    if (userForDelete && userIdForDelete) {
-      // 1. delete user data first:
-      remove(ref(database, "users/" + userForDelete.uid)).then(() => {
-        console.log("User data of deleted user " + userIdForDelete + " was deleted...");
-      }).catch((error) => {
-        // An error ocurred
-        alert(error.message);
-      });
+  //   if (userForDelete && userIdForDelete) {
+  //     // 1. delete user data first:
+  //     remove(ref(database, "users/" + userForDelete.uid)).then(() => {
+  //       console.log("User data of deleted user " + userIdForDelete + " was deleted...");
+  //     }).catch((error) => {
+  //       // An error ocurred
+  //       alert(error.message);
+  //     });
 
-      // + delete user from two lists => [x]
+  //     // + delete user from two lists => [x]
       
-      // 2. delete user blogs in for loop:
-      // THIS WILL BE COMPLETELY ANOTHER PROCEDURE WHEN NEW RULES & DATA STRUCTURE WILL BE SET
-      const userBlogsForDelete = Object.entries(blogs).filter(blog => blog[1].userId === userIdForDelete);
-      console.log("userBlogsForDelete:", userBlogsForDelete);
-      if (userBlogsForDelete && userBlogsForDelete.length) {
-        let userBlogsKeysForDelete = [];
-        for (let i = 0; i < userBlogsForDelete.length; i++) {
-          const key = userBlogsForDelete[i][0];
-          userBlogsKeysForDelete.push(key);
-        }
-        console.log("userBlogsKeysForDelete:", userBlogsKeysForDelete);
-        if (userBlogsKeysForDelete && userBlogsKeysForDelete.length) {
-          for (let n = 0; n < userBlogsKeysForDelete.length; n++) {
-            const key = userBlogsKeysForDelete[n];
-            remove(ref(database, "blogs/" + key)).then(() => {
-              console.log("Blog " + key + " of deleted user " + userIdForDelete + " was deleted...");
-              // 3. delete user in the last loop
-              if (n === userBlogsKeysForDelete.length - 1) {
-                // eslint-disable-next-line no-restricted-globals
-                const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
-                if (confirmAccountDeletion) {
-                  deleteUser(userForDelete).then(() => {
-                    console.log("User " + userIdForDelete + " was deleted.");
-                  }).catch((error) => {
-                    alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
-                  });
-                }
-              }
-            }).catch((error) => {
-              // An error ocurred
-              alert(error.message);
-            });
-          }
-        } else {
-          console.log("There are no user blogs to delete... So delete user.");
-          // eslint-disable-next-line no-restricted-globals
-          const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
-          if (confirmAccountDeletion) {
-            deleteUser(userForDelete).then(() => {
-              console.log("User " + userIdForDelete + " was deleted.");
-            }).catch((error) => {
-              alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
-            });
-          }
-        }
-      } else {
-        console.log("There are no user blogs to delete... So delete user.");
-        // eslint-disable-next-line no-restricted-globals
-        const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
-        if (confirmAccountDeletion) {
-          deleteUser(userForDelete).then(() => {
-            console.log("User " + userIdForDelete + " was deleted.");
-          }).catch((error) => {
-            alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
-          });
-        }
-      }  
-    } else {
-      alert("You need to be signed in to delete your account. Try again!")
-    }
-  }
+  //     // 2. delete user blogs in for loop:
+  //     // THIS WILL BE COMPLETELY ANOTHER PROCEDURE WHEN NEW RULES & DATA STRUCTURE WILL BE SET
+  //     const userBlogsForDelete = Object.entries(blogs).filter(blog => blog[1].userId === userIdForDelete);
+  //     console.log("userBlogsForDelete:", userBlogsForDelete);
+  //     if (userBlogsForDelete && userBlogsForDelete.length) {
+  //       let userBlogsKeysForDelete = [];
+  //       for (let i = 0; i < userBlogsForDelete.length; i++) {
+  //         const key = userBlogsForDelete[i][0];
+  //         userBlogsKeysForDelete.push(key);
+  //       }
+  //       console.log("userBlogsKeysForDelete:", userBlogsKeysForDelete);
+  //       if (userBlogsKeysForDelete && userBlogsKeysForDelete.length) {
+  //         for (let n = 0; n < userBlogsKeysForDelete.length; n++) {
+  //           const key = userBlogsKeysForDelete[n];
+  //           remove(ref(database, "blogs/" + key)).then(() => {
+  //             console.log("Blog " + key + " of deleted user " + userIdForDelete + " was deleted...");
+  //             // 3. delete user in the last loop
+  //             if (n === userBlogsKeysForDelete.length - 1) {
+  //               // eslint-disable-next-line no-restricted-globals
+  //               const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
+  //               if (confirmAccountDeletion) {
+  //                 deleteUser(userForDelete).then(() => {
+  //                   console.log("User " + userIdForDelete + " was deleted.");
+  //                 }).catch((error) => {
+  //                   alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
+  //                 });
+  //               }
+  //             }
+  //           }).catch((error) => {
+  //             // An error ocurred
+  //             alert(error.message);
+  //           });
+  //         }
+  //       } else {
+  //         console.log("There are no user blogs to delete... So delete user.");
+  //         // eslint-disable-next-line no-restricted-globals
+  //         const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
+  //         if (confirmAccountDeletion) {
+  //           deleteUser(userForDelete).then(() => {
+  //             console.log("User " + userIdForDelete + " was deleted.");
+  //           }).catch((error) => {
+  //             alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
+  //           });
+  //         }
+  //       }
+  //     } else {
+  //       console.log("There are no user blogs to delete... So delete user.");
+  //       // eslint-disable-next-line no-restricted-globals
+  //       const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
+  //       if (confirmAccountDeletion) {
+  //         deleteUser(userForDelete).then(() => {
+  //           console.log("User " + userIdForDelete + " was deleted.");
+  //         }).catch((error) => {
+  //           alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
+  //         });
+  //       }
+  //     }  
+  //   } else {
+  //     alert("You need to be signed in to delete your account. Try again!")
+  //   }
+  // }
 
   //============================== fetch ===========================
   //
@@ -330,6 +330,15 @@ export function DatabaseProvider({ children }) {
       const data = snapshot.val();
       console.log("article key:", data.key);
       setArticleKey(data.key);
+    });
+  }
+
+  function getBlogKeyByLink(blogLink) {
+    const blogRef = ref(database, "blogs/listOrderedByLinks/" + blogLink);
+    onValue(blogRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("blog key:", data.key);
+      setBlogKey(data.key);
     });
   }
 
@@ -413,12 +422,12 @@ export function DatabaseProvider({ children }) {
     });
   }
 
-  //==== THIS IS FOR DELETE !!!!!!!!!!!!!!!
-  function fetchBlogs() {
-    const blogsRef = ref(database, "blogs");
-    onValue(blogsRef, (snapshot) => {
+  function fetchBlogsListOrderedByKeys() {
+    const listRef = query(ref(database, "blogs/listOrderedByKeys"), limitToFirst(10));
+    onValue(listRef, (snapshot) => {
       const data = snapshot.val();
-      setBlogs(data);
+      console.log("blogs list ordered by keys:", data);
+      setBlogsListOrderedByKeys(data);
     });
   }
 
@@ -441,14 +450,27 @@ export function DatabaseProvider({ children }) {
           console.log("user public data:", data);
           setUserPublicData(data);
         });
+        // check
+        //getEverything()
       } else {
         setUser(null);
         setUserPrivateData(null);
         setUserPublicData(null);
         console.log("user is logged out");
+        // check
+        //getEverything()
       }
     });
   }, []);
+
+  // check if its possible to download the whole database:
+  function getEverything() {
+    const usersRef = ref(database, "users");
+    onValue(usersRef, snapshot => {
+      const data = snapshot.val();
+      console.log("users:", data);
+    });
+  }
 
   const value = {
     signIn,
@@ -473,6 +495,8 @@ export function DatabaseProvider({ children }) {
     //====== blog:
     blog,
     fetchBlog,
+    getBlogKeyByLink,
+    blogKey,
     //===== article:
     article,
     articleKey,
@@ -482,15 +506,15 @@ export function DatabaseProvider({ children }) {
     fetchUserBlogsList,
     userBlogsList,
     updateUserPublicData,
-    blogs,
-    fetchBlogs,
+    blogsListOrderedByKeys,
+    fetchBlogsListOrderedByKeys,
     deleteBlog,
     addBlog,
     updateBlog,
     addArticle,
     deleteArticle,
     updateArticle,
-    deleteUserAccount
+    //deleteUserAccount
   }
 
   return (

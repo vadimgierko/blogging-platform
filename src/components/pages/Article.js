@@ -8,7 +8,7 @@ import SectionHeader from "../molecules/SectionHeader";
 export default function Article() {
 
     const { articleLink } = useParams();
-    const { blogLink } = useParams();
+    //const { blogLink } = useParams();
 
     const {
         article,
@@ -32,10 +32,12 @@ export default function Article() {
     if (!article) return <p>Downloading article or there is no such article...</p>;
 
     return (
-        <article className="article">
-            <SectionHeader item={article.metadata} />
-            <hr />
-            <ReactMarkdown children={article.content} remarkPlugins={[remarkGfm]} />
-        </article>
+        <div className="article-page">
+            <article className="article">
+                <SectionHeader item={article.metadata} headerClassname="article-header" />
+                <hr />
+                <ReactMarkdown children={article.content} remarkPlugins={[remarkGfm]} />
+            </article>
+        </div>
     );
 }

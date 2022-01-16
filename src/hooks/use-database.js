@@ -27,31 +27,37 @@ export const useDatabase = () => useContext(DatabaseContext);
 
 export function DatabaseProvider({ children }) {
 
+  //==================== VARIABLES
+  //
   //==================== current logged user:
   //
   const [user, setUser] = useState(null);
   const [userPrivateData, setUserPrivateData] = useState();
   const [userPublicData, setUserPublicData] = useState();
-  const [userBlogsList, setUserBlogsList] = useState();
+  const [userBlogsList, setUserBlogsList] = useState(); // ordered by keys
 
-  //============================ bloggers:
+  //============================ users/ bloggers:
   //
   const [usersListOrderedByUserName, setUsersListOrderedByUserName] = useState();
   const [usersListOrderedByKeys, setUsersListOrderedByKeys] = useState();
+
+  //============================ blogger:
   const [bloggerPublicData, setBloggerPublicData] = useState();
   const [bloggerBlogsList, setBloggerBlogsList] = useState();
   const [bloggerId, setBloggerId] = useState();
 
-  //========================= blog
+  //============================ blogs:
+  const [blogsListOrderedByKeys, setBlogsListOrderedByKeys] = useState();
+
+  //========================= blog:
   const [blog, setBlog] = useState();
+  const [blogKey, setBlogKey] = useState();
 
-  const [blogs, setBlogs] = useState();
-
-  //======================== article
+  //======================== article:
   const [article, setArticle] = useState();
   const [articleKey, setArticleKey] = useState();
 
-  //================================= auth & userData functions ==
+  //================================= AUTH ==
 
   const signIn = (signInData) => {
     const email = signInData.email;
@@ -111,57 +117,6 @@ export function DatabaseProvider({ children }) {
       });
   };
 
-  const updateUserPublicData = (userData) => {
-    // save prev userName val:
-    const prevUserName = userPublicData.userName;
-    // update user data:
-    set(ref(database, "users/" + user.uid + "/publicData/data"), {
-      ...userData
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-
-    // update user's public data in users list ordered by keys:
-    set(ref(database, "users/listOrderedByKeys/" + user.uid), {
-      ...userData
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-
-    // update user's public data in users list ordered by user name:
-    if (userData.userName === prevUserName) {
-      // if userName wasn't updated:
-      set(ref(database, "users/listOrderedByUserName/" + prevUserName), {
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        userId: user.uid
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-    } else {
-      // if userName was updated:
-      // delete prev userName record:
-      remove(ref(database, "users/listOrderedByUserName/" + prevUserName))
-      .then(() => console.log(prevUserName, "record was deleted from database."))
-      .catch((error) => {
-        alert(error.message);
-      });
-      // set new userName record:
-      set(ref(database, "users/listOrderedByUserName/" + userData.userName), {
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        userId: user.uid
-      })
-      .then(() => console.log(userData.userName, "record was added to database."))
-      .catch((error) => {
-        alert(error.message);
-      });
-    }
-  };
-
   const logOut = async () => {
     try {
       await signOut(firebaseAuth);
@@ -171,88 +126,165 @@ export function DatabaseProvider({ children }) {
     }
   };
 
+  //===================== UPDATE USER DATA
+
+  // const updateUserPublicData = (userData) => {
+  //   // save prev userName val:
+  //   const prevUserName = userPublicData.userName;
+  //   // update user data:
+  //   set(ref(database, "users/" + user.uid + "/publicData/data"), {
+  //     ...userData
+  //   })
+  //   .catch((error) => {
+  //     alert(error.message);
+  //   });
+
+  //   // update user's public data in users list ordered by keys:
+  //   set(ref(database, "users/listOrderedByKeys/" + user.uid), {
+  //     ...userData
+  //   })
+  //   .catch((error) => {
+  //     alert(error.message);
+  //   });
+
+  //   // update user's public data in users list ordered by user name:
+  //   if (userData.userName === prevUserName) {
+  //     // if userName wasn't updated:
+  //     set(ref(database, "users/listOrderedByUserName/" + prevUserName), {
+  //       firstName: userData.firstName,
+  //       lastName: userData.lastName,
+  //       userId: user.uid
+  //     })
+  //     .catch((error) => {
+  //       alert(error.message);
+  //     });
+  //   } else {
+  //     // if userName was updated:
+  //     // delete prev userName record:
+  //     remove(ref(database, "users/listOrderedByUserName/" + prevUserName))
+  //     .then(() => console.log(prevUserName, "record was deleted from database."))
+  //     .catch((error) => {
+  //       alert(error.message);
+  //     });
+  //     // set new userName record:
+  //     set(ref(database, "users/listOrderedByUserName/" + userData.userName), {
+  //       firstName: userData.firstName,
+  //       lastName: userData.lastName,
+  //       userId: user.uid
+  //     })
+  //     .then(() => console.log(userData.userName, "record was added to database."))
+  //     .catch((error) => {
+  //       alert(error.message);
+  //     });
+  //   }
+  // };
+
+  //==================== DELETE USER ACCOUNT  
+
   // THIS FUNCTION IS OFF FOR A MOMENT (delete this comment, when fix)
-  const deleteUserAccount = () => {
-    console.log("deleteUser operations:");
-    const userForDelete = firebaseAuth.currentUser;
-    console.log("userForDelete:", userForDelete);
-    const userIdForDelete = userForDelete.uid;
-    console.log("userIdForDelete:", userIdForDelete);
+  // const deleteUserAccount = () => {
+  //   console.log("deleteUser operations:");
+  //   const userForDelete = firebaseAuth.currentUser;
+  //   console.log("userForDelete:", userForDelete);
+  //   const userIdForDelete = userForDelete.uid;
+  //   console.log("userIdForDelete:", userIdForDelete);
 
-    if (userForDelete && userIdForDelete) {
-      // 1. delete user data first:
-      remove(ref(database, "users/" + userForDelete.uid)).then(() => {
-        console.log("User data of deleted user " + userIdForDelete + " was deleted...");
-      }).catch((error) => {
-        // An error ocurred
-        alert(error.message);
-      });
+  //   if (userForDelete && userIdForDelete) {
+  //     // 1. delete user data first:
+  //     remove(ref(database, "users/" + userForDelete.uid)).then(() => {
+  //       console.log("User data of deleted user " + userIdForDelete + " was deleted...");
+  //     }).catch((error) => {
+  //       // An error ocurred
+  //       alert(error.message);
+  //     });
 
-      // + delete user from two lists => [x]
+  //     // + delete user from two lists => [x]
       
-      // 2. delete user blogs in for loop:
-      // THIS WILL BE COMPLETELY ANOTHER PROCEDURE WHEN NEW RULES & DATA STRUCTURE WILL BE SET
-      const userBlogsForDelete = Object.entries(blogs).filter(blog => blog[1].userId === userIdForDelete);
-      console.log("userBlogsForDelete:", userBlogsForDelete);
-      if (userBlogsForDelete && userBlogsForDelete.length) {
-        let userBlogsKeysForDelete = [];
-        for (let i = 0; i < userBlogsForDelete.length; i++) {
-          const key = userBlogsForDelete[i][0];
-          userBlogsKeysForDelete.push(key);
-        }
-        console.log("userBlogsKeysForDelete:", userBlogsKeysForDelete);
-        if (userBlogsKeysForDelete && userBlogsKeysForDelete.length) {
-          for (let n = 0; n < userBlogsKeysForDelete.length; n++) {
-            const key = userBlogsKeysForDelete[n];
-            remove(ref(database, "blogs/" + key)).then(() => {
-              console.log("Blog " + key + " of deleted user " + userIdForDelete + " was deleted...");
-              // 3. delete user in the last loop
-              if (n === userBlogsKeysForDelete.length - 1) {
-                // eslint-disable-next-line no-restricted-globals
-                const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
-                if (confirmAccountDeletion) {
-                  deleteUser(userForDelete).then(() => {
-                    console.log("User " + userIdForDelete + " was deleted.");
-                  }).catch((error) => {
-                    alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
-                  });
-                }
-              }
-            }).catch((error) => {
-              // An error ocurred
-              alert(error.message);
-            });
-          }
-        } else {
-          console.log("There are no user blogs to delete... So delete user.");
-          // eslint-disable-next-line no-restricted-globals
-          const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
-          if (confirmAccountDeletion) {
-            deleteUser(userForDelete).then(() => {
-              console.log("User " + userIdForDelete + " was deleted.");
-            }).catch((error) => {
-              alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
-            });
-          }
-        }
-      } else {
-        console.log("There are no user blogs to delete... So delete user.");
-        // eslint-disable-next-line no-restricted-globals
-        const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
-        if (confirmAccountDeletion) {
-          deleteUser(userForDelete).then(() => {
-            console.log("User " + userIdForDelete + " was deleted.");
-          }).catch((error) => {
-            alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
-          });
-        }
-      }  
-    } else {
-      alert("You need to be signed in to delete your account. Try again!")
-    }
-  }
+  //     // 2. delete user blogs in for loop:
+  //     // THIS WILL BE COMPLETELY ANOTHER PROCEDURE WHEN NEW RULES & DATA STRUCTURE WILL BE SET
+  //     const userBlogsForDelete = Object.entries(blogs).filter(blog => blog[1].userId === userIdForDelete);
+  //     console.log("userBlogsForDelete:", userBlogsForDelete);
+  //     if (userBlogsForDelete && userBlogsForDelete.length) {
+  //       let userBlogsKeysForDelete = [];
+  //       for (let i = 0; i < userBlogsForDelete.length; i++) {
+  //         const key = userBlogsForDelete[i][0];
+  //         userBlogsKeysForDelete.push(key);
+  //       }
+  //       console.log("userBlogsKeysForDelete:", userBlogsKeysForDelete);
+  //       if (userBlogsKeysForDelete && userBlogsKeysForDelete.length) {
+  //         for (let n = 0; n < userBlogsKeysForDelete.length; n++) {
+  //           const key = userBlogsKeysForDelete[n];
+  //           remove(ref(database, "blogs/" + key)).then(() => {
+  //             console.log("Blog " + key + " of deleted user " + userIdForDelete + " was deleted...");
+  //             // 3. delete user in the last loop
+  //             if (n === userBlogsKeysForDelete.length - 1) {
+  //               // eslint-disable-next-line no-restricted-globals
+  //               const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
+  //               if (confirmAccountDeletion) {
+  //                 deleteUser(userForDelete).then(() => {
+  //                   console.log("User " + userIdForDelete + " was deleted.");
+  //                 }).catch((error) => {
+  //                   alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
+  //                 });
+  //               }
+  //             }
+  //           }).catch((error) => {
+  //             // An error ocurred
+  //             alert(error.message);
+  //           });
+  //         }
+  //       } else {
+  //         console.log("There are no user blogs to delete... So delete user.");
+  //         // eslint-disable-next-line no-restricted-globals
+  //         const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
+  //         if (confirmAccountDeletion) {
+  //           deleteUser(userForDelete).then(() => {
+  //             console.log("User " + userIdForDelete + " was deleted.");
+  //           }).catch((error) => {
+  //             alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
+  //           });
+  //         }
+  //       }
+  //     } else {
+  //       console.log("There are no user blogs to delete... So delete user.");
+  //       // eslint-disable-next-line no-restricted-globals
+  //       const confirmAccountDeletion = confirm("Your blogs & user data was deleted. Now press OK to delete your account");
+  //       if (confirmAccountDeletion) {
+  //         deleteUser(userForDelete).then(() => {
+  //           console.log("User " + userIdForDelete + " was deleted.");
+  //         }).catch((error) => {
+  //           alert(error.message, "Try again to delete your account. Your blogs & user data were already deleted.");
+  //         });
+  //       }
+  //     }  
+  //   } else {
+  //     alert("You need to be signed in to delete your account. Try again!")
+  //   }
+  // }
 
   //============================== fetch ===========================
+  
+  //============== fetch user blogs list
+  //
+  function fetchUserBlogsList() {
+    const currentUserDataRef = ref(database, "users/" + user.uid + "/publicData/blogs");
+    onValue(currentUserDataRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("current user blogs list data object:", data);
+      setUserBlogsList(data);
+    });
+  }
+
+  function fetchBlogsListOrderedByKeys() {
+    const listRef = query(ref(database, "blogs/listOrderedByKeys"), limitToFirst(10));
+    onValue(listRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("blogs list ordered by keys:", data);
+      setBlogsListOrderedByKeys(data);
+    });
+  }
+
+  //====================== users lists:
   //
   function fetchUsersListOrderedByUserName() {
     const listRef = query(ref(database, "users/listOrderedByUserName"), limitToFirst(10));
@@ -272,6 +304,8 @@ export function DatabaseProvider({ children }) {
     });
   }
 
+  //========================== blogger
+
   function fetchBloggerPublicData(userId) {
     const bloggerPublicDataRef = ref(database, "users/" + userId + "/publicData/data");
     onValue(bloggerPublicDataRef, (snapshot) => {
@@ -281,23 +315,12 @@ export function DatabaseProvider({ children }) {
     });
   }
 
-  function fetchBloggerBlogsList(userId) {
+  function fetchBloggerBlogsList(userId) { //================= ordered by keys
     const bloggerBlogsListRef = ref(database, "users/" + userId + "/publicData/blogs");
     onValue(bloggerBlogsListRef, (snapshot) => {
       const data = snapshot.val();
       console.log("blogger blogs list object:", data);
       setBloggerBlogsList(data);
-    });
-  }
-
-  //============== fetch user
-  //
-  function fetchUserBlogsList(userId) {
-    const currentUserDataRef = ref(database, "users/" + userId + "/publicData/blogs");
-    onValue(currentUserDataRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("current user blogs list data object:", data);
-      setUserBlogsList(data);
     });
   }
 
@@ -328,8 +351,21 @@ export function DatabaseProvider({ children }) {
     const articleRef = ref(database, "articles/listOrderedByLinks/" + articleLink);
     onValue(articleRef, (snapshot) => {
       const data = snapshot.val();
-      console.log("article key:", data.key);
-      setArticleKey(data.key);
+      if (data) {
+        console.log("article key:", data.key);
+        setArticleKey(data.key);
+      }
+    });
+  }
+
+  function getBlogKeyByLink(blogLink) {
+    const blogRef = ref(database, "blogs/listOrderedByLinks/" + blogLink);
+    onValue(blogRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        console.log("blog key:", data.key);
+        setBlogKey(data.key);
+      }
     });
   }
 
@@ -346,81 +382,149 @@ export function DatabaseProvider({ children }) {
     });
   }
 
-  //function getBlogKeyByBlogLink(blogLink) 
+  //============================= ADD FUNCTIONS =========================
 
-  //====================================================
-
-  const addBlog = (blogData) => {
+  const addBlog = (blogData) => { // blogData consists title, description & link
 
     const newBlogKey = push(child(ref(database), "blogs")).key;
 
     if (newBlogKey) {
-      set(ref(database, "blogs/" + newBlogKey), {
-        ...blogData,
+
+      // add blog to blogs in database:
+      set(ref(database, "blogs/" + newBlogKey + "/metadata"), {
         author: userPublicData.firstName + " " + userPublicData.lastName,
         userName: userPublicData.userName,
         userId: user.uid,
+        ...blogData
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+
+      // add blog to user blogs list:
+      set(ref(database, "users/" + user.uid + "/publicData/blogs/" + newBlogKey), {
+        title: blogData.title,
+        link: blogData.link
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+
+      // add blog to blogs list ordered by keys:
+      set(ref(database, "blogs/listOrderedByKeys/" + newBlogKey), {
+        author: userPublicData.firstName + " " + userPublicData.lastName,
+        userName: userPublicData.userName,
+        userId: user.uid, // remember about userId, because only then rules will allow the user add smth !!!
+        ...blogData
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+      
+      // add blog to blogs list ordered by links:
+      set(ref(database, "blogs/listOrderedByLinks/" + blogData.link), {
+        userId: user.uid,
+        title: blogData.title,
+        key: newBlogKey
+      })
+      .catch((error) => {
+        alert(error.message);
       });
     }
   }
 
-  const deleteBlog = (blogKey) => {
-    remove(ref(database, "blogs/" +  blogKey)).then(() => {
-      console.log("blog " + blogKey + " was deleted");
-    }).catch((error) => {
-      // An error ocurred
-      console.log(error.message);
-    });
-  }
-
-  const updateBlog = (blogKey, updatedBlogData) => {
-    set(ref(database, "blogs/" + blogKey), {
-      ...updatedBlogData
-    });
-  };
-
   const addArticle = (blogKey, blogTitle, article) => {
+    // article: {title, description, content, link, createdAt}
 
-    const newArticleKey = push(child(ref(database), "blogs/" + blogKey + "/articles/")).key;
+    const newArticleKey = push(child(ref(database), "articles")).key;
 
     if (newArticleKey) {
-      set(ref(database, "blogs/" + blogKey + "/articles/" + newArticleKey), {
+
+      // add article to articles in database:
+      // add metadata & content
+      set(ref(database, "articles/" + newArticleKey + "/metadata"), {
         ...article,
         author: userPublicData.firstName + " " + userPublicData.lastName,
         userName: userPublicData.userName,
         userId: user.uid,
         blogKey: blogKey,
         blogTitle: blogTitle
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+
+      // add article to articles list ordered by links
+      set(ref(database, "articles/listOrderedByLinks/" + article.link), {
+        title: article.title,
+        key: newArticleKey,
+        userId: user.uid
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+
+      // add article to its blog's list ordered by keys
+      set(ref(database, "blogs/" + blogKey + "/articlesListOrderedByKeys/" + newArticleKey), {
+        link: article.link,
+        title: article.title,
+        userId: user.uid
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+
+      // add article to its blog's list ordered by links
+      set(ref(database, "blogs/" + blogKey + "/articlesListOrderedByLinks/" + article.link), {
+        title: article.title,
+        key: newArticleKey,
+        userId: user.uid
+      })
+      .catch((error) => {
+        alert(error.message);
       });
     }
+
   }
 
-  const updateArticle = (blogKey, articleKey, updatedArticleData) => {
-    if (updatedArticleData) {
-      set(ref(database, "blogs/" + blogKey + "/articles/" + articleKey), {
-        ...updatedArticleData
-      });
-    } else {
-      alert("There is no data to update... The article isn't updated.");
-    }
-  }
+  //========================== DELETE ITEMS FUNCTIONS
 
-  const deleteArticle = (blogKey, articleKey) => {
-    remove(ref(database, "blogs/" +  blogKey + "/articles/" + articleKey)).then(() => {
-      console.log("article " + articleKey + " in blog " + blogKey + " was deleted");
-    }).catch((error) => {
-      console.log(error.message);
-    });
-  }
+  // const deleteBlog = (blogKey) => {
+  //   remove(ref(database, "blogs/" +  blogKey)).then(() => {
+  //     console.log("blog " + blogKey + " was deleted");
+  //   }).catch((error) => {
+  //     // An error ocurred
+  //     console.log(error.message);
+  //   });
+  // }
 
-  //==== THIS IS FOR DELETE !!!!!!!!!!!!!!!
-  function fetchBlogs() {
-    const blogsRef = ref(database, "blogs");
-    onValue(blogsRef, (snapshot) => {
-      const data = snapshot.val();
-      setBlogs(data);
-    });
-  }
+  // const deleteArticle = (blogKey, articleKey) => {
+  //   remove(ref(database, "blogs/" +  blogKey + "/articles/" + articleKey)).then(() => {
+  //     console.log("article " + articleKey + " in blog " + blogKey + " was deleted");
+  //   }).catch((error) => {
+  //     console.log(error.message);
+  //   });
+  // }
+
+  //========================== UPDATE ITEMS FUNCTIONS 
+
+  // const updateBlog = (blogKey, updatedBlogData) => {
+  //   set(ref(database, "blogs/" + blogKey), {
+  //     ...updatedBlogData
+  //   });
+  // };
+
+  // const updateArticle = (blogKey, articleKey, updatedArticleData) => {
+  //   if (updatedArticleData) {
+  //     set(ref(database, "blogs/" + blogKey + "/articles/" + articleKey), {
+  //       ...updatedArticleData
+  //     });
+  //   } else {
+  //     alert("There is no data to update... The article isn't updated.");
+  //   }
+  // }
+
+  //====================================================================================
 
   useEffect(() => {
     onAuthStateChanged(firebaseAuth, (user) => {
@@ -450,6 +554,9 @@ export function DatabaseProvider({ children }) {
     });
   }, []);
 
+  //================================== EXPORTED FUNCTIONS & VARS
+  //================================= inline exports ?
+
   const value = {
     signIn,
     signUp,
@@ -457,6 +564,7 @@ export function DatabaseProvider({ children }) {
     user,
     userPrivateData,
     userPublicData,
+    userBlogsList,
     //=== users lists:
     fetchUsersListOrderedByKeys,
     fetchUsersListOrderedByUserName,
@@ -473,6 +581,8 @@ export function DatabaseProvider({ children }) {
     //====== blog:
     blog,
     fetchBlog,
+    getBlogKeyByLink,
+    blogKey,
     //===== article:
     article,
     articleKey,
@@ -480,17 +590,16 @@ export function DatabaseProvider({ children }) {
     getArticleKeyByLink,
     //====================
     fetchUserBlogsList,
-    userBlogsList,
-    updateUserPublicData,
-    blogs,
-    fetchBlogs,
-    deleteBlog,
+    //updateUserPublicData,
+    blogsListOrderedByKeys,
+    fetchBlogsListOrderedByKeys,
+    //deleteBlog,
     addBlog,
-    updateBlog,
+    //updateBlog,
     addArticle,
-    deleteArticle,
-    updateArticle,
-    deleteUserAccount
+    //deleteArticle,
+    //updateArticle,
+    //deleteUserAccount
   }
 
   return (

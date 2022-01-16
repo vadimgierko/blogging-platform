@@ -9,45 +9,37 @@ export default function Blog() {
     let { url } = useRouteMatch();
     const { blogLink } = useParams();
 
-    const { blogs, fetchBlogs } = useDatabase();
-
-    const [blog, setBlog] = useState(null);
-
-    // useEffect(() => {
-    //     if (blogLink) {
-    //         //
-    //     }
-    // }, [blogLink]);
-
-    // this will be deleted
-    // here will be fetching the blog according to its link:
-    // getBlogByLink
-    // => fetchBlog(blogLink)
-    useEffect(() => {
-        fetchBlogs();
-    }, []);
+    const { 
+        blog,
+        fetchBlog,
+        getBlogKeyByLink,
+        blogKey,
+    } = useDatabase();
 
     useEffect(() => {
-        if (blogs) {
-            const fetchedBlogs = Object.entries(blogs);
-            const currentBlog = fetchedBlogs.find(blog => blog[1].blogLink === blogLink)[1];
-            setBlog(currentBlog);
-            console.log("blog articles:", currentBlog.articles);
-        } else {
-            console.log("there are no blogs or blogLink in BlogPage ...")
+        if (blogLink) {
+            getBlogKeyByLink(blogLink);
         }
-    }, [blogs, blogLink]);
+    }, [blogLink]);
+
+    useEffect(() => {
+        if (blogKey) {
+            fetchBlog(blogKey);
+        }
+    }, [blogKey]);
+
+    useEffect(() => {
+        if (blog) {
+            console.log("fetched blog:", blog);
+        }
+    }, [blog]);
 
     if (!blog) return <p>Downloading data or there is no data...</p>
 
     return (
-        <section className="blog">
-            <SectionHeader item={blog} />
-            {
-                blog.articles
-                ? <TableOfContent articles={blog.articles} url={url} />
-                : <p>There are no articles yet...</p>
-            }
-        </section>
+        <div className="blog-page">
+            <SectionHeader item={blog.metadata} headerClassname="blog-header" />
+            <TableOfContent articles={blog.articlesListOrderedByKeys} url={url} />
+        </div>
     );
 }

@@ -7,7 +7,7 @@ export default function BlogEditionSection() {
 
     const { blogLink } = useParams();
 
-    const { blogs, deleteBlog, updateBlog, deleteArticle } = useDatabase();
+    const { blogs, updateBlog, deleteArticle } = useDatabase(); // + deleteBlog
 
     const [blog, setBlog] = useState(null);
     const [blogKey, setBlogKey] = useState(null);
@@ -15,7 +15,7 @@ export default function BlogEditionSection() {
     useEffect(() => {
         if (blogs) {
             const fetchedBlogs = Object.entries(blogs);
-            const currentBlogArray = fetchedBlogs.filter(blog => blog[1].blogLink === blogLink); // array...
+            const currentBlogArray = fetchedBlogs.filter(blog => blog[1].link === blogLink); // array...
             const currentBlog = currentBlogArray[0][1];
             const currentBlogKey = currentBlogArray[0][0];
             setBlog(currentBlog);
@@ -39,7 +39,7 @@ export default function BlogEditionSection() {
                             type="text"
                             className="form-control"
                             defaultValue={blog.title}
-                            onChange={(e) => setBlog({...blog, title: e.target.value, blogLink: convertTitleIntoLink(e.target.value)})}
+                            onChange={(e) => setBlog({...blog, title: e.target.value, link: convertTitleIntoLink(e.target.value)})}
                         />
                     </div>
                     <div className="mb-2">
@@ -61,7 +61,8 @@ export default function BlogEditionSection() {
                                 blog.title.replace(/\s/g, '').length &&
                                 blog.description.replace(/\s/g, '').length
                             ) {
-                                updateBlog(blogKey, blog);
+                                //updateBlog(blogKey, blog);
+                                alert("At the moment you can not update blog. Check the note in about section.");
                             } else {
                                 alert("You need to complete all input fields (not only white spaces...) to update your blog data... Try again!");
                             }
@@ -77,7 +78,8 @@ export default function BlogEditionSection() {
                             // eslint-disable-next-line no-restricted-globals
                             const wantToDeleteBlog = confirm("Are you sure, you want to delete this blog & all articles from this blog forever? There's no turning back... Delete blog?");
                             if (wantToDeleteBlog) {
-                                deleteBlog(blogKey);
+                                //deleteBlog(blogKey);
+                                alert("At the moment you can not delete blog. Check the note in about section.");
                             }
                         }}
                     >
@@ -104,7 +106,7 @@ export default function BlogEditionSection() {
                                             <i className="bi bi-pencil" />
                                         </Link>
                                         <Link
-                                            to={"/blogs/" + blog.blogLink + "/" + article[1].articleLink}
+                                            to={"/blogs/" + blog.link + "/" + article[1].link}
                                             className="btn btn-secondary d-inline"
                                         >
                                             <i className="bi bi-eye" />
@@ -115,7 +117,8 @@ export default function BlogEditionSection() {
                                                 // eslint-disable-next-line no-restricted-globals
                                                 const wantToDeleteArticle = confirm("Are you sure, you want to delete this article from this blog forever? There's no turning back... Delete article?");
                                                 if (wantToDeleteArticle) {
-                                                    deleteArticle(blogKey, article[0]);
+                                                    //deleteArticle(blogKey, article[0]);
+                                                    alert("At the moment you can not delete article. Check the note in about section.");
                                                 }
                                             }}
                                         >

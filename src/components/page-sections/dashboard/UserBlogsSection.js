@@ -2,7 +2,7 @@ import { useDatabase } from "../../../hooks/use-database";
 import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
 import BlogEditionSection from "./BlogEditionSection";
 import LinkButton from "../../atoms/LinkButton";
-import { useEffect } from "react/cjs/react.development";
+import { useEffect } from "react";
 
 export default function UserBlogsSection() {
 

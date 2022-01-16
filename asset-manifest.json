@@ -1,26 +1,26 @@
 {
   "files": {
     "main.css": "/blogging-platform/static/css/main.b9e3e56d.chunk.css",
-    "main.js": "/blogging-platform/static/js/main.8cdb391c.chunk.js",
-    "main.js.map": "/blogging-platform/static/js/main.8cdb391c.chunk.js.map",
-    "runtime-main.js": "/blogging-platform/static/js/runtime-main.5bc41a3c.js",
-    "runtime-main.js.map": "/blogging-platform/static/js/runtime-main.5bc41a3c.js.map",
+    "main.js": "/blogging-platform/static/js/main.61b8491f.chunk.js",
+    "main.js.map": "/blogging-platform/static/js/main.61b8491f.chunk.js.map",
+    "runtime-main.js": "/blogging-platform/static/js/runtime-main.aa82f0ab.js",
+    "runtime-main.js.map": "/blogging-platform/static/js/runtime-main.aa82f0ab.js.map",
     "static/css/2.343f8fc5.chunk.css": "/blogging-platform/static/css/2.343f8fc5.chunk.css",
-    "static/js/2.0db2b720.chunk.js": "/blogging-platform/static/js/2.0db2b720.chunk.js",
-    "static/js/2.0db2b720.chunk.js.map": "/blogging-platform/static/js/2.0db2b720.chunk.js.map",
-    "static/js/3.08fc2455.chunk.js": "/blogging-platform/static/js/3.08fc2455.chunk.js",
-    "static/js/3.08fc2455.chunk.js.map": "/blogging-platform/static/js/3.08fc2455.chunk.js.map",
+    "static/js/2.0393b937.chunk.js": "/blogging-platform/static/js/2.0393b937.chunk.js",
+    "static/js/2.0393b937.chunk.js.map": "/blogging-platform/static/js/2.0393b937.chunk.js.map",
+    "static/js/3.1a2f4f2c.chunk.js": "/blogging-platform/static/js/3.1a2f4f2c.chunk.js",
+    "static/js/3.1a2f4f2c.chunk.js.map": "/blogging-platform/static/js/3.1a2f4f2c.chunk.js.map",
     "index.html": "/blogging-platform/index.html",
     "static/css/2.343f8fc5.chunk.css.map": "/blogging-platform/static/css/2.343f8fc5.chunk.css.map",
     "static/css/main.b9e3e56d.chunk.css.map": "/blogging-platform/static/css/main.b9e3e56d.chunk.css.map",
-    "static/js/2.0db2b720.chunk.js.LICENSE.txt": "/blogging-platform/static/js/2.0db2b720.chunk.js.LICENSE.txt",
+    "static/js/2.0393b937.chunk.js.LICENSE.txt": "/blogging-platform/static/js/2.0393b937.chunk.js.LICENSE.txt",
     "static/media/bootstrap-icons.css": "/blogging-platform/static/media/bootstrap-icons.dfd0ea12.woff2"
   },
   "entrypoints": [
-    "static/js/runtime-main.5bc41a3c.js",
+    "static/js/runtime-main.aa82f0ab.js",
     "static/css/2.343f8fc5.chunk.css",
-    "static/js/2.0db2b720.chunk.js",
+    "static/js/2.0393b937.chunk.js",
     "static/css/main.b9e3e56d.chunk.css",
-    "static/js/main.8cdb391c.chunk.js"
+    "static/js/main.61b8491f.chunk.js"
   ]
 }

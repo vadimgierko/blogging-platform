@@ -2,97 +2,91 @@ import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDatabase } from "../../../hooks/use-database";
 import convertTitleIntoLink from "../../../functions/convertTitleIntoLink";
+import Form from "../../organisms/Form";
+import { CREATE_BLOG } from "../../../initial-data/form-structure-templates";
 
 export default function BlogEditionSection() {
 
     const { blogLink } = useParams();
 
-    const { blogs, updateBlog, deleteArticle } = useDatabase(); // + deleteBlog
-
-    const [blog, setBlog] = useState(null);
-    const [blogKey, setBlogKey] = useState(null);
+    const { 
+        blog,
+        fetchBlog,
+        getBlogKeyByLink,
+        blogKey,
+        updateBlog,
+        deleteArticle,
+        deleteBlog
+    } = useDatabase();
 
     useEffect(() => {
-        if (blogs) {
-            const fetchedBlogs = Object.entries(blogs);
-            const currentBlogArray = fetchedBlogs.filter(blog => blog[1].link === blogLink); // array...
-            const currentBlog = currentBlogArray[0][1];
-            const currentBlogKey = currentBlogArray[0][0];
-            setBlog(currentBlog);
-            setBlogKey(currentBlogKey);
-        } else {
-            console.log("there are no blogs or blogLink in BlogPage ...")
+        if (blogLink) {
+            getBlogKeyByLink(blogLink);
         }
-    }, [blogs, blogLink]);
+    }, [blogLink]);
 
-    if (!blog && !blogKey) return <p>Downloading blog data...</p>
+    useEffect(() => {
+        if (blogKey) {
+            fetchBlog(blogKey);
+        }
+    }, [blogKey]);
+
+    useEffect(() => {
+        if (blog) {
+            console.log("fetched blog:", blog);
+        }
+    }, [blog]);
+
+    if (!blog) return <p>Downloading data or there is no data...</p>
+
+    function handleBlogEditionFormSubmit(blog) {
+
+        // need to convert updated blog title into link!
+        // convertTitleIntoLink(link)
+        if (
+            blog.title.replace(/\s/g, '').length &&
+            blog.description.replace(/\s/g, '').length
+        ) {
+            //updateBlog(blogKey, blog);
+            alert("At the moment you can not update blog. Check the note in about section.");
+        } else {
+            alert("You need to complete all input fields (not only white spaces...) to update your blog data... Try again!");
+        }
+    }
 
     return (
         <div className="blog-edition-section row">
             <div className="col-lg">
-                <form>
-                    <div className="mb-2">
-                        <h4 className="text-center">Blog</h4>
-                        <hr />
-                        <p>Blog title</p>
-                        <input
-                            type="text"
-                            className="form-control"
-                            defaultValue={blog.title}
-                            onChange={(e) => setBlog({...blog, title: e.target.value, link: convertTitleIntoLink(e.target.value)})}
-                        />
-                    </div>
-                    <div className="mb-2">
-                        <p>Blog description</p>
-                        <textarea
-                            type="text"
-                            className="form-control"
-                            defaultValue={blog.description}
-                            onChange={(e) => setBlog({...blog, description: e.target.value})}
-                        />
-                    </div>
-                    <Link
-                        to="/dashboard/user-blogs"
-                        type="button"
-                        className="btn btn-success mb-3 d-block"
-                        style={{width: "100%"}}
-                        onClick={() => {
-                            if (
-                                blog.title.replace(/\s/g, '').length &&
-                                blog.description.replace(/\s/g, '').length
-                            ) {
-                                //updateBlog(blogKey, blog);
-                                alert("At the moment you can not update blog. Check the note in about section.");
-                            } else {
-                                alert("You need to complete all input fields (not only white spaces...) to update your blog data... Try again!");
-                            }
-                        }}
-                    >
-                        Save changes
-                    </Link>
-                    <Link
-                        to="/dashboard/user-blogs"
-                        type="button"
-                        className="btn btn-outline-danger mb-3 d-block"
-                        onClick={() => {
-                            // eslint-disable-next-line no-restricted-globals
-                            const wantToDeleteBlog = confirm("Are you sure, you want to delete this blog & all articles from this blog forever? There's no turning back... Delete blog?");
-                            if (wantToDeleteBlog) {
-                                //deleteBlog(blogKey);
-                                alert("At the moment you can not delete blog. Check the note in about section.");
-                            }
-                        }}
-                    >
-                        Delete blog
-                    </Link>
-                </form>
+                <Form
+                    structure={CREATE_BLOG}
+                    data={blog.metadata}
+                    onSubmit={handleBlogEditionFormSubmit}
+                    text="save changes"
+                    to="/dashboard/user-blogs"
+                    formClassname="blog-edition-form"
+                />
+                {/*<Link
+                    to="/dashboard/user-blogs"
+                    type="button"
+                    className="btn btn-outline-danger mb-3 d-block"
+                    onClick={() => {
+                        // eslint-disable-next-line no-restricted-globals
+                        const wantToDeleteBlog = confirm("Are you sure, you want to delete this blog & all articles from this blog forever? There's no turning back... Delete blog?");
+                        if (wantToDeleteBlog) {
+                            //deleteBlog(blogKey);
+                            alert("At the moment you can not delete blog. Check the note in about section.");
+                        }
+                    }}
+                >
+                    Delete blog
+                </Link>*/}
             </div>
             <div className="col-lg">
                 <h4 className="text-center">Articles</h4>
                 <hr />
                 {
-                    blog.articles ? (
-                        Object.entries(blog.articles).map((article) => (
+                    blog.articlesListOrderedByKeys ? (
+                        Object.entries(blog.articlesListOrderedByKeys).map((article) => (
                             <div key={article[0]}>
                                 <div className="row">
                                     <div className="col-md">
@@ -106,7 +100,7 @@ export default function BlogEditionSection() {
                                             <i className="bi bi-pencil" />
                                         </Link>
                                         <Link
-                                            to={"/blogs/" + blog.link + "/" + article[1].link}
+                                            to={"/blogs/" + blogLink + "/" + article[1].link}
                                             className="btn btn-secondary d-inline"
                                         >
                                             <i className="bi bi-eye" />

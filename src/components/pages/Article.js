@@ -36,7 +36,7 @@ export default function Article() {
             <article className="article">
                 <SectionHeader item={article.metadata} headerClassname="article-header" />
                 <hr />
-                <ReactMarkdown children={article.content} remarkPlugins={[remarkGfm]} />
+                <ReactMarkdown children={article.metadata.content} remarkPlugins={[remarkGfm]} />
             </article>
         </div>
     );

@@ -30,7 +30,7 @@ export default function CreateArticlePage() {
             const createdAt = year + "." + month + "." + day;
             const newArticleDataWithLink = {
                 ...newArticleData,
-                articleLink: articleLink,
+                link: articleLink,
                 createdAt: createdAt
             }
             addArticle(blogKey, blogTitle, newArticleDataWithLink);
@@ -74,8 +74,8 @@ export default function CreateArticlePage() {
                 to="/dashboard/user-blogs"
                 type="button"
                 className="btn btn-primary mb-3"
-                //onClick={handleSubmit}
-                onClick={() => alert("I'm currently updating the app according to new database structure & security rules, so you can't create an article at the moment... Sorry, wait a few days!")}
+                onClick={handleSubmit}
+                //onClick={() => alert("I'm currently updating the app according to new database structure & security rules, so you can't create an article at the moment... Sorry, wait a few days!")}
             >
                 Create new article
             </Link>

@@ -39,7 +39,7 @@ export default function Blogger() {
                 {
                     bloggerBlogsList
                     ? Object.entries(bloggerBlogsList).map((blog) => 
-                            <Link key={blog[0]} to={"/blogs/" + blog[1].blogLink}>
+                            <Link key={blog[0]} to={"/blogs/" + blog[1].link}>
                                 <h3>{blog[1].title}</h3>
                             </Link>
                         )

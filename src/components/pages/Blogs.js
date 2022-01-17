@@ -6,7 +6,6 @@ export default function Blogs() {
 
     const { blogsListOrderedByKeys, fetchBlogsListOrderedByKeys } = useDatabase();
 
-    // this will be deleted
     // here will be fetching the blogsList object limeted to some num
     useEffect(() => {
         fetchBlogsListOrderedByKeys();

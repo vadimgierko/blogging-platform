@@ -8,12 +8,15 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { HashRouter } from "react-router-dom";
 import { DatabaseProvider } from "./hooks/use-database";
+import { BlogProvider } from "./hooks/use-blog";
 
 ReactDOM.render(
   <React.StrictMode>
     <HashRouter>
       <DatabaseProvider>
-        <App />
+        <BlogProvider>
+          <App />
+        </BlogProvider>
       </DatabaseProvider>
     </HashRouter>
   </React.StrictMode>,

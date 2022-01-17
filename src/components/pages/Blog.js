@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouteMatch, useParams } from "react-router-dom";
-import { useDatabase } from "../../hooks/use-database";
+import { useBlog } from "../../hooks/use-blog";
 import TableOfContent from "../molecules/TableOfContent";
 import SectionHeader from "../molecules/SectionHeader";
 
@@ -14,7 +14,7 @@ export default function Blog() {
         fetchBlog,
         getBlogKeyByLink,
         blogKey,
-    } = useDatabase();
+    } = useBlog();
 
     useEffect(() => {
         if (blogLink) {

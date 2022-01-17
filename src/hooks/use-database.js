@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { firebaseAuth, database } from "../firebase"; // + , storage
+import { firebaseAuth, database } from "../firebase";
 
 import {
   createUserWithEmailAndPassword,
@@ -48,10 +48,6 @@ export function DatabaseProvider({ children }) {
 
   //============================ blogs:
   const [blogsListOrderedByKeys, setBlogsListOrderedByKeys] = useState();
-
-  //========================= blog:
-  const [blog, setBlog] = useState();
-  const [blogKey, setBlogKey] = useState();
 
   //======================== article:
   const [article, setArticle] = useState();
@@ -324,17 +320,6 @@ export function DatabaseProvider({ children }) {
     });
   }
 
-  //============= fetch blog
-  //
-  function fetchBlog(blogKey) {
-    const blogRef = ref(database, "blogs/" + blogKey);
-    onValue(blogRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("blog object:", data);
-      setBlog(data);
-    });
-  }
-
   //============= fetch article
   function fetchArticle(articleKey) {
     const articleRef = ref(database, "articles/" + articleKey);
@@ -358,17 +343,6 @@ export function DatabaseProvider({ children }) {
     });
   }
 
-  function getBlogKeyByLink(blogLink) {
-    const blogRef = ref(database, "blogs/listOrderedByLinks/" + blogLink);
-    onValue(blogRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        console.log("blog key:", data.key);
-        setBlogKey(data.key);
-      }
-    });
-  }
-
   function getBloggerIdByUserName(userName) {
     const bloggerRef = ref(database, "users/listOrderedByUserName/" + userName);
     onValue(bloggerRef, (snapshot) => {
@@ -383,55 +357,6 @@ export function DatabaseProvider({ children }) {
   }
 
   //============================= ADD FUNCTIONS =========================
-
-  const addBlog = (blogData) => { // blogData consists title, description & link
-
-    const newBlogKey = push(child(ref(database), "blogs")).key;
-
-    if (newBlogKey) {
-
-      // add blog to blogs in database:
-      set(ref(database, "blogs/" + newBlogKey + "/metadata"), {
-        author: userPublicData.firstName + " " + userPublicData.lastName,
-        userName: userPublicData.userName,
-        userId: user.uid,
-        ...blogData
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-
-      // add blog to user blogs list:
-      set(ref(database, "users/" + user.uid + "/publicData/blogs/" + newBlogKey), {
-        title: blogData.title,
-        link: blogData.link
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-
-      // add blog to blogs list ordered by keys:
-      set(ref(database, "blogs/listOrderedByKeys/" + newBlogKey), {
-        author: userPublicData.firstName + " " + userPublicData.lastName,
-        userName: userPublicData.userName,
-        userId: user.uid, // remember about userId, because only then rules will allow the user add smth !!!
-        ...blogData
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-      
-      // add blog to blogs list ordered by links:
-      set(ref(database, "blogs/listOrderedByLinks/" + blogData.link), {
-        userId: user.uid,
-        title: blogData.title,
-        key: newBlogKey
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-    }
-  }
 
   const addArticle = (blogKey, blogTitle, article) => {
     // article: {title, description, content, link, createdAt}
@@ -489,15 +414,6 @@ export function DatabaseProvider({ children }) {
 
   //========================== DELETE ITEMS FUNCTIONS
 
-  // const deleteBlog = (blogKey) => {
-  //   remove(ref(database, "blogs/" +  blogKey)).then(() => {
-  //     console.log("blog " + blogKey + " was deleted");
-  //   }).catch((error) => {
-  //     // An error ocurred
-  //     console.log(error.message);
-  //   });
-  // }
-
   // const deleteArticle = (blogKey, articleKey) => {
   //   remove(ref(database, "blogs/" +  blogKey + "/articles/" + articleKey)).then(() => {
   //     console.log("article " + articleKey + " in blog " + blogKey + " was deleted");
@@ -507,12 +423,6 @@ export function DatabaseProvider({ children }) {
   // }
 
   //========================== UPDATE ITEMS FUNCTIONS 
-
-  // const updateBlog = (blogKey, updatedBlogData) => {
-  //   set(ref(database, "blogs/" + blogKey), {
-  //     ...updatedBlogData
-  //   });
-  // };
 
   // const updateArticle = (blogKey, articleKey, updatedArticleData) => {
   //   if (updatedArticleData) {
@@ -578,11 +488,6 @@ export function DatabaseProvider({ children }) {
     getBloggerIdByUserName,
     bloggerId,
     setBloggerId,
-    //====== blog:
-    blog,
-    fetchBlog,
-    getBlogKeyByLink,
-    blogKey,
     //===== article:
     article,
     articleKey,
@@ -593,9 +498,6 @@ export function DatabaseProvider({ children }) {
     //updateUserPublicData,
     blogsListOrderedByKeys,
     fetchBlogsListOrderedByKeys,
-    //deleteBlog,
-    addBlog,
-    //updateBlog,
     addArticle,
     //deleteArticle,
     //updateArticle,

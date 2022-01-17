@@ -9,9 +9,9 @@ import {
     child,
     //update,
     onValue,
-    remove,
-    query,
-    limitToFirst
+    //remove,
+    //query,
+    //limitToFirst
 } from "firebase/database";
 
 const ArticleContext = createContext();
@@ -98,6 +98,24 @@ export function ArticleProvider({ children }) {
         }
     
     }
+
+    // const updateArticle = (blogKey, articleKey, updatedArticleData) => {
+  //   if (updatedArticleData) {
+  //     set(ref(database, "blogs/" + blogKey + "/articles/" + articleKey), {
+  //       ...updatedArticleData
+  //     });
+  //   } else {
+  //     alert("There is no data to update... The article isn't updated.");
+  //   }
+  // }
+
+      // const deleteArticle = (blogKey, articleKey) => {
+  //   remove(ref(database, "blogs/" +  blogKey + "/articles/" + articleKey)).then(() => {
+  //     console.log("article " + articleKey + " in blog " + blogKey + " was deleted");
+  //   }).catch((error) => {
+  //     console.log(error.message);
+  //   });
+  // }
     
     const value = {
         article,

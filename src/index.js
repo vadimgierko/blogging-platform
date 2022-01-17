@@ -10,6 +10,8 @@ import { HashRouter } from "react-router-dom";
 import { DatabaseProvider } from "./hooks/use-database";
 import { BlogProvider } from "./hooks/use-blog";
 import { ArticleProvider } from "./hooks/use-article";
+import { BloggerProvider } from "./hooks/use-blogger";
+import { ListsProvider } from "./hooks/use-lists";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -17,7 +19,11 @@ ReactDOM.render(
       <DatabaseProvider>
         <BlogProvider>
           <ArticleProvider>
-            <App />
+            <BloggerProvider>
+              <ListsProvider>
+                <App />
+              </ListsProvider>
+            </BloggerProvider>
           </ArticleProvider>
         </BlogProvider>
       </DatabaseProvider>

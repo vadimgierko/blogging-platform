@@ -6,19 +6,17 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  deleteUser
+  //deleteUser
 } from "firebase/auth";
 
 import {
     ref,
     set,
-    push,
-    child,
+    //push,
+    //child,
     //update,
     onValue,
-    remove,
-    query,
-    limitToFirst
+    //remove
 } from "firebase/database";
 
 const DatabaseContext = createContext();
@@ -27,29 +25,10 @@ export const useDatabase = () => useContext(DatabaseContext);
 
 export function DatabaseProvider({ children }) {
 
-  //==================== VARIABLES
-  //
-  //==================== current logged user:
-  //
   const [user, setUser] = useState(null);
   const [userPrivateData, setUserPrivateData] = useState();
   const [userPublicData, setUserPublicData] = useState();
   const [userBlogsList, setUserBlogsList] = useState(); // ordered by keys
-
-  //============================ users/ bloggers:
-  //
-  const [usersListOrderedByUserName, setUsersListOrderedByUserName] = useState();
-  const [usersListOrderedByKeys, setUsersListOrderedByKeys] = useState();
-
-  //============================ blogger:
-  const [bloggerPublicData, setBloggerPublicData] = useState();
-  const [bloggerBlogsList, setBloggerBlogsList] = useState();
-  const [bloggerId, setBloggerId] = useState();
-
-  //============================ blogs:
-  const [blogsListOrderedByKeys, setBlogsListOrderedByKeys] = useState();
-
-  //================================= AUTH ==
 
   const signIn = (signInData) => {
     const email = signInData.email;
@@ -254,10 +233,6 @@ export function DatabaseProvider({ children }) {
   //   }
   // }
 
-  //============================== fetch ===========================
-  
-  //============== fetch user blogs list
-  //
   function fetchUserBlogsList() {
     const currentUserDataRef = ref(database, "users/" + user.uid + "/publicData/blogs");
     onValue(currentUserDataRef, (snapshot) => {
@@ -266,96 +241,6 @@ export function DatabaseProvider({ children }) {
       setUserBlogsList(data);
     });
   }
-
-  function fetchBlogsListOrderedByKeys() {
-    const listRef = query(ref(database, "blogs/listOrderedByKeys"), limitToFirst(10));
-    onValue(listRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("blogs list ordered by keys:", data);
-      setBlogsListOrderedByKeys(data);
-    });
-  }
-
-  //====================== users lists:
-  //
-  function fetchUsersListOrderedByUserName() {
-    const listRef = query(ref(database, "users/listOrderedByUserName"), limitToFirst(10));
-    onValue(listRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("users list ordered by user name object:", data);
-      setUsersListOrderedByUserName(data);
-    });
-  }
-
-  function fetchUsersListOrderedByKeys() {
-    const listRef = query(ref(database, "users/listOrderedByKeys"), limitToFirst(10));
-    onValue(listRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("users list ordered by user id object:", data);
-      setUsersListOrderedByKeys(data);
-    });
-  }
-
-  //========================== blogger
-
-  function fetchBloggerPublicData(userId) {
-    const bloggerPublicDataRef = ref(database, "users/" + userId + "/publicData/data");
-    onValue(bloggerPublicDataRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("blogger public data object:", data);
-      setBloggerPublicData(data);
-    });
-  }
-
-  function fetchBloggerBlogsList(userId) { //================= ordered by keys
-    const bloggerBlogsListRef = ref(database, "users/" + userId + "/publicData/blogs");
-    onValue(bloggerBlogsListRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("blogger blogs list object:", data);
-      setBloggerBlogsList(data);
-    });
-  }
-
-  //=============== get
-
-  function getBloggerIdByUserName(userName) {
-    const bloggerRef = ref(database, "users/listOrderedByUserName/" + userName);
-    onValue(bloggerRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        console.log("blogger id got by user name:", data.userId);
-        setBloggerId(data.userId);
-      } else {
-        console.log("There is no user with user name:", userName);
-      }
-    });
-  }
-
-  //============================= ADD FUNCTIONS =========================
-
-  //========================== DELETE ITEMS FUNCTIONS
-
-  // const deleteArticle = (blogKey, articleKey) => {
-  //   remove(ref(database, "blogs/" +  blogKey + "/articles/" + articleKey)).then(() => {
-  //     console.log("article " + articleKey + " in blog " + blogKey + " was deleted");
-  //   }).catch((error) => {
-  //     console.log(error.message);
-  //   });
-  // }
-
-  //========================== UPDATE ITEMS FUNCTIONS 
-
-  // const updateArticle = (blogKey, articleKey, updatedArticleData) => {
-  //   if (updatedArticleData) {
-  //     set(ref(database, "blogs/" + blogKey + "/articles/" + articleKey), {
-  //       ...updatedArticleData
-  //     });
-  //   } else {
-  //     alert("There is no data to update... The article isn't updated.");
-  //   }
-  // }
-
-  //====================================================================================
 
   useEffect(() => {
     onAuthStateChanged(firebaseAuth, (user) => {
@@ -385,9 +270,6 @@ export function DatabaseProvider({ children }) {
     });
   }, []);
 
-  //================================== EXPORTED FUNCTIONS & VARS
-  //================================= inline exports ?
-
   const value = {
     signIn,
     signUp,
@@ -396,24 +278,8 @@ export function DatabaseProvider({ children }) {
     userPrivateData,
     userPublicData,
     userBlogsList,
-    //=== users lists:
-    fetchUsersListOrderedByKeys,
-    fetchUsersListOrderedByUserName,
-    usersListOrderedByKeys,
-    usersListOrderedByUserName,
-    //=== blogger:
-    fetchBloggerPublicData,
-    bloggerPublicData,
-    fetchBloggerBlogsList,
-    bloggerBlogsList,
-    getBloggerIdByUserName,
-    bloggerId,
-    setBloggerId,
-    //====================
     fetchUserBlogsList,
     //updateUserPublicData,
-    blogsListOrderedByKeys,
-    fetchBlogsListOrderedByKeys,
     //deleteUserAccount
   }
 

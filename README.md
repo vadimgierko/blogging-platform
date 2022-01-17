@@ -1,7 +1,7 @@
 # Blogging Platform
 
 ## About App
-This is my newest, most complex & advanced responsive full-stack single-page application, which supports all kinds of CRUD features, in which I have used all of my previous knowledge and skills in the field of front-end development (React, Bootstrap) and realtime database integration (Firebase).
+[Blogging Platform](https://vadimgierko.github.io/blogging-platform/) is on of my latest, most complex & advanced responsive full-stack single-page application, which supports all kinds of CRUD features, in which I have used all of my previous knowledge and skills in the field of front-end development (React, Bootstrap) and realtime database integration (Firebase, database structure & security rules).
 
 ## Blogging Platform allows you to:
 
@@ -19,3 +19,4 @@ This is my newest, most complex & advanced responsive full-stack single-page app
 - Bootstrap 5.1
 - Bootswatch 5.1
 - GitHub Pages 3.2
+- Atomic Web Design pattern

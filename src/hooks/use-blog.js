@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 import { database } from "../firebase";
 import { useDatabase } from "./use-database";
 
@@ -9,9 +9,7 @@ import {
     child,
     //update,
     onValue,
-    remove,
-    query,
-    limitToFirst
+    //remove,
 } from "firebase/database";
 
 const BlogContext = createContext();

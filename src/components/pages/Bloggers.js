@@ -1,15 +1,13 @@
 import { useEffect } from "react";
-import { useDatabase } from "../../hooks/use-database";
+import { useLists } from "../../hooks/use-lists";
 import BloggerCard from "../molecules/BloggerCard";
 
 export default function Bloggers() {
 
     const {
-        //fetchUsersListOrderedByKeys,
         fetchUsersListOrderedByUserName,
-        //usersListOrderedByKeys,
         usersListOrderedByUserName
-    } = useDatabase();
+    } = useLists();
 
     useEffect(() => {
         if (!usersListOrderedByUserName) {

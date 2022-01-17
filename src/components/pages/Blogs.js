@@ -1,13 +1,11 @@
 import { useEffect } from "react";
-import { useDatabase } from "../../hooks/use-database";
+import { useLists } from "../../hooks/use-lists";
 import BlogCard from "../molecules/BlogCard";
 
 export default function Blogs() {
 
-    const { blogsListOrderedByKeys, fetchBlogsListOrderedByKeys } = useDatabase();
+    const { blogsListOrderedByKeys, fetchBlogsListOrderedByKeys } = useLists();
 
-    // this will be deleted
-    // here will be fetching the blogsList object limeted to some num
     useEffect(() => {
         fetchBlogsListOrderedByKeys();
     }, []);

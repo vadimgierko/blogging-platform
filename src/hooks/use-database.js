@@ -1,24 +1,22 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { firebaseAuth, database } from "../firebase"; // + , storage
+import { firebaseAuth, database } from "../firebase";
 
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  deleteUser
+  //deleteUser
 } from "firebase/auth";
 
 import {
     ref,
     set,
-    push,
-    child,
+    //push,
+    //child,
     //update,
     onValue,
-    remove,
-    query,
-    limitToFirst
+    //remove
 } from "firebase/database";
 
 const DatabaseContext = createContext();
@@ -27,37 +25,10 @@ export const useDatabase = () => useContext(DatabaseContext);
 
 export function DatabaseProvider({ children }) {
 
-  //==================== VARIABLES
-  //
-  //==================== current logged user:
-  //
   const [user, setUser] = useState(null);
   const [userPrivateData, setUserPrivateData] = useState();
   const [userPublicData, setUserPublicData] = useState();
   const [userBlogsList, setUserBlogsList] = useState(); // ordered by keys
-
-  //============================ users/ bloggers:
-  //
-  const [usersListOrderedByUserName, setUsersListOrderedByUserName] = useState();
-  const [usersListOrderedByKeys, setUsersListOrderedByKeys] = useState();
-
-  //============================ blogger:
-  const [bloggerPublicData, setBloggerPublicData] = useState();
-  const [bloggerBlogsList, setBloggerBlogsList] = useState();
-  const [bloggerId, setBloggerId] = useState();
-
-  //============================ blogs:
-  const [blogsListOrderedByKeys, setBlogsListOrderedByKeys] = useState();
-
-  //========================= blog:
-  const [blog, setBlog] = useState();
-  const [blogKey, setBlogKey] = useState();
-
-  //======================== article:
-  const [article, setArticle] = useState();
-  const [articleKey, setArticleKey] = useState();
-
-  //================================= AUTH ==
 
   const signIn = (signInData) => {
     const email = signInData.email;
@@ -262,10 +233,6 @@ export function DatabaseProvider({ children }) {
   //   }
   // }
 
-  //============================== fetch ===========================
-  
-  //============== fetch user blogs list
-  //
   function fetchUserBlogsList() {
     const currentUserDataRef = ref(database, "users/" + user.uid + "/publicData/blogs");
     onValue(currentUserDataRef, (snapshot) => {
@@ -274,257 +241,6 @@ export function DatabaseProvider({ children }) {
       setUserBlogsList(data);
     });
   }
-
-  function fetchBlogsListOrderedByKeys() {
-    const listRef = query(ref(database, "blogs/listOrderedByKeys"), limitToFirst(10));
-    onValue(listRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("blogs list ordered by keys:", data);
-      setBlogsListOrderedByKeys(data);
-    });
-  }
-
-  //====================== users lists:
-  //
-  function fetchUsersListOrderedByUserName() {
-    const listRef = query(ref(database, "users/listOrderedByUserName"), limitToFirst(10));
-    onValue(listRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("users list ordered by user name object:", data);
-      setUsersListOrderedByUserName(data);
-    });
-  }
-
-  function fetchUsersListOrderedByKeys() {
-    const listRef = query(ref(database, "users/listOrderedByKeys"), limitToFirst(10));
-    onValue(listRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("users list ordered by user id object:", data);
-      setUsersListOrderedByKeys(data);
-    });
-  }
-
-  //========================== blogger
-
-  function fetchBloggerPublicData(userId) {
-    const bloggerPublicDataRef = ref(database, "users/" + userId + "/publicData/data");
-    onValue(bloggerPublicDataRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("blogger public data object:", data);
-      setBloggerPublicData(data);
-    });
-  }
-
-  function fetchBloggerBlogsList(userId) { //================= ordered by keys
-    const bloggerBlogsListRef = ref(database, "users/" + userId + "/publicData/blogs");
-    onValue(bloggerBlogsListRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("blogger blogs list object:", data);
-      setBloggerBlogsList(data);
-    });
-  }
-
-  //============= fetch blog
-  //
-  function fetchBlog(blogKey) {
-    const blogRef = ref(database, "blogs/" + blogKey);
-    onValue(blogRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("blog object:", data);
-      setBlog(data);
-    });
-  }
-
-  //============= fetch article
-  function fetchArticle(articleKey) {
-    const articleRef = ref(database, "articles/" + articleKey);
-    onValue(articleRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("article object:", data);
-      setArticle(data);
-    });
-  }
-
-  //=============== get
-
-  function getArticleKeyByLink(articleLink) {
-    const articleRef = ref(database, "articles/listOrderedByLinks/" + articleLink);
-    onValue(articleRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        console.log("article key:", data.key);
-        setArticleKey(data.key);
-      }
-    });
-  }
-
-  function getBlogKeyByLink(blogLink) {
-    const blogRef = ref(database, "blogs/listOrderedByLinks/" + blogLink);
-    onValue(blogRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        console.log("blog key:", data.key);
-        setBlogKey(data.key);
-      }
-    });
-  }
-
-  function getBloggerIdByUserName(userName) {
-    const bloggerRef = ref(database, "users/listOrderedByUserName/" + userName);
-    onValue(bloggerRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        console.log("blogger id got by user name:", data.userId);
-        setBloggerId(data.userId);
-      } else {
-        console.log("There is no user with user name:", userName);
-      }
-    });
-  }
-
-  //============================= ADD FUNCTIONS =========================
-
-  const addBlog = (blogData) => { // blogData consists title, description & link
-
-    const newBlogKey = push(child(ref(database), "blogs")).key;
-
-    if (newBlogKey) {
-
-      // add blog to blogs in database:
-      set(ref(database, "blogs/" + newBlogKey + "/metadata"), {
-        author: userPublicData.firstName + " " + userPublicData.lastName,
-        userName: userPublicData.userName,
-        userId: user.uid,
-        ...blogData
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-
-      // add blog to user blogs list:
-      set(ref(database, "users/" + user.uid + "/publicData/blogs/" + newBlogKey), {
-        title: blogData.title,
-        link: blogData.link
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-
-      // add blog to blogs list ordered by keys:
-      set(ref(database, "blogs/listOrderedByKeys/" + newBlogKey), {
-        author: userPublicData.firstName + " " + userPublicData.lastName,
-        userName: userPublicData.userName,
-        userId: user.uid, // remember about userId, because only then rules will allow the user add smth !!!
-        ...blogData
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-      
-      // add blog to blogs list ordered by links:
-      set(ref(database, "blogs/listOrderedByLinks/" + blogData.link), {
-        userId: user.uid,
-        title: blogData.title,
-        key: newBlogKey
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-    }
-  }
-
-  const addArticle = (blogKey, blogTitle, article) => {
-    // article: {title, description, content, link, createdAt}
-
-    const newArticleKey = push(child(ref(database), "articles")).key;
-
-    if (newArticleKey) {
-
-      // add article to articles in database:
-      // add metadata & content
-      set(ref(database, "articles/" + newArticleKey + "/metadata"), {
-        ...article,
-        author: userPublicData.firstName + " " + userPublicData.lastName,
-        userName: userPublicData.userName,
-        userId: user.uid,
-        blogKey: blogKey,
-        blogTitle: blogTitle
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-
-      // add article to articles list ordered by links
-      set(ref(database, "articles/listOrderedByLinks/" + article.link), {
-        title: article.title,
-        key: newArticleKey,
-        userId: user.uid
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-
-      // add article to its blog's list ordered by keys
-      set(ref(database, "blogs/" + blogKey + "/articlesListOrderedByKeys/" + newArticleKey), {
-        link: article.link,
-        title: article.title,
-        userId: user.uid
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-
-      // add article to its blog's list ordered by links
-      set(ref(database, "blogs/" + blogKey + "/articlesListOrderedByLinks/" + article.link), {
-        title: article.title,
-        key: newArticleKey,
-        userId: user.uid
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-    }
-
-  }
-
-  //========================== DELETE ITEMS FUNCTIONS
-
-  // const deleteBlog = (blogKey) => {
-  //   remove(ref(database, "blogs/" +  blogKey)).then(() => {
-  //     console.log("blog " + blogKey + " was deleted");
-  //   }).catch((error) => {
-  //     // An error ocurred
-  //     console.log(error.message);
-  //   });
-  // }
-
-  // const deleteArticle = (blogKey, articleKey) => {
-  //   remove(ref(database, "blogs/" +  blogKey + "/articles/" + articleKey)).then(() => {
-  //     console.log("article " + articleKey + " in blog " + blogKey + " was deleted");
-  //   }).catch((error) => {
-  //     console.log(error.message);
-  //   });
-  // }
-
-  //========================== UPDATE ITEMS FUNCTIONS 
-
-  // const updateBlog = (blogKey, updatedBlogData) => {
-  //   set(ref(database, "blogs/" + blogKey), {
-  //     ...updatedBlogData
-  //   });
-  // };
-
-  // const updateArticle = (blogKey, articleKey, updatedArticleData) => {
-  //   if (updatedArticleData) {
-  //     set(ref(database, "blogs/" + blogKey + "/articles/" + articleKey), {
-  //       ...updatedArticleData
-  //     });
-  //   } else {
-  //     alert("There is no data to update... The article isn't updated.");
-  //   }
-  // }
-
-  //====================================================================================
 
   useEffect(() => {
     onAuthStateChanged(firebaseAuth, (user) => {
@@ -554,9 +270,6 @@ export function DatabaseProvider({ children }) {
     });
   }, []);
 
-  //================================== EXPORTED FUNCTIONS & VARS
-  //================================= inline exports ?
-
   const value = {
     signIn,
     signUp,
@@ -565,40 +278,8 @@ export function DatabaseProvider({ children }) {
     userPrivateData,
     userPublicData,
     userBlogsList,
-    //=== users lists:
-    fetchUsersListOrderedByKeys,
-    fetchUsersListOrderedByUserName,
-    usersListOrderedByKeys,
-    usersListOrderedByUserName,
-    //=== blogger:
-    fetchBloggerPublicData,
-    bloggerPublicData,
-    fetchBloggerBlogsList,
-    bloggerBlogsList,
-    getBloggerIdByUserName,
-    bloggerId,
-    setBloggerId,
-    //====== blog:
-    blog,
-    fetchBlog,
-    getBlogKeyByLink,
-    blogKey,
-    //===== article:
-    article,
-    articleKey,
-    fetchArticle,
-    getArticleKeyByLink,
-    //====================
     fetchUserBlogsList,
     //updateUserPublicData,
-    blogsListOrderedByKeys,
-    fetchBlogsListOrderedByKeys,
-    //deleteBlog,
-    addBlog,
-    //updateBlog,
-    addArticle,
-    //deleteArticle,
-    //updateArticle,
     //deleteUserAccount
   }
 

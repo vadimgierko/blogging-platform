@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useParams } from 'react-router-dom';
 import MarkdownEditor from "../page-sections/create-article/MarkdownEditor";
-import { useDatabase } from "../../hooks/use-database";
+import { useArticle } from "../../hooks/use-article";
 import convertTitleIntoLink from "../../functions/convertTitleIntoLink";
 
 export default function CreateArticlePage() {
@@ -9,7 +9,7 @@ export default function CreateArticlePage() {
     const { blogKey } = useParams();
     const { blogTitle } = useParams();
 
-    const { addArticle } = useDatabase();
+    const { addArticle } = useArticle();
 
     const [newArticleData, setNewArticleData] = useState({
         title: "",

@@ -1,4 +1,4 @@
-import { useDatabase } from "../../hooks/use-database";
+import { useBlogger } from "../../hooks/use-blogger";
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -13,7 +13,7 @@ export default function Blogger() {
         fetchBloggerBlogsList,
         getBloggerIdByUserName,
         bloggerId
-    } = useDatabase();
+    } = useBlogger();
 
     useEffect(() => {
         if (userName) {

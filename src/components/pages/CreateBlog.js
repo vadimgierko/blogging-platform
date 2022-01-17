@@ -1,11 +1,11 @@
-import { useDatabase } from "../../hooks/use-database";
+import { useBlog } from "../../hooks/use-blog";
 import convertTitleIntoLink from "../../functions/convertTitleIntoLink";
 import Form from "../organisms/Form";
 import { CREATE_BLOG } from "../../initial-data/form-structure-templates";
 
 export default function CreateBlog() {
 
-    const { addBlog } = useDatabase();
+    const { addBlog } = useBlog();
 
     function handleSubmit(blog) {
         if (

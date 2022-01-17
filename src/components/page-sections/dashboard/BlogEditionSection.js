@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useBlog } from "../../../hooks/use-blog";
+import { useArticle } from "../../../hooks/use-article";
 import convertTitleIntoLink from "../../../functions/convertTitleIntoLink";
 import Form from "../../organisms/Form";
 import { CREATE_BLOG } from "../../../initial-data/form-structure-templates";
@@ -18,7 +19,7 @@ export default function BlogEditionSection() {
         //deleteBlog
     } = useBlog();
 
-    // import deleteArticle !!!
+    // import deleteArticle from useArticle !!!
 
     useEffect(() => {
         if (blogLink) {

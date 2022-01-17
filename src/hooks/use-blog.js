@@ -121,5 +121,5 @@ export function BlogProvider({ children }) {
 
     return (
         <BlogContext.Provider value={value} >{children}</BlogContext.Provider>
-      );
+    );
 }

@@ -9,13 +9,16 @@ import reportWebVitals from './reportWebVitals';
 import { HashRouter } from "react-router-dom";
 import { DatabaseProvider } from "./hooks/use-database";
 import { BlogProvider } from "./hooks/use-blog";
+import { ArticleProvider } from "./hooks/use-article";
 
 ReactDOM.render(
   <React.StrictMode>
     <HashRouter>
       <DatabaseProvider>
         <BlogProvider>
-          <App />
+          <ArticleProvider>
+            <App />
+          </ArticleProvider>
         </BlogProvider>
       </DatabaseProvider>
     </HashRouter>

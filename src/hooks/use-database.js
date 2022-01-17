@@ -49,10 +49,6 @@ export function DatabaseProvider({ children }) {
   //============================ blogs:
   const [blogsListOrderedByKeys, setBlogsListOrderedByKeys] = useState();
 
-  //======================== article:
-  const [article, setArticle] = useState();
-  const [articleKey, setArticleKey] = useState();
-
   //================================= AUTH ==
 
   const signIn = (signInData) => {
@@ -320,28 +316,7 @@ export function DatabaseProvider({ children }) {
     });
   }
 
-  //============= fetch article
-  function fetchArticle(articleKey) {
-    const articleRef = ref(database, "articles/" + articleKey);
-    onValue(articleRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("article object:", data);
-      setArticle(data);
-    });
-  }
-
   //=============== get
-
-  function getArticleKeyByLink(articleLink) {
-    const articleRef = ref(database, "articles/listOrderedByLinks/" + articleLink);
-    onValue(articleRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        console.log("article key:", data.key);
-        setArticleKey(data.key);
-      }
-    });
-  }
 
   function getBloggerIdByUserName(userName) {
     const bloggerRef = ref(database, "users/listOrderedByUserName/" + userName);
@@ -357,60 +332,6 @@ export function DatabaseProvider({ children }) {
   }
 
   //============================= ADD FUNCTIONS =========================
-
-  const addArticle = (blogKey, blogTitle, article) => {
-    // article: {title, description, content, link, createdAt}
-
-    const newArticleKey = push(child(ref(database), "articles")).key;
-
-    if (newArticleKey) {
-
-      // add article to articles in database:
-      // add metadata & content
-      set(ref(database, "articles/" + newArticleKey + "/metadata"), {
-        ...article,
-        author: userPublicData.firstName + " " + userPublicData.lastName,
-        userName: userPublicData.userName,
-        userId: user.uid,
-        blogKey: blogKey,
-        blogTitle: blogTitle
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-
-      // add article to articles list ordered by links
-      set(ref(database, "articles/listOrderedByLinks/" + article.link), {
-        title: article.title,
-        key: newArticleKey,
-        userId: user.uid
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-
-      // add article to its blog's list ordered by keys
-      set(ref(database, "blogs/" + blogKey + "/articlesListOrderedByKeys/" + newArticleKey), {
-        link: article.link,
-        title: article.title,
-        userId: user.uid
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-
-      // add article to its blog's list ordered by links
-      set(ref(database, "blogs/" + blogKey + "/articlesListOrderedByLinks/" + article.link), {
-        title: article.title,
-        key: newArticleKey,
-        userId: user.uid
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-    }
-
-  }
 
   //========================== DELETE ITEMS FUNCTIONS
 
@@ -488,19 +409,11 @@ export function DatabaseProvider({ children }) {
     getBloggerIdByUserName,
     bloggerId,
     setBloggerId,
-    //===== article:
-    article,
-    articleKey,
-    fetchArticle,
-    getArticleKeyByLink,
     //====================
     fetchUserBlogsList,
     //updateUserPublicData,
     blogsListOrderedByKeys,
     fetchBlogsListOrderedByKeys,
-    addArticle,
-    //deleteArticle,
-    //updateArticle,
     //deleteUserAccount
   }
 

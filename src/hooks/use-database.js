@@ -12,9 +12,6 @@ import {
 import {
     ref,
     set,
-    //push,
-    //child,
-    //update,
     onValue,
     //remove
 } from "firebase/database";
@@ -247,14 +244,6 @@ export function DatabaseProvider({ children }) {
       if (user) {
         setUser(user);
         console.log("user logged in. user:", user);
-        //setUserPrivateData
-        // const userPrivateDataRef = ref(database, "users/" + user.uid + "/privateData");
-        // onValue(userPrivateDataRef, (snapshot) => {
-        //   const data = snapshot.val();
-        //   console.log("user private data:", data);
-        //   setUserPrivateData(data);
-        // });
-        //setUserPublicData
         const userPublicDataRef = ref(database, "users/" + user.uid + "/publicData/data");
         onValue(userPublicDataRef, (snapshot) => {
           const data = snapshot.val();
@@ -263,7 +252,6 @@ export function DatabaseProvider({ children }) {
         });
       } else {
         setUser(null);
-        //setUserPrivateData(null);
         setUserPublicData(null);
         console.log("user is logged out");
       }
@@ -275,7 +263,6 @@ export function DatabaseProvider({ children }) {
     signUp,
     logOut,
     user,
-    //userPrivateData,
     userPublicData,
     userBlogsList,
     fetchUserBlogsList,

@@ -27,8 +27,8 @@ export default function SignUp() {
             <Form
                 formClassname="sign-up-form"
                 structure={SIGN_UP}
-                //onSubmit={handleSubmit}
-                onSubmit={() => alert("I'm currently updating the app according to new database structure & security rules, so you can't create an account at the moment... Sorry, wait a few days!")}
+                onSubmit={handleSubmit}
+                //onSubmit={() => alert("I'm currently updating the app according to new database structure & security rules, so you can't create an account at the moment... Sorry, wait a few days!")}
                 to="/dashboard"
                 text="sign up"
             />

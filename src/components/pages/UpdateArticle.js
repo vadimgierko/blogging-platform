@@ -1,25 +1,23 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from 'react-router-dom';
 import MarkdownEditor from "../page-sections/create-article/MarkdownEditor";
-import { useDatabase } from "../../hooks/use-database";
+import { useArticle } from "../../hooks/use-article";
 import convertTitleIntoLink from "../../functions/convertTitleIntoLink";
 
 export default function UpdateArticle() {
 
-    const { blogKey } = useParams();
+    //const { blogKey } = useParams();
     const { articleKey } = useParams();
 
-    const { blogs, updateArticle } = useDatabase();
+    const { article, fetchArticle, updateArticle } = useArticle();
 
-    const [updatedArticleData, setUpdatedArticleData] = useState(null);
+    const [updatedArticleData, setUpdatedArticleData] = useState();
 
     function handleSubmit() {
         if (
             updatedArticleData.title.replace(/\s/g, '').length &&
             updatedArticleData.description.replace(/\s/g, '').length
         ) {
-            // update article link in the case if title changed:
-            const articleLink = convertTitleIntoLink(updatedArticleData.title);
             // set date of update:
             const date = new Date();
             const day = date.getUTCDate();
@@ -27,26 +25,54 @@ export default function UpdateArticle() {
             const year = date.getUTCFullYear();
             const updatedAt = year + "." + month + "." + day;
             // update updatedData with new link & updateAt date:
-            const updatedArticleDataWithLink = {
-                ...updatedArticleData,
-                articleLink: articleLink,
-                updatedAt: updatedAt
+            let updatedArticleDataWithLink;
+            let isLinkChanged = false;
+            // update article link in the case if title changed:
+            if (article && article.metadata && article.metadata.title !== updatedArticleData.title) {
+                isLinkChanged = true;
+                const articleLink = convertTitleIntoLink(updatedArticleData.title);
+                updatedArticleDataWithLink = {
+                    ...updatedArticleData,
+                    link: articleLink,
+                    updatedAt: updatedAt
+                }
+            } else {
+                updatedArticleDataWithLink = {
+                    ...updatedArticleData,
+                    updatedAt: updatedAt
+                }
             }
-            updateArticle(blogKey, articleKey, updatedArticleDataWithLink);
+            updateArticle(updatedArticleDataWithLink, articleKey, isLinkChanged, isLinkChanged && article.metadata.link);
+            setUpdatedArticleData(null);
         } else {
             alert("You need to complete all input fields (not only white spaces...) to create new article... Try again!");
         }
     }
 
     useEffect(() => {
-        if (blogs) {
-            const currentBlog = blogs[blogKey];
-            console.log("currentBlog:", currentBlog);
-            const currentArticle = currentBlog.articles[articleKey];
-            console.log("currentArticle:", currentArticle);
-            setUpdatedArticleData(currentArticle);
+        if (articleKey) {
+            fetchArticle(articleKey);
         }
-    }, [blogs, blogKey, articleKey]);
+    }, [articleKey]);
+
+    useEffect(() => {
+        if (article) {
+            console.log("prev article metadata:", article.metadata);
+            /*
+            author: "Test User"
+            blogKey: "-MtYRswcLW0tm4F2dcRL"
+            blogTitle: "New Test Blog"
+            content: "...article,\n          author: userPublicData.firstName + \" \" + userPublicData.lastName,\n          userName: userPublicData.userName,\n          userId: user.uid,\n          blogKey: blogKey,\n          blogTitle: blogTitle"
+            createdAt: "2022.1.16"
+            description: "I hope it would work finally!"
+            link: "new-test-article"
+            title: "New Test Article"
+            userId: "7M5XFfl36vSfhmyAkShjHDFuQnA3"
+            userName: "testuser"
+            */
+            setUpdatedArticleData(article.metadata);
+        }
+    }, [article]);
 
     if (!updatedArticleData) return <p>Downloading article data...</p>
 
@@ -85,8 +111,8 @@ export default function UpdateArticle() {
                 to="/dashboard/user-blogs"
                 type="button"
                 className="btn btn-primary mb-3"
-                //onClick={handleSubmit}
-                onClick={() => alert("I'm currently updating the app according to new database structure & security rules, so you can't update an article at the moment... Sorry, wait a few days!")}
+                onClick={handleSubmit}
+                //onClick={() => alert("I'm currently updating the app according to new database structure & security rules, so you can't update an article at the moment... Sorry, wait a few days!")}
             >
                 Update article
             </Link>   

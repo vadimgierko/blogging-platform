@@ -153,18 +153,11 @@ export function BlogProvider({ children }) {
           }).catch((error) => {
             alert(error.message);
           });
-        }
-        
+        } 
       } else {
-        alert("Can't update article... No blog data or/and no key passed... Try again.");
+        alert("Can't update blog... No blog data or/and no key passed... Try again.");
       }
     }
-
-    // const updateBlog = (blogKey, updatedBlogData) => {
-  //   set(ref(database, "blogs/" + blogKey), {
-  //     ...updatedBlogData
-  //   });
-  // };
 
     // const deleteBlog = (blogKey) => {
   //   remove(ref(database, "blogs/" +  blogKey)).then(() => {

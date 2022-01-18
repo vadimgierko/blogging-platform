@@ -26,7 +26,7 @@ export const useDatabase = () => useContext(DatabaseContext);
 export function DatabaseProvider({ children }) {
 
   const [user, setUser] = useState(null);
-  const [userPrivateData, setUserPrivateData] = useState();
+  //const [userPrivateData, setUserPrivateData] = useState();
   const [userPublicData, setUserPublicData] = useState();
   const [userBlogsList, setUserBlogsList] = useState(); // ordered by keys
 
@@ -248,12 +248,12 @@ export function DatabaseProvider({ children }) {
         setUser(user);
         console.log("user logged in. user:", user);
         //setUserPrivateData
-        const userPrivateDataRef = ref(database, "users/" + user.uid + "/privateData");
-        onValue(userPrivateDataRef, (snapshot) => {
-          const data = snapshot.val();
-          console.log("user private data:", data);
-          setUserPrivateData(data);
-        });
+        // const userPrivateDataRef = ref(database, "users/" + user.uid + "/privateData");
+        // onValue(userPrivateDataRef, (snapshot) => {
+        //   const data = snapshot.val();
+        //   console.log("user private data:", data);
+        //   setUserPrivateData(data);
+        // });
         //setUserPublicData
         const userPublicDataRef = ref(database, "users/" + user.uid + "/publicData/data");
         onValue(userPublicDataRef, (snapshot) => {
@@ -263,7 +263,7 @@ export function DatabaseProvider({ children }) {
         });
       } else {
         setUser(null);
-        setUserPrivateData(null);
+        //setUserPrivateData(null);
         setUserPublicData(null);
         console.log("user is logged out");
       }
@@ -275,7 +275,7 @@ export function DatabaseProvider({ children }) {
     signUp,
     logOut,
     user,
-    userPrivateData,
+    //userPrivateData,
     userPublicData,
     userBlogsList,
     fetchUserBlogsList,

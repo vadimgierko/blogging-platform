@@ -9,6 +9,7 @@ import {
     child,
     //update,
     onValue,
+    remove,
     //remove,
 } from "firebase/database";
 
@@ -47,7 +48,7 @@ export function BlogProvider({ children }) {
 
         const newBlogKey = push(child(ref(database), "blogs")).key;
     
-        if (newBlogKey) {
+        if (newBlogKey && blogData) {
     
           // add blog to blogs in database:
           set(ref(database, "blogs/" + newBlogKey + "/metadata"), {
@@ -89,7 +90,74 @@ export function BlogProvider({ children }) {
           .catch((error) => {
             alert(error.message);
           });
+        } else {
+          alert("Can't add article... No blog data passed or/and no key generated... Try again.");
         }
+    }
+
+    const updateBlog = (prevBlogData, updatedBlogData, blogKey) => {
+      
+      if (updatedBlogData && blogKey) {
+
+        // update blog in blogs in database:
+        set(ref(database, "blogs/" + blogKey + "/metadata"), {
+          ...prevBlogData,
+          ...updatedBlogData
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+  
+        // update blog in user blogs list
+        // only if title or/and link changed:
+        if (
+          prevBlogData.title !== updatedBlogData.title ||
+          prevBlogData.link !== updatedBlogData.link
+          ) {
+          set(ref(database, "users/" + user.uid + "/publicData/blogs/" + blogKey), {
+            title: updatedBlogData.title,
+            link: updatedBlogData.link
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
+        }
+  
+        // update blog in blogs list ordered by keys:
+        set(ref(database, "blogs/listOrderedByKeys/" + blogKey), {
+          ...prevBlogData,
+          ...updatedBlogData
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+        
+        // update blog in blogs list ordered by links
+        // only if link changed = title changed:
+        if (prevBlogData.link !== updatedBlogData.link) {
+          // add new object with new link:
+          set(ref(database, "blogs/listOrderedByLinks/" + updatedBlogData.link), {
+            userId: prevBlogData.userId,
+            title: updatedBlogData.title,
+            key: blogKey
+          })
+          .then(() => {
+            console.log("blog with new link:" + updatedBlogData.link + " was added to blogs list ordered by links.");
+          }).catch((error) => {
+            alert(error.message);
+          });
+          // delete old object with old link:
+          remove(ref(database, "blogs/listOrderedByLinks/" + prevBlogData.link))
+          .then(() => {
+            console.log("blog with old link:" + prevBlogData.link + " was deleted from blogs list ordered by links.");
+          }).catch((error) => {
+            alert(error.message);
+          });
+        }
+        
+      } else {
+        alert("Can't update article... No blog data or/and no key passed... Try again.");
+      }
     }
 
     // const updateBlog = (blogKey, updatedBlogData) => {
@@ -113,7 +181,7 @@ export function BlogProvider({ children }) {
         getBlogKeyByLink,
         fetchBlog,
         addBlog,
-        //updateBlog,
+        updateBlog,
         //deleteBlog,
     }
 

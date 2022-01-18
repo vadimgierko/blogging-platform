@@ -8,7 +8,6 @@ import SectionHeader from "../molecules/SectionHeader";
 export default function Article() {
 
     const { articleLink } = useParams();
-    //const { blogLink } = useParams();
 
     const {
         article,

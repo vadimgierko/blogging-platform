@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useBlog } from "../../../hooks/use-blog";
-import { useArticle } from "../../../hooks/use-article";
+//import { useArticle } from "../../../hooks/use-article";
 import convertTitleIntoLink from "../../../functions/convertTitleIntoLink";
 import Form from "../../organisms/Form";
 import { CREATE_BLOG } from "../../../initial-data/form-structure-templates";
@@ -15,7 +15,7 @@ export default function BlogEditionSection() {
         fetchBlog,
         getBlogKeyByLink,
         blogKey,
-        //updateBlog,
+        updateBlog,
         //deleteBlog
     } = useBlog();
 
@@ -39,22 +39,28 @@ export default function BlogEditionSection() {
         }
     }, [blog]);
 
-    if (!blog) return <p>Downloading data or there is no data...</p>
+    function handleBlogEditionFormSubmit(updatedBlogData) {
 
-    function handleBlogEditionFormSubmit(blog) {
-
-        // need to convert updated blog title into link!
+        //========================== need to convert updated blog title into link!
         // convertTitleIntoLink(link)
         if (
-            blog.title.replace(/\s/g, '').length &&
-            blog.description.replace(/\s/g, '').length
+            updatedBlogData.title.replace(/\s/g, '').length &&
+            updatedBlogData.description.replace(/\s/g, '').length
         ) {
-            //updateBlog(blogKey, blog);
-            alert("At the moment you can not update blog. Check the note in about section.");
+            const link = convertTitleIntoLink(updatedBlogData.title);
+            const newBlogDataWithLink = {
+                ...updatedBlogData,
+                link: link
+            }
+            //updatedBlog(prevBlogData, updatedBlogData, blogKey)
+            updateBlog(blog.metadata, newBlogDataWithLink, blogKey);
+            //alert("At the moment you can not update blog. Check the note in about section.");
         } else {
             alert("You need to complete all input fields (not only white spaces...) to update your blog data... Try again!");
         }
     }
+
+    if (!blog) return <p>Downloading data or there is no data...</p>
 
     return (
         <div className="blog-edition-section row">

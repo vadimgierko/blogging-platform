@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useBlog } from "../../../hooks/use-blog";
-//import { useArticle } from "../../../hooks/use-article";
+import { useArticle } from "../../../hooks/use-article";
 import convertTitleIntoLink from "../../../functions/convertTitleIntoLink";
 import Form from "../../organisms/Form";
 import { CREATE_BLOG } from "../../../initial-data/form-structure-templates";
@@ -19,7 +19,7 @@ export default function BlogEditionSection() {
         //deleteBlog
     } = useBlog();
 
-    // import deleteArticle from useArticle !!!
+    const { deleteArticle } = useArticle();
 
     useEffect(() => {
         if (blogLink) {
@@ -41,8 +41,6 @@ export default function BlogEditionSection() {
 
     function handleBlogEditionFormSubmit(updatedBlogData) {
 
-        //========================== need to convert updated blog title into link!
-        // convertTitleIntoLink(link)
         if (
             updatedBlogData.title.replace(/\s/g, '').length &&
             updatedBlogData.description.replace(/\s/g, '').length
@@ -119,8 +117,9 @@ export default function BlogEditionSection() {
                                                 // eslint-disable-next-line no-restricted-globals
                                                 const wantToDeleteArticle = confirm("Are you sure, you want to delete this article from this blog forever? There's no turning back... Delete article?");
                                                 if (wantToDeleteArticle) {
-                                                    //deleteArticle(blogKey, article[0]);
-                                                    alert("At the moment you can not delete article. Check the note in about section.");
+                                                    //articleKey, title, link, blogKey
+                                                    deleteArticle(article[0], article[1].title, article[1].link, blogKey);
+                                                    //alert("At the moment you can not delete article. Check the note in about section.");
                                                 }
                                             }}
                                         >

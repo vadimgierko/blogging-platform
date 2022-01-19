@@ -183,13 +183,44 @@ export function ArticleProvider({ children }) {
       }
     }
 
-      // const deleteArticle = (blogKey, articleKey) => {
-  //   remove(ref(database, "blogs/" +  blogKey + "/articles/" + articleKey)).then(() => {
-  //     console.log("article " + articleKey + " in blog " + blogKey + " was deleted");
-  //   }).catch((error) => {
-  //     console.log(error.message);
-  //   });
-  // }
+    const deleteArticle = (articleKey, title, link, blogKey) => {
+
+      // delete article from articles in database:
+      remove(ref(database, "articles/" + articleKey))
+      .then(() => {
+        console.log("Article", title, "was deleted.");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+
+      // delete article from articles list ordered by links:
+      remove(ref(database, "articles/listOrderedByLinks/" + link))
+      .then(() => {
+        console.log("article with the link:" + link + " was deleted from articles list ordered by links.");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+
+      // delete article from its blog's list ordered by keys:
+      remove(ref(database, "blogs/" + blogKey + "/articlesListOrderedByKeys/" + articleKey))
+      .then(() => {
+        console.log("article with the key " + articleKey + " was deleted from its blog " + blogKey + " articles list ordered by keys.");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+
+      // delete article from its blog's list ordered by links:
+      remove(ref(database, "blogs/" + blogKey + "/articlesListOrderedByLinks/" + link))
+      .then(() => {
+        console.log("article with the link " + link + " was deleted from its blog " + blogKey + " articles list ordered by links.");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+    }
     
     const value = {
         article,
@@ -197,7 +228,7 @@ export function ArticleProvider({ children }) {
         getArticleKeyByLink,
         fetchArticle,
         addArticle,
-        //deleteArticle,
+        deleteArticle,
         updateArticle
     }
 

@@ -3,15 +3,15 @@ import { database } from "../firebase";
 import { useDatabase } from "./use-database";
 
 import {
-    ref,
-    set,
-    push,
-    child,
-    //update,
-    onValue,
-    remove,
-    //query,
-    //limitToFirst
+  ref,
+  set,
+  push,
+  child,
+  //update,
+  onValue,
+  remove,
+  //query,
+  //limitToFirst
 } from "firebase/database";
 
 const ArticleContext = createContext();

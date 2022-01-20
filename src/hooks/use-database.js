@@ -88,7 +88,6 @@ export function DatabaseProvider({ children }) {
   const logOut = async () => {
     try {
       await signOut(firebaseAuth);
-      setUser(null);
     } catch (error) {
       alert(error.message);
     }

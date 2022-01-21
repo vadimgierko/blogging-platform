@@ -17,15 +17,15 @@ ReactDOM.render(
   <React.StrictMode>
     <HashRouter>
       <DatabaseProvider>
-        <BlogProvider>
-          <ArticleProvider>
+        <ArticleProvider>
+          <BlogProvider>
             <BloggerProvider>
               <ListsProvider>
                 <App />
               </ListsProvider>
             </BloggerProvider>
-          </ArticleProvider>
-        </BlogProvider>
+          </BlogProvider>
+        </ArticleProvider>
       </DatabaseProvider>
     </HashRouter>
   </React.StrictMode>,

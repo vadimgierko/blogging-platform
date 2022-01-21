@@ -3,12 +3,15 @@ import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
 import BlogEditionSection from "./BlogEditionSection";
 import LinkButton from "../../atoms/LinkButton";
 import { useEffect } from "react";
+//import { useBlog } from "../../../hooks/use-blog";
 
 export default function UserBlogsSection() {
 
     let {path, url} = useRouteMatch();
 
-    const { userBlogsList, fetchUserBlogsList } = useDatabase(); // + deleteBlog
+    const { userBlogsList, fetchUserBlogsList } = useDatabase();
+
+    //const { deleteBlog } = useBlog();
 
     useEffect(() => {
         fetchUserBlogsList();
@@ -49,20 +52,21 @@ export default function UserBlogsSection() {
                                                 >
                                                     <i className="bi bi-eye me-2" />
                                                 </Link>
-                                                <Link
+                                                {/* <Link
                                                     className="text-danger"
                                                     to="/dashboard/user-blogs"
                                                     onClick={() => {
                                                         // eslint-disable-next-line no-restricted-globals
                                                         const wantToDeleteBlog = confirm("Are you sure, you want to delete this blog & all articles from this blog forever? There's no turning back... Delete blog?");
                                                         if (wantToDeleteBlog) {
-                                                            //deleteBlog(blog[0]);
-                                                            alert("At the moment you can not delete blog... Check the note in about section.");
+                                                            //deleteBlog(blogKey, blogLink, blog.articlesListOrderedByKeys);
+                                                            deleteBlog(blog[0], blog[1].link);
+                                                            //alert("At the moment you can not delete blog... Check the note in about section.");
                                                         }
                                                     }}
                                                 >
                                                     <i className="bi bi-trash" />
-                                                </Link>
+                                                </Link> */}
                                             </div>
                                             
                                         </div>

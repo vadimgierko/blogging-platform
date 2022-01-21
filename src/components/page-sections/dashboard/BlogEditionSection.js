@@ -16,7 +16,7 @@ export default function BlogEditionSection() {
         getBlogKeyByLink,
         blogKey,
         updateBlog,
-        //deleteBlog
+        deleteBlog
     } = useBlog();
 
     const { deleteArticle } = useArticle();
@@ -71,21 +71,21 @@ export default function BlogEditionSection() {
                     to="/dashboard/user-blogs"
                     formClassname="blog-edition-form"
                 />
-                {/*<Link
+                <Link
                     to="/dashboard/user-blogs"
                     type="button"
-                    className="btn btn-outline-danger mb-3 d-block"
+                    className="btn btn-outline-danger mb-3 mt-2 d-block"
                     onClick={() => {
                         // eslint-disable-next-line no-restricted-globals
                         const wantToDeleteBlog = confirm("Are you sure, you want to delete this blog & all articles from this blog forever? There's no turning back... Delete blog?");
                         if (wantToDeleteBlog) {
-                            //deleteBlog(blogKey);
-                            alert("At the moment you can not delete blog. Check the note in about section.");
+                            deleteBlog(blogKey, blogLink, blog.articlesListOrderedByKeys);
+                            //alert("At the moment you can not delete blog. Check the note in about section.");
                         }
                     }}
                 >
                     Delete blog
-                </Link>*/}
+                </Link>
             </div>
             <div className="col-lg">
                 <h4 className="text-center">Articles</h4>

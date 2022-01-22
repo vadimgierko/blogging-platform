@@ -1,7 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { database } from "../firebase";
 import { useDatabase } from "./use-database";
-import { useArticle } from "./use-article";
 
 import {
   ref,
@@ -20,8 +19,6 @@ export function BlogProvider({ children }) {
 
   const { userPublicData, user } = useDatabase();
 
-  const { deleteArticle } = useArticle();
-
   const [blog, setBlog] = useState();
   const [blogKey, setBlogKey] = useState();
 
@@ -33,6 +30,7 @@ export function BlogProvider({ children }) {
         console.log("blog key:", data.key);
         setBlogKey(data.key);
       }
+      console.log("DATA WAS FETCHED: BLOG KEY");
     });
   }
 
@@ -43,6 +41,7 @@ export function BlogProvider({ children }) {
       console.log("blog object:", data);
       setBlog(data);
     });
+    console.log("DATA WAS FETCHED: BLOG");
   }
 
   const addBlog = (blogData) => { // blogData consists title, description & link
@@ -160,71 +159,45 @@ export function BlogProvider({ children }) {
     }
   }
 
-  const deleteBlog = (blogKey, blogLink, blogArticlesListOrderedByKeys) => {
+  const deleteBlog = (blogKey, blogLink) => {
 
-    let areBlogArticlesDeleted = false;
+    // NOTE: this method must run after looping blogs articles list with deleteArticle()
 
-    // delete blog articles in loop
-    if (blogArticlesListOrderedByKeys) {
-      const articles = Object.entries(blogArticlesListOrderedByKeys);
-      if (articles.length) {
-        for (let i = 0; i < articles.length; i++) {
-          const article = articles[i];
-          const articleKey = article[0];
-          const articleLink = article[1].link;
-          const articleTitle = article[1].title;
-          deleteArticle(articleKey, articleTitle, articleLink, blogKey);
-          if (i === articles.length - 1) {
-            console.log("All blog articles were deleted. Delete blog now.");
-            areBlogArticlesDeleted = true;
-          }
-        }
-      } else {
-        console.log("articles.length === false => There are no articles to delete. Delete blog now.");
-        areBlogArticlesDeleted = true;
-      }
-    } else {
-      console.log("blogArticlesListOrderedByKeys === false => There are no articles to delete. Delete blog now.");
-      areBlogArticlesDeleted = true;
-    }
+    // delete blog from blogs in database:
+    remove(ref(database, "blogs/" + blogKey))
+    .then(() => {
+      console.log("Blog with", blogKey, " blogKey was deleted.");
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
 
-    if (areBlogArticlesDeleted) {
-      // delete blog from blogs in database:
-      remove(ref(database, "blogs/" + blogKey))
-      .then(() => {
-        console.log("Blog with", blogKey, " blogKey was deleted.");
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
+    // delete blog from user blogs list:
+    remove(ref(database, "users/" + user.uid + "/publicData/blogs/" + blogKey))
+    .then(() => {
+      console.log("Blog with", blogKey, " blogKey was deleted from user blog list.");
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
 
-      // delete blog from user blogs list:
-      remove(ref(database, "users/" + user.uid + "/publicData/blogs/" + blogKey))
-      .then(() => {
-        console.log("Blog with", blogKey, " blogKey was deleted from user blog list.");
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-
-      // delete blog from blogs list ordered by keys:
-      remove(ref(database, "blogs/listOrderedByKeys/" + blogKey))
-      .then(() => {
-        console.log("Blog with", blogKey, " blogKey was deleted from blogs list ordered by keys.");
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-      
-      // delete blog from blogs list ordered by links:
-      remove(ref(database, "blogs/listOrderedByLinks/" + blogLink))
-      .then(() => {
-        console.log("Blog with", blogLink, " blogLink was deleted from blogs list ordered by keys..");
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-    }
+    // delete blog from blogs list ordered by keys:
+    remove(ref(database, "blogs/listOrderedByKeys/" + blogKey))
+    .then(() => {
+      console.log("Blog with", blogKey, " blogKey was deleted from blogs list ordered by keys.");
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+    
+    // delete blog from blogs list ordered by links:
+    remove(ref(database, "blogs/listOrderedByLinks/" + blogLink))
+    .then(() => {
+      console.log("Blog with", blogLink, " blogLink was deleted from blogs list ordered by keys..");
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
   }
 
   const value = {

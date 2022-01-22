@@ -236,6 +236,7 @@ export function DatabaseProvider({ children }) {
       console.log("current user blogs list data object:", data);
       setUserBlogsList(data);
     });
+    console.log("DATA WAS FETCHED: USER BLOGS LIST");
   }
 
   useEffect(() => {
@@ -248,6 +249,7 @@ export function DatabaseProvider({ children }) {
           const data = snapshot.val();
           console.log("user public data:", data);
           setUserPublicData(data);
+          console.log("DATA WAS FETCHED: USER PUBLIC DATA");
         });
       } else {
         setUser(null);

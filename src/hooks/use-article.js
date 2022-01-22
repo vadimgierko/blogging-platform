@@ -34,6 +34,7 @@ export function ArticleProvider({ children }) {
           setArticleKey(data.key);
         }
       });
+      console.log("DATA WAS FETCHED: ARTICLE KEY");
     }
 
     const fetchArticle = (articleKey) => {
@@ -43,6 +44,7 @@ export function ArticleProvider({ children }) {
         console.log("article object:", data);
         setArticle(data);
       });
+      console.log("DATA WAS FETCHED: ARTICLE");
     }
 
     const addArticle = (blogKey, blogTitle, article) => {

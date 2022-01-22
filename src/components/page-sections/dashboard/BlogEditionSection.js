@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useBlog } from "../../../hooks/use-blog";
 import { useArticle } from "../../../hooks/use-article";
@@ -21,23 +21,8 @@ export default function BlogEditionSection() {
 
     const { deleteArticle } = useArticle();
 
-    useEffect(() => {
-        if (blogLink) {
-            getBlogKeyByLink(blogLink);
-        }
-    }, [blogLink]);
-
-    useEffect(() => {
-        if (blogKey) {
-            fetchBlog(blogKey);
-        }
-    }, [blogKey]);
-
-    useEffect(() => {
-        if (blog) {
-            console.log("fetched blog:", blog);
-        }
-    }, [blog]);
+    const [startDeletingBlog, setStartDeletingBlog] = useState(false);
+    const [isBlogDeleted, setIsBlogDeleted] = useState(false);
 
     function handleBlogEditionFormSubmit(updatedBlogData) {
 
@@ -58,7 +43,85 @@ export default function BlogEditionSection() {
         }
     }
 
-    if (!blog) return <p>Downloading data or there is no data...</p>
+    //======================== fetch blog procedure:
+    useEffect(() => {
+        if (blogLink) {
+            getBlogKeyByLink(blogLink);
+        }
+    }, [blogLink]);
+
+    useEffect(() => {
+        if (blogKey) {
+            fetchBlog(blogKey);
+        }
+    }, [blogKey]);
+
+    useEffect(() => {
+        if (blog) {
+            console.log("fetched blog:", blog);
+        }
+    }, [blog]);
+    
+    //======================== delete blog procedure:
+    useEffect(() => {
+        if (blog) {
+            if (startDeletingBlog) {
+                //================ 1. check if there are any articles in blog
+                if (blog && blog.articlesListOrderedByKeys) {
+                    //============ 1. a) delete all articles in loop
+                    const articles = Object.entries(blog.articlesListOrderedByKeys);
+                    for (let i = 0; i < articles.length; i++) {
+                        const article = articles[i];
+                        const articleKey = article[0];
+                        const articleLink = article[1].link;
+                        const articleTitle = article[1].title;
+                        deleteArticle(articleKey, articleTitle, articleLink, blogKey);
+                    }
+                } else {
+                    //============ 2. if articles are deleted or there are no articles, delete blog
+                    console.log("There are no articles to delete. Delete blog now.");
+                    deleteBlog(blogKey, blogLink);
+                }
+            } else {
+                if (!isBlogDeleted) {
+                    console.log("User didn't start deleting blog procedure.");
+                }
+            }
+        }
+    }, [startDeletingBlog, blog]);
+
+    //===================== 3. if blog is deleted:
+    useEffect(() => {
+        if (!blog) {
+            if (startDeletingBlog) {
+                if (!isBlogDeleted) {
+                    setIsBlogDeleted(true);
+                    console.log("BlogEditionSection confirms: Blog was deleted");
+                } else {
+                    setStartDeletingBlog(false);
+                }
+            }
+        }
+    }, [startDeletingBlog, isBlogDeleted, blog]);
+
+    //===================================== render() =====================================
+
+    if (!blog && !startDeletingBlog && !isBlogDeleted) return <p>Downloading data or there is no data...</p>;
+
+    if (startDeletingBlog) return <p className="text-danger text-center">Deleting Blog... please wait...</p>;
+
+    if (isBlogDeleted && !startDeletingBlog && !blog) return (
+        <div>
+            <p className="text-success text-center">Your blog && all articles it contained were deleted successfully!</p>
+            <Link
+                to="/dashboard/user-blogs"
+                type="button"
+                className="btn btn-outline-info mb-3 mt-2 d-block"
+            >
+                Go back to your blogs list
+            </Link>
+        </div>
+    );
 
     return (
         <div className="blog-edition-section row">
@@ -71,27 +134,29 @@ export default function BlogEditionSection() {
                     to="/dashboard/user-blogs"
                     formClassname="blog-edition-form"
                 />
-                <Link
-                    to="/dashboard/user-blogs"
+                <div className="d-grid">
+                <button
                     type="button"
-                    className="btn btn-outline-danger mb-3 mt-2 d-block"
+                    className="btn btn-outline-danger mb-3 mt-2"
                     onClick={() => {
                         // eslint-disable-next-line no-restricted-globals
-                        const wantToDeleteBlog = confirm("Are you sure, you want to delete this blog & all articles from this blog forever? There's no turning back... Delete blog?");
+                        const wantToDeleteBlog = confirm("Are you sure, you want to delete this blog & all articles this blog contains forever? There's no turning back... Delete blog?");
                         if (wantToDeleteBlog) {
-                            deleteBlog(blogKey, blogLink, blog.articlesListOrderedByKeys);
+                            setStartDeletingBlog(true);
+                            //deleteBlog(blogKey, blogLink, blog.articlesListOrderedByKeys);
                             //alert("At the moment you can not delete blog. Check the note in about section.");
                         }
                     }}
                 >
                     Delete blog
-                </Link>
+                </button>
+                </div>
             </div>
             <div className="col-lg">
                 <h4 className="text-center">Articles</h4>
                 <hr />
                 {
-                    blog.articlesListOrderedByKeys ? (
+                    blog && blog.articlesListOrderedByKeys ? (
                         Object.entries(blog.articlesListOrderedByKeys).map((article) => (
                             <div key={article[0]}>
                                 <div className="row">
@@ -132,7 +197,7 @@ export default function BlogEditionSection() {
                         ))
                     ) : (
                         <div>
-                            There are no articles...
+                            There are no articles in the blog...
                         </div>
                     )
                 }

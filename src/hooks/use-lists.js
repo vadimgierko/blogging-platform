@@ -14,7 +14,7 @@ export function ListsProvider({ children }) {
 	const [blogsListOrderedByKeys, setBlogsListOrderedByKeys] = useState();
 
 	const fetchBlogsListOrderedByKeys = () => {
-		const listRef = query(ref(database, "blogs/listOrderedByKeys"), limitToFirst(10));
+		const listRef = query(ref(database, "blogs/listOrderedByKeys"), limitToFirst(100));
 		onValue(listRef, (snapshot) => {
 			const data = snapshot.val();
 			console.log("blogs list ordered by keys:", data);
@@ -24,7 +24,7 @@ export function ListsProvider({ children }) {
 	};
 
 	const fetchUsersListOrderedByUserName = () => {
-		const listRef = query(ref(database, "users/listOrderedByUserName"), limitToFirst(10));
+		const listRef = query(ref(database, "users/listOrderedByUserName"), limitToFirst(100));
 		onValue(listRef, (snapshot) => {
 			const data = snapshot.val();
 			console.log("users list ordered by user name object:", data);
@@ -34,7 +34,7 @@ export function ListsProvider({ children }) {
 	};
 
 	const fetchUsersListOrderedByKeys = () => {
-		const listRef = query(ref(database, "users/listOrderedByKeys"), limitToFirst(10));
+		const listRef = query(ref(database, "users/listOrderedByKeys"), limitToFirst(100));
 		onValue(listRef, (snapshot) => {
 			const data = snapshot.val();
 			console.log("users list ordered by user id object:", data);

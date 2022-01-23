@@ -11,32 +11,32 @@
 // add a key_name: {},
 
 export const SIGN_IN = {
-    email: {
-        type: "email"
-    },
-    password: {
-        type: "password"
-    },
+	email: {
+		type: "email",
+	},
+	password: {
+		type: "password",
+	},
 };
 
 export const EDIT_USER_DATA = {
-    firstName: {
-        placeholder: "input your real first name"
-    },
-    lastName: {
-        placeholder: "input your real last name"
-    },
-    userName: {
-        placeholder: "input your user name using lower case letters only"
-    }
+	firstName: {
+		placeholder: "input your real first name",
+	},
+	lastName: {
+		placeholder: "input your real last name",
+	},
+	userName: {
+		placeholder: "input your user name using lower case letters only",
+	},
 };
 
 export const SIGN_UP = {
-    ...EDIT_USER_DATA,
-    ...SIGN_IN
+	...EDIT_USER_DATA,
+	...SIGN_IN,
 };
 
 export const CREATE_BLOG = {
-    title: {},
-    description: {}
-}
+	title: {},
+	description: {},
+};

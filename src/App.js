@@ -18,67 +18,66 @@ import About from "./components/pages/About";
 import UpdateArticle from "./components/pages/UpdateArticle";
 
 export default function App() {
+	const [userId, setUserId] = useState(null);
 
-  const [userId, setUserId] = useState(null);
+	const { user, userPublicData, logOut } = useDatabase();
 
-  const { user, userPublicData, logOut } = useDatabase();
+	useEffect(() => {
+		if (user) {
+			setUserId(user.uid);
+		} else {
+			setUserId(null);
+		}
+	}, [user]);
 
-  useEffect(() => {
-    if (user) {
-      setUserId(user.uid);
-    } else {
-      setUserId(null);
-    }
-  }, [user]);
-
-  return (
-    <div className="App">
-      <Header 
-        userFirstName={user && userPublicData ? userPublicData.firstName : null}
-        userLastName={user && userPublicData ? userPublicData.lastName : null}
-        logOut={logOut} 
-      />
-      <main className="container" style={{ marginTop: 120 }}>
-        <Switch>
-          <Route exact path="/">
-            <About />
-          </Route>
-          <Route path="/login">
-            <SignIn />
-          </Route>
-          <Route path="/signup">
-            <SignUp />
-          </Route>
-          <Route path="/dashboard">
-            <Dashboard userId={userId} />
-          </Route>
-          <Route path="/blogs/:blogLink/:articleLink">
-            <Article />
-          </Route>
-          <Route path="/blogs/:blogLink">
-            <Blog />
-          </Route>
-          <Route path="/blogs">
-            <Blogs />
-          </Route>
-          <Route path="/bloggers/:userName">
-            <Blogger />
-          </Route>
-          <Route path="/bloggers">
-            <Bloggers />
-          </Route>
-          <Route path="/create-blog">
-            <CreateBlog />
-          </Route>
-          <Route path="/create-article/:blogKey/:blogTitle">
-            <CreateArticle />
-          </Route>
-          <Route path="/edit-article/:blogKey/:articleKey">
-            <UpdateArticle />
-          </Route>
-        </Switch>
-      </main>
-      <Footer />
-    </div>
-  );
+	return (
+		<div className="App">
+			<Header
+				userFirstName={user && userPublicData ? userPublicData.firstName : null}
+				userLastName={user && userPublicData ? userPublicData.lastName : null}
+				logOut={logOut}
+			/>
+			<main className="container" style={{ marginTop: 120 }}>
+				<Switch>
+					<Route exact path="/">
+						<About />
+					</Route>
+					<Route path="/login">
+						<SignIn />
+					</Route>
+					<Route path="/signup">
+						<SignUp />
+					</Route>
+					<Route path="/dashboard">
+						<Dashboard userId={userId} />
+					</Route>
+					<Route path="/blogs/:blogLink/:articleLink">
+						<Article />
+					</Route>
+					<Route path="/blogs/:blogLink">
+						<Blog />
+					</Route>
+					<Route path="/blogs">
+						<Blogs />
+					</Route>
+					<Route path="/bloggers/:userName">
+						<Blogger />
+					</Route>
+					<Route path="/bloggers">
+						<Bloggers />
+					</Route>
+					<Route path="/create-blog">
+						<CreateBlog />
+					</Route>
+					<Route path="/create-article/:blogKey/:blogTitle">
+						<CreateArticle />
+					</Route>
+					<Route path="/edit-article/:blogKey/:articleKey">
+						<UpdateArticle />
+					</Route>
+				</Switch>
+			</main>
+			<Footer />
+		</div>
+	);
 }

@@ -1,42 +1,8 @@
-// import { useEffect } from "react";
-// import { database } from "../../firebase";
-// import { useArticle } from "../../hooks/use-article";
-
-// import {
-//     ref,
-//     set,
-//     push,
-//     child,
-//     //update,
-//     onValue,
-//     remove,
-//     //query,
-//     //limitToFirst
-// } from "firebase/database";
-
 export default function About() {
-	// const { deleteArticle, addArticle } = useArticle();
-
-	// useEffect(() => {
-	//     console.log("fetch");
-	//     onValue(ref(database, "blogs/"), snapshot => {
-	//         if (snapshot) {
-	//             console.log(snapshot.val());
-	//         }
-	//     });
-	//     //articleKey, title, link, blogKey
-	//     deleteArticle("-Mtte3InA9O8p8rG2VKE", "Test EDITED", "test-edited", "-MtYRswcLW0tm4F2dcRL");
-	// }, []);
-
 	return (
 		<article className="about-page">
 			<h1>What you can do with Blogging Platform</h1>
 			<hr />
-			<p style={{ color: "red" }}>
-				NOTE: I'm currently updating the app according to new database structure & security
-				rules, so some of features, like: delete an account & update user data are off for a
-				few days...
-			</p>
 			<ul>
 				<li>create & run your blog (or many blogs) after creating a free user account</li>
 				<li>
@@ -58,6 +24,24 @@ export default function About() {
 				skills in the field of front-end development (React, Bootstrap) and realtime
 				database integration (Firebase).
 			</p>
+			<p className="text-success">
+				Recently the app was updated and rewritten (basically from scratch) and adapted to:
+			</p>
+			<ul className="text-success">
+				<li>
+					new app structure according to Atomic Web Design pattern (so now code is split,
+					and components are reused more efficiently)
+				</li>
+				<li>
+					new, more flatten realtime database structure (so now the app downloads up to 10
+					times less data & does it when necessary)
+				</li>
+				<li>
+					new security rules (so now the app is protected from malicious users, and that's
+					very hard to download big portions of data, for example it's impossible to
+					download the whole database)
+				</li>
+			</ul>
 			<h3>Technologies used in Blogging Platform development</h3>
 			<hr />
 			<ul>
@@ -69,7 +53,7 @@ export default function About() {
 				<li>Bootstrap 5.1</li>
 				<li>Bootswatch 5.1</li>
 				<li>GitHub Pages 3.2</li>
-				<li>Atomic Web Design</li>
+				<li>Atomic Web Design pattern</li>
 			</ul>
 		</article>
 	);

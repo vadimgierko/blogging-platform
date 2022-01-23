@@ -6,37 +6,31 @@ import { useArticle } from "../../hooks/use-article";
 import SectionHeader from "../molecules/SectionHeader";
 
 export default function Article() {
+	const { articleLink } = useParams();
 
-    const { articleLink } = useParams();
+	const { article, articleKey, fetchArticle, getArticleKeyByLink } = useArticle();
 
-    const {
-        article,
-        articleKey,
-        fetchArticle,
-        getArticleKeyByLink,
-    } = useArticle();
+	useEffect(() => {
+		if (articleLink) {
+			getArticleKeyByLink(articleLink);
+		}
+	}, [articleLink]);
 
-    useEffect(() => {
-        if (articleLink) {
-            getArticleKeyByLink(articleLink);
-        }
-    }, [articleLink]);
+	useEffect(() => {
+		if (articleKey) {
+			fetchArticle(articleKey);
+		}
+	}, [articleKey]);
 
-    useEffect(() => {
-        if (articleKey) {
-            fetchArticle(articleKey);
-        }
-    }, [articleKey]);
+	if (!article) return <p>Downloading article or there is no such article...</p>;
 
-    if (!article) return <p>Downloading article or there is no such article...</p>;
-
-    return (
-        <div className="article-page">
-            <article className="article">
-                <SectionHeader item={article.metadata} headerClassname="article-header" />
-                <hr />
-                <ReactMarkdown children={article.metadata.content} remarkPlugins={[remarkGfm]} />
-            </article>
-        </div>
-    );
+	return (
+		<div className="article-page">
+			<article className="article">
+				<SectionHeader item={article.metadata} headerClassname="article-header" />
+				<hr />
+				<ReactMarkdown children={article.metadata.content} remarkPlugins={[remarkGfm]} />
+			</article>
+		</div>
+	);
 }
